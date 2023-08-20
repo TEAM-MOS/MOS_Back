@@ -4,6 +4,7 @@ import mos.mosback.dto.StudyGroupRequest;
 import mos.mosback.entity.StudyGroup;
 import mos.mosback.service.StudyGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,8 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@ComponentScan
 @Controller
-@RequestMapping("/study-groups")
+@RequestMapping("/")
 public class StudyGroupController {
 
     private final StudyGroupService studyGroupService;
@@ -27,13 +29,12 @@ public class StudyGroupController {
     public String index(Model model) {
         List<StudyGroup> studyGroups = studyGroupService.getAllStudyGroups();
         model.addAttribute("studyGroups", studyGroups);
-        return "index";
+        return "index.html"; // 뷰 이름에 확장자 .html 추가
     }
-
 
     @GetMapping("/create")
     public String createForm() {
-        return "create_form";
+        return "create_form.html"; // 뷰 이름에 확장자 .html 추가
     }
 
 
