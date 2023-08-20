@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/api/study-groups")
+@RequestMapping("/study-groups")
 public class StudyGroupController {
 
     private final StudyGroupService studyGroupService;
@@ -30,10 +30,12 @@ public class StudyGroupController {
         return "index";
     }
 
+
     @GetMapping("/create")
     public String createForm() {
         return "create_form";
     }
+
 
     @PostMapping("/create")
     public ResponseEntity<Void> createStudyGroup(@RequestParam(required = false) String groupName,
@@ -60,7 +62,5 @@ public class StudyGroupController {
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-
-
 
 }
