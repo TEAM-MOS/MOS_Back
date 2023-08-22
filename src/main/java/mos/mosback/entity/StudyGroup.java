@@ -1,6 +1,7 @@
 package mos.mosback.entity;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "study_group")
@@ -10,66 +11,104 @@ public class StudyGroup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String st_key;
 
-    @Column(name = "group_name")
-    private String groupName;
+    @Column(name = "st_title")
+    private String st_title;
 
     @Column
-    private String location;
+    private String st_mode;
 
-    @Column(name = "max_members")
-    private int maxMembers;
+    @Column(name = "st_num")
+    private int st_num;
 
     @Column
     private String subject;
 
-    // Getter and Setter methods for id
-    public Long getId() {
-        return id;
-    }
+    @Column
+    private Date st_startDate;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Column
+    private Date st_endDate;
 
-    // Getter and Setter methods for groupName
-    public String getGroupName() {
-        return groupName;
-    }
+    @Column
+    private String st_date;
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
+    @Column
+    private String st_goal;
 
-    // Getter and Setter methods for location
-    public String getLocation() {
-        return location;
-    }
+    @Column
+    private String st_rules;
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+    @Column
+    private Date st_createDate;
 
-    // Getter and Setter methods for maxMembers
-    public int getMaxMembers() {
-        return maxMembers;
-    }
+    @Column
+    private Integer st_click;
 
-    public void setMaxMembers(int maxMembers) {
-        this.maxMembers = maxMembers;
-    }
+    @Column
+    private Date rc_start;
 
-    // Getter and Setter methods for subject
-    public String getSubject() {
-        return subject;
-    }
+    @Column
+    private Date rc_end;
 
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
+    @Column
+    private String st_quest;
+
+
+    @Column
+    private String st_tend;
+
+    @Column
+    private String st_category;
+
 
     public void setSt_key(String stKey) {
     }
 
     public void setSt_title(String stTitle) {
+    }
+
+    public void setSt_mode(String stMode) {
+    }
+
+    public void setSt_num(int stNum) {
+    }
+
+    public void setSt_startDate(Date stStartDate) {
+    }
+
+    public void setSt_endDate(Date stEndDate) {
+    }
+
+    public void isSt_onoff(boolean stOnoff) {
+    }
+
+    public void setSt_date(String stDate) {
+    }
+
+    public void setSt_goal(String stGoal) {
+    }
+
+    public void setSt_rules(String stRules) {
+    }
+
+    public void setSt_createDate(Date stCreateDate) {
+    }
+
+    public void setSt_click(int stClick) {
+    }
+
+    public void setRc_start(Date rcStart) {
+    }
+
+    public void setRc_end(Date rcEnd) {
+    }
+
+    public void setSt_quest(String stQuest) {
+    }
+
+    public void setSt_tend(String stTend) {
+    }
+
+    public void setSt_category(String stCategory) {
     }
 }

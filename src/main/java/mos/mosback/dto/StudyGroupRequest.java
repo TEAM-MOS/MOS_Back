@@ -1,5 +1,9 @@
 package mos.mosback.dto;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import java.util.Date;
+
+@RequestMapping("/create")
 public class StudyGroupRequest {
 
     private String st_key;

@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 @ComponentScan
-@Controller
+@RestController
 @RequestMapping("/study-groups")
 public class StudyGroupController {
 
@@ -30,38 +30,18 @@ public class StudyGroupController {
     public String index(Model model) {
         List<StudyGroup> studyGroups = studyGroupService.getAllStudyGroups();
         model.addAttribute("studyGroups", studyGroups);
-        return "index.html"; // 뷰 이름에 확장자 .html 추가
+        return "index"; // 뷰 이름에 확장자 .html 추가
     }
-
     @GetMapping("/create")
     public String createForm() {
-        return "create_form.html"; // 뷰 이름에 확장자 .html 추가
+        return "create_form"; // Assuming create_form.html is a Thymeleaf template
     }
-
-
     @PostMapping("/create")
-    public ResponseEntity<Void> createStudyGroup(@RequestParam(required = false) String st_key,
-                                                 @RequestParam(required = false) String st_title,
-                                                 @RequestParam(required = false) String st_mode,
-                                                 @RequestParam(required = false) Integer st_num,
-                                                 @RequestParam(required = false) Date st_startDate,
-                                                 @RequestParam(required = false) Date st_endDate,
-                                                 @RequestParam(required = false) Boolean st_onoff,
-                                                 @RequestParam(required = false) String st_date,
-                                                 @RequestParam(required = false) String st_goal,
-                                                 @RequestParam(required = false) String st_rules,
-                                                 @RequestParam(required = false) Date st_createDate,
-                                                 @RequestParam(required = false) Integer st_click,
-                                                 @RequestParam(required = false) Date rc_start,
-                                                 @RequestParam(required = false) Date rc_end,
-                                                 @RequestParam(required = false) String st_quest,
-                                                 @RequestParam(required = false) String st_tend,
-                                                 @RequestParam(required = false) String st_category,
-                                                 @RequestBody(required = false) StudyGroupRequest studyGroupRequest) {
+    public ResponseEntity<Void> createStudyGroup(@RequestBody StudyGroupRequest studyGroupRequest){
 
         StudyGroup studyGroup = new StudyGroup();
 
-        if (studyGroupRequest != null) {
+
             studyGroup.setSt_key(studyGroupRequest.getSt_key());
             studyGroup.setSt_title(studyGroupRequest.getSt_title());
             studyGroup.setSt_mode(studyGroupRequest.getSt_mode());
@@ -79,12 +59,6 @@ public class StudyGroupController {
             studyGroup.setSt_quest(studyGroupRequest.getSt_quest());
             studyGroup.setSt_tend(studyGroupRequest.getSt_tend());
             studyGroup.setSt_category(studyGroupRequest.getSt_category());
-        } else {
-            studyGroup.setSt_key(groupName);
-            studyGroup.setSubject(subject);
-            studyGroup.setLocation(location);
-            studyGroup.setMaxMembers(maxMembers);
-        }
 
         studyGroupService.createStudyGroup(studyGroup);
 
