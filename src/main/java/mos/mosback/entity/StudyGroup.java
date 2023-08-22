@@ -8,7 +8,7 @@ public class StudyGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String st_key;
 
     @Column(name = "group_name")
     private String groupName;
@@ -65,5 +65,11 @@ public class StudyGroup {
 
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    public void setSt_key(String stKey) {
+    }
+
+    public void setSt_title(String stTitle) {
     }
 }
