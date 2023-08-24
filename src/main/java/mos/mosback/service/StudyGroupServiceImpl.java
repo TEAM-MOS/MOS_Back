@@ -19,16 +19,8 @@ public class StudyGroupServiceImpl implements StudyGroupService {
 
     @Override
     public void createStudyGroup(StudyGroup studyGroup) {
-        studyGroup = new StudyGroup();
         studyGroupRepository.save(studyGroup);
     }
-
-    @Override
-    public void createStudyGroup(mos.mosback.service.StudyGroup studyGroup) {
-
-
-    }
-
 
     @Override
     public List<StudyGroup> getAllStudyGroups() {

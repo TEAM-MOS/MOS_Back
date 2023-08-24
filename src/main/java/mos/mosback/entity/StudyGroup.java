@@ -1,5 +1,6 @@
 package mos.mosback.entity;
 
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -9,106 +10,57 @@ public class StudyGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String st_key;
+    private Long key;
 
-    @Column(name = "st_title")
-    private String st_title;
+    @Column(name = "title",nullable = false)
+    private String title;
 
-    @Column
-    private String st_mode;
+    @Column(nullable = false)
+    private String mode;
 
-    @Column(name = "st_num")
-    private int st_num;
+    @Column(name = "num",nullable = false)
+    private int num;
 
-    @Column
-    private String subject;
+    @Column(nullable = false)
+    private Date startDate;
 
-    @Column
-    private Date st_startDate;
+    @Column(nullable = false)
+    private Date endDate;
 
-    @Column
-    private Date st_endDate;
+    @Column(nullable = false)
+    private String date;
 
-    @Column
-    private String st_date;
+    @Column(nullable = false)
+    private String goal;
 
-    @Column
-    private String st_goal;
+    @Column(nullable = false)
+    private String rules;
 
-    @Column
-    private String st_rules;
+    @Column(nullable = false)
+    private Date createDate;
 
-    @Column
-    private Date st_createDate;
+    @Column(nullable = false)
+    private Integer click;
 
-    @Column
-    private Integer st_click;
+    @Column(nullable = false)
+    private Date rcstart;
 
-    @Column
-    private Date rc_start;
+    @Column(nullable = false)
+    private Date rcend;
 
-    @Column
-    private Date rc_end;
-
-    @Column
-    private String st_quest;
+    @Column(nullable = false)
+    private String quest;
 
 
-    @Column
-    private String st_tend;
+    @Column(nullable = false)
+    private String tend;
 
-    @Column
-    private String st_category;
+    @Column(nullable = false)
+    private String category;
+
+    @Column(nullable = false)
+    private boolean onoff;
 
 
-    public void setSt_key(String stKey) {
-    }
 
-    public void setSt_title(String stTitle) {
-    }
-
-    public void setSt_mode(String stMode) {
-    }
-
-    public void setSt_num(int stNum) {
-    }
-
-    public void setSt_startDate(Date stStartDate) {
-    }
-
-    public void setSt_endDate(Date stEndDate) {
-    }
-
-    public void isSt_onoff(boolean stOnoff) {
-    }
-
-    public void setSt_date(String stDate) {
-    }
-
-    public void setSt_goal(String stGoal) {
-    }
-
-    public void setSt_rules(String stRules) {
-    }
-
-    public void setSt_createDate(Date stCreateDate) {
-    }
-
-    public void setSt_click(int stClick) {
-    }
-
-    public void setRc_start(Date rcStart) {
-    }
-
-    public void setRc_end(Date rcEnd) {
-    }
-
-    public void setSt_quest(String stQuest) {
-    }
-
-    public void setSt_tend(String stTend) {
-    }
-
-    public void setSt_category(String stCategory) {
-    }
 }

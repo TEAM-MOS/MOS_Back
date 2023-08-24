@@ -6,159 +6,157 @@ import java.util.Date;
 @RequestMapping("/create")
 public class StudyGroupRequest {
 
-    private String st_key;
-    private String st_title;
-    private String st_mode;
-    private int st_num;
-    private Date st_startDate;
-    private Date st_endDate;
-    private boolean st_onoff;
-    private String st_date;
-    private String st_goal;
-    private String st_rules;
-    private Date st_createDate;
-    private int st_click;
-    private Date rc_start;
-    private Date rc_end;
-    private String st_quest;
-    private String st_tend;
-    private String st_category;
+    private Long key;
+    private String title;
+    private String mode;
+    private int num;
+    private Date startDate;
+    private Date endDate;
+    private boolean onoff;
+    private String date;
+    private String goal;
+    private String rules;
+    private Date createDate;
+    private int click;
+    private Date rcstart;
+    private Date rcend;
+    private String quest;
+    private String tend;
+    private Integer category;
 
-    //Getter, Setter 메소드
-
-    public String getSt_key() {
-        return st_key;
+    public Long getKey() {
+        return key;
     }
 
-    public void setSt_key(String st_key) {
-        this.st_key = st_key;
+    public void setKey(Long key) {
+        this.key = key;
     }
 
-    public String getSt_title() {
-        return st_title;
+    public String getTitle() {
+        return title;
     }
 
-    public void setSt_title(String st_title) {
-        this.st_title = st_title;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getSt_mode() {
-        return st_mode;
+    public String getMode() {
+        return mode;
     }
 
-    public void setSt_mode(String st_mode) {
-        this.st_mode = st_mode;
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 
-    public int getSt_num() {
-        return st_num;
+    public int getNum() {
+        return num;
     }
 
-    public void setSt_num(int st_num) {
-        this.st_num = st_num;
+    public void setNum(int num) {
+        this.num = num;
     }
 
-    public Date getSt_startDate() {
-        return st_startDate;
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public void setSt_startDate(Date st_startDate) {
-        this.st_startDate = st_startDate;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
-    public Date getSt_endDate() {
-        return st_endDate;
+    public Date getEndDate() {
+        return endDate;
     }
 
-    public void setSt_endDate(Date st_endDate) {
-        this.st_endDate = st_endDate;
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
-    public boolean isSt_onoff() {
-        return st_onoff;
+    public boolean isOnoff() {
+        return onoff;
     }
 
-    public void setSt_onoff(boolean st_onoff) {
-        this.st_onoff = st_onoff;
+    public void setOnoff(boolean onoff) {
+        this.onoff = onoff;
     }
 
-    public String getSt_date() {
-        return st_date;
+    public String getDate() {
+        return date;
     }
 
-    public void setSt_date(String st_date) {
-        this.st_date = st_date;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public String getSt_goal() {
-        return st_goal;
+    public String getGoal() {
+        return goal;
     }
 
-    public void setSt_goal(String st_goal) {
-        this.st_goal = st_goal;
+    public void setGoal(String goal) {
+        this.goal = goal;
     }
 
-    public String getSt_rules() {
-        return st_rules;
+    public String getRules() {
+        return rules;
     }
 
-    public void setSt_rules(String st_rules) {
-        this.st_rules = st_rules;
+    public void setRules(String rules) {
+        this.rules = rules;
     }
 
-    public Date getSt_createDate() {
-        return st_createDate;
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setSt_createDate(Date st_createDate) {
-        this.st_createDate = st_createDate;
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 
-    public int getSt_click() {
-        return st_click;
+    public int getClick() {
+        return click;
     }
 
-    public void setSt_click(int st_click) {
-        this.st_click = st_click;
+    public void setClick(int click) {
+        this.click = click;
     }
 
-    public Date getRc_start() {
-        return rc_start;
+    public Date getRcstart() {
+        return rcstart;
     }
 
-    public void setRc_start(Date rc_start) {
-        this.rc_start = rc_start;
+    public void setRcstart(Date rcstart) {
+        this.rcstart = rcstart;
     }
 
-    public Date getRc_end() {
-        return rc_end;
+    public Date getRcend() {
+        return rcend;
     }
 
-    public void setRc_end(Date rc_end) {
-        this.rc_end = rc_end;
+    public void setRcend(Date rcend) {
+        this.rcend = rcend;
     }
 
-    public String getSt_quest() {
-        return st_quest;
+    public String getQuest() {
+        return quest;
     }
 
-    public void setSt_quest(String st_quest) {
-        this.st_quest = st_quest;
+    public void setQuest(String quest) {
+        this.quest = quest;
     }
 
-    public String getSt_tend() {
-        return st_tend;
+    public String getTend() {
+        return tend;
     }
 
-    public void setSt_tend(String st_tend) {
-        this.st_tend = st_tend;
+    public void setTend(String tend) {
+        this.tend = tend;
     }
 
-    public String getSt_category() {
-        return st_category;
+    public Integer getCategory() {
+        return category;
     }
 
-    public void setSt_category(String st_category) {
-        this.st_category = st_category;
+    public void setCategory(Integer category) {
+        this.category = category;
     }
 }
