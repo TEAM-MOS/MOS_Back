@@ -12,53 +12,53 @@ public class StudyGroup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long key;
 
-    @Column(name = "title",nullable = false)
+    @Column(name = "title")
     private String title;
 
-    @Column(nullable = false)
+    @Column
     private String mode;
 
-    @Column(name = "num",nullable = false)
+    @Column(name = "num")
     private int num;
 
-    @Column(nullable = false)
+    @Column
     private Date startDate;
 
-    @Column(nullable = false)
+    @Column
     private Date endDate;
 
-    @Column(nullable = false)
+    @Column
     private String date;
 
-    @Column(nullable = false)
+    @Column
     private String goal;
 
-    @Column(nullable = false)
+    @Column
     private String rules;
 
-    @Column(nullable = false)
+    @Column
     private Date createDate;
 
-    @Column(nullable = false)
+    @Column
     private Integer click;
 
-    @Column(nullable = false)
+    @Column
     private Date rcstart;
 
-    @Column(nullable = false)
+    @Column
     private Date rcend;
 
-    @Column(nullable = false)
+    @Column
     private String quest;
 
 
-    @Column(nullable = false)
+    @Column
     private String tend;
 
-    @Column(nullable = false)
+    @Column
     private String category;
 
-    @Column(nullable = false)
+    @Column
     private boolean onoff;
 
 
