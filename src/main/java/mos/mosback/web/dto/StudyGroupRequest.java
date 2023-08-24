@@ -1,4 +1,4 @@
-package mos.mosback.dto;
+package mos.mosback.web.dto;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Date;
