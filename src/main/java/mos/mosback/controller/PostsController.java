@@ -25,8 +25,7 @@ public class PostsController {
     @PostMapping("/create")
     public ResponseEntity<String> savePost(@RequestBody PostSaveRequestDto requestDto) {
         Long postId = postService.save(requestDto);
-        String message = "created successfully. ID: " + postId;
-        return ResponseEntity.status(HttpStatus.CREATED).body(message);
+        return ResponseEntity.status(HttpStatus.CREATED).body("created successfully. ID: " + postId);
     }
 
     @GetMapping("/{id}")
@@ -42,9 +41,15 @@ public class PostsController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Long> updatePost(@PathVariable Long id, @RequestBody PostsUpdateRequestDto requestDto) {
-        Long updatedId = postService.update(id, requestDto);
-        return new ResponseEntity<>(updatedId, HttpStatus.OK);
+    public ResponseEntity<String> updatePost(@PathVariable Long id, @RequestBody PostsUpdateRequestDto requestDto) {
+        try {
+            postService.update(id, requestDto);
+            return ResponseEntity.ok("updated.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("NOT FOUND"+"'"+id+"'");
+
+        }
     }
 
     @DeleteMapping("/{id}")

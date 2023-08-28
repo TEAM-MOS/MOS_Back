@@ -6,6 +6,8 @@ import mos.mosback.web.dto.PostSaveRequestDto;
 import mos.mosback.web.dto.PostsListResponseDto;
 import mos.mosback.web.dto.PostsResponseDto;
 import mos.mosback.web.dto.PostsUpdateRequestDto;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -23,25 +25,24 @@ public class PostService {
     }
 
 
+
     @Transactional
-    public Long update(Long id, PostsUpdateRequestDto requestDto) {
+    public void update(Long id, PostsUpdateRequestDto requestDto) {
         Posts posts = postsRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + id));
+                .orElseThrow(() -> new IllegalArgumentException(id + " NOT FOUND"));
 
-        posts.update(requestDto.getTitle(), requestDto.getGoal(),requestDto.getRules()
-        ,requestDto.getQuest(),requestDto.getTend(),requestDto.getCategory(),
-                requestDto.getDate(),requestDto.getIntro(),requestDto.getNum(),
-                requestDto.getMod(),requestDto.isOnOff(),requestDto.getStartDate(),
-                requestDto.getEndDate(),requestDto.getRcstart(),requestDto.getRcend());
-
-        return id;
-    }   //postsRepository를 사용하여 데이터베이스에서 주어진 id에 해당하는 게시물을 찾기
+        posts.update(requestDto.getTitle(), requestDto.getGoal(), requestDto.getRules(),
+                requestDto.getQuest(), requestDto.getTend(), requestDto.getCategory(),
+                requestDto.getDate(), requestDto.getIntro(), requestDto.getNum(),
+                requestDto.getMod(), requestDto.isOnOff(), requestDto.getStartDate(),
+                requestDto.getEndDate(), requestDto.getRcstart(), requestDto.getRcend());
+    }  //postsRepository를 사용하여 데이터베이스에서 주어진 id에 해당하는 게시물을 찾기
 
 
     @Transactional(readOnly = true)
     public PostsResponseDto findById(Long id) {
         Posts entity = postsRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + id));
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id=" + id));
 
         return new PostsResponseDto(entity);
     }
@@ -75,7 +76,7 @@ public class PostService {
         return posts.stream()
                 .map(PostsListResponseDto::new)
                 .collect(Collectors.toList());
-    }
+    } //스터디 title 로 검색하기
 
 
     @Transactional(readOnly = true)
