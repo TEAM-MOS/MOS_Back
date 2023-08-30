@@ -19,7 +19,7 @@ public class UserInfo {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Long groupID) {
         this.id = id;
     }
 

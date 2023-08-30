@@ -21,15 +21,14 @@ public class PostService {
 
     @Transactional
     public  Long save(PostSaveRequestDto requestDto){
-        return postsRepository.save(requestDto.toEntity()).getId();
+        return postsRepository.save(requestDto.toEntity()).getGroupID();
     }
-
-
+    //스터디를 생성하고 아이디를 반환.
 
     @Transactional
-    public void update(Long id, PostsUpdateRequestDto requestDto) {
-        Posts posts = postsRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(id + " NOT FOUND"));
+    public void update(Long groupID, PostsUpdateRequestDto requestDto) {
+        Posts posts = postsRepository.findById(groupID)
+                .orElseThrow(() -> new IllegalArgumentException(groupID + " NOT FOUND"));
 
         posts.update(requestDto.getTitle(), requestDto.getGoal(), requestDto.getRules(),
                 requestDto.getQuest(), requestDto.getTend(), requestDto.getCategory(),
@@ -40,9 +39,9 @@ public class PostService {
 
 
     @Transactional(readOnly = true)
-    public PostsResponseDto findById(Long id) {
-        Posts entity = postsRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id=" + id));
+    public PostsResponseDto findById(Long groupID) {
+        Posts entity = postsRepository.findById(groupID)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id=" + groupID));
 
         return new PostsResponseDto(entity);
     }
@@ -58,9 +57,9 @@ public class PostService {
     }
 
     @Transactional
-    public  void delete (Long id){
-        Posts posts = postsRepository.findById(id)
-                .orElseThrow(()-> new IllegalArgumentException("해당 게시물이 없습니다. id =" + id));
+    public  void delete (Long groupID){
+        Posts posts = postsRepository.findById(groupID)
+                .orElseThrow(()-> new IllegalArgumentException("해당 게시물이 없습니다. id =" + groupID));
 
         postsRepository.delete(posts); //JpaRepository 에서 이미 delete 메소드를 지원하고 있으므로 활용
         //엔티티를 파라미터로 살제할 수도 있고, deleteById 메서드를 이용하면 id로 삭제할 수 있음
@@ -76,7 +75,7 @@ public class PostService {
         return posts.stream()
                 .map(PostsListResponseDto::new)
                 .collect(Collectors.toList());
-    } //스터디 title 로 검색하기
+    } //스터디 title 로 검색
 
 
     @Transactional(readOnly = true)

@@ -1,9 +1,8 @@
 package mos.mosback.domain.posts;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import mos.mosback.domain.posts.BaseTimeEntity;
+
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +19,7 @@ public class Posts extends BaseTimeEntity {
     @Id //해당 테이블 PK 필드 나타냄
     @GeneratedValue(strategy = GenerationType.IDENTITY) //PK 생성규칙 나타냄 스프링 2.0은
     //GenerationType.IDENTITY 옵션을 추가해야만 auto_increment가 된다.
-    private Long id;
+    private Long groupID;
     //웬만하면 Entity의 Pk는 long타입의 auto_increment 쓰는게 좋음
     @Column(length = 500, nullable = false)
     private String title;

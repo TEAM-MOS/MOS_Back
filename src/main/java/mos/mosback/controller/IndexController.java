@@ -29,10 +29,10 @@ public class IndexController {
     }
 
     @GetMapping("posts/update/{id}")
-    public  String Update(@PathVariable Long id,
+    public  String Update(@PathVariable Long groupID,
                           Model model){
 
-        PostsResponseDto dto = postService.findById(id);
+        PostsResponseDto dto = postService.findById(groupID);
         model.addAttribute("post",dto);
 
         return "posts-update";

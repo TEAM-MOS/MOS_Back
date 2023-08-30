@@ -10,7 +10,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class PostsUpdateRequestDto {
 
-    Long id;
+    Long groupID;
     private String title;
     private String goal; //스터디 목표
     private String rules; //스터디 규칙

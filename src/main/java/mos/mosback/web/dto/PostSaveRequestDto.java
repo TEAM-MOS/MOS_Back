@@ -10,7 +10,7 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 public class PostSaveRequestDto {
-    Long id;
+    Long groupID;
     private String title;
     private String goal; //스터디 목표
     private String rules; //스터디 규칙

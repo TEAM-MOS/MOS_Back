@@ -29,8 +29,8 @@ public class PostsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostsResponseDto> FindByID (@PathVariable Long id) {
-        PostsResponseDto post = postService.findById(id);
+    public ResponseEntity<PostsResponseDto> FindByID (@PathVariable Long groupID) {
+        PostsResponseDto post = postService.findById(groupID);
         return new ResponseEntity<>(post, HttpStatus.OK);
     }
 
@@ -41,20 +41,20 @@ public class PostsController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updatePost(@PathVariable Long id, @RequestBody PostsUpdateRequestDto requestDto) {
+    public ResponseEntity<String> updatePost(@PathVariable Long groupID, @RequestBody PostsUpdateRequestDto requestDto) {
         try {
-            postService.update(id, requestDto);
+            postService.update(groupID, requestDto);
             return ResponseEntity.ok("updated.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("NOT FOUND"+"'"+id+"'");
+                    .body("NOT FOUND"+"'"+groupID+"'");
 
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
-        postService.delete(id);
+    public ResponseEntity<Void> deletePost(@PathVariable Long groupID) {
+        postService.delete(groupID);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
