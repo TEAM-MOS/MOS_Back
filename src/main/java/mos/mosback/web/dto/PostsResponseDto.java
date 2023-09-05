@@ -1,10 +1,9 @@
 package mos.mosback.web.dto;
-
 import lombok.Getter;
 import mos.mosback.domain.posts.Posts;
-
+import mos.mosback.domain.posts.StudyDays;
 import java.util.Date;
-
+import java.util.Set;
 
 @Getter
 public class PostsResponseDto {
@@ -15,7 +14,7 @@ public class PostsResponseDto {
     private String quest; //생성 시 질문
     private String tend; //유저 스터디 성향
     private String category; // 스터디 카테고리
-    private String date; //스터디 요일
+    private Set<StudyDays> studyDays; //스터디 요일
     private String intro; //스터디 소개
     private int num; //멤버수
     private String mod; //스터디 분위기
@@ -30,9 +29,8 @@ public class PostsResponseDto {
         this.goal = entity.getGoal();
         this.rules = entity.getRules();
         this.quest =entity.getQuest();
-        this.tend =entity.getTend();
         this.category =entity.getCategory();
-        this.date =entity.getDate();
+        this.studyDays =entity.getStudyDays();
         this.intro =entity.getIntro();
         this.num = entity.getNum();
         this.mod = entity.getMod();

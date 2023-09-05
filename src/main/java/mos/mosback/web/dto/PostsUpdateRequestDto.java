@@ -3,7 +3,8 @@ package mos.mosback.web.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
+import mos.mosback.domain.posts.StudyDays;
+import java.util.Set;
 import java.util.Date;
 
 @Getter
@@ -15,9 +16,8 @@ public class PostsUpdateRequestDto {
     private String goal; //스터디 목표
     private String rules; //스터디 규칙
     private String quest; //생성 시 질문
-    private String tend; //유저 스터디 성향
     private String category; // 스터디 카테고리
-    private String date; //스터디 요일
+    private Set<StudyDays> studyDays; //스터디 요일
     private String intro; //스터디 소개
     private int num; //멤버수
     private String mod; //스터디 분위기
@@ -28,16 +28,15 @@ public class PostsUpdateRequestDto {
     private Date rcend; //모집 마감 날짜
 
     @Builder
-    public PostsUpdateRequestDto(String title, String goal, String rules, String quest, String tend,
-                                 String category, String date, String intro, int num, String mod,
+    public PostsUpdateRequestDto(String title, String goal, String rules, String quest,
+                                 String category,Set<StudyDays> studyDays, String intro, int num, String mod,
                                  boolean onOff, Date startDate, Date endDate, Date rcstart, Date rcend){
         this.title = title;
         this.goal = goal;
         this.rules = rules;
         this.quest = quest;
-        this.tend = tend;
         this.category = category;
-        this.date = date;
+        this.studyDays = studyDays;
         this.intro = intro;
         this.mod = mod;
         this.num = num;
@@ -47,4 +46,5 @@ public class PostsUpdateRequestDto {
         this.rcstart = rcstart;
         this.rcend = rcend;
     }
+
 }

@@ -3,6 +3,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mos.mosback.domain.posts.Posts;
+import mos.mosback.domain.posts.StudyDays;
+import java.util.Set;
 
 import javax.persistence.Column;
 import java.util.Date;
@@ -15,9 +17,8 @@ public class PostSaveRequestDto {
     private String goal; //스터디 목표
     private String rules; //스터디 규칙
     private String quest; //생성 시 질문
-    private String tend; //유저 스터디 성향
+    private Set<StudyDays> studyDays;
     private String category; // 스터디 카테고리
-    private String date; //스터디 요일
     private String intro; //스터디 소개
     private int num; //멤버수
     private String mod; //스터디 분위기
@@ -30,16 +31,15 @@ public class PostSaveRequestDto {
 
 
     @Builder
-    public PostSaveRequestDto(String title, String goal, String rules, String quest, String tend,
-                              String category, String date, String intro, int num, String mod,
+    public PostSaveRequestDto(String title, String goal, String rules, String quest,Set<StudyDays> studyDays,
+                              String category, String intro, int num, String mod,
                               boolean onOff, Date startDate, Date endDate, Date rcstart, Date rcend) {
         this.title = title;
         this.goal = goal;
         this.rules = rules;
         this.quest = quest;
-        this.tend = tend;
+        this.studyDays = studyDays;
         this.category = category;
-        this.date = date;
         this.intro = intro;
         this.mod = mod;
         this.num = num;
@@ -56,13 +56,11 @@ public class PostSaveRequestDto {
                 .goal(goal)
                 .rules(rules)
                 .quest(quest)
-                .tend(tend)
+                .studyDays(studyDays)
                 .category(category)
-                .date(date)
                 .intro(intro)
                 .mod(mod)
                 .num(num)
-                .date(date)
                 .intro(intro)
                 .mod(mod)
                 .num(num)

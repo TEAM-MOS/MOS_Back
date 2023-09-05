@@ -31,10 +31,10 @@ public class PostService {
                 .orElseThrow(() -> new IllegalArgumentException(groupID + " NOT FOUND"));
 
         posts.update(requestDto.getTitle(), requestDto.getGoal(), requestDto.getRules(),
-                requestDto.getQuest(), requestDto.getTend(), requestDto.getCategory(),
-                requestDto.getDate(), requestDto.getIntro(), requestDto.getNum(),
-                requestDto.getMod(), requestDto.isOnOff(), requestDto.getStartDate(),
-                requestDto.getEndDate(), requestDto.getRcstart(), requestDto.getRcend());
+                requestDto.getQuest(),requestDto.getStudyDays(), requestDto.getCategory(),
+                requestDto.getIntro(), requestDto.getNum(),requestDto.getMod(),
+                requestDto.isOnOff(),requestDto.getStartDate(),requestDto.getEndDate(),
+                requestDto.getRcstart(),requestDto.getRcend());
     }  //postsRepository를 사용하여 데이터베이스에서 주어진 id에 해당하는 게시물을 찾기
 
 
