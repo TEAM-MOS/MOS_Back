@@ -21,11 +21,9 @@ public class PostsUpdateRequestDto {
     private String intro; //스터디 소개
     private int num; //멤버수
     private String mod; //스터디 분위기
-    private int click;// 클릭횟수 (인기순 조회)
     private boolean onOff; //진행방식 (온오프)
     private Date startDate; //스터디 시작 날짜
     private Date endDate; //스터디 끝나는 날짜
-    private Date createDate; // 스터디룸 생성 날짜
     private Date rcstart; // 모집 시작 날짜
     private Date rcend; //모집 마감 날짜
 

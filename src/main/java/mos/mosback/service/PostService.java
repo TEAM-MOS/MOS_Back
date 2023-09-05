@@ -86,4 +86,12 @@ public class PostService {
                 .map(PostsListResponseDto::new)
                 .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public List<PostsListResponseDto> findGroupRecruitmentPeriod() {
+        List<Posts> RecruitmentPeriod = postsRepository.findGroupInRecruitmentPeriod();
+        return RecruitmentPeriod.stream()
+                .map(PostsListResponseDto::new)
+                .collect(Collectors.toList());
+    } //모집기간인 스터디 조회
 }

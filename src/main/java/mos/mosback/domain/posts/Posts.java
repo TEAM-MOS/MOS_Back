@@ -33,17 +33,14 @@ public class Posts extends BaseTimeEntity {
     private String date; //스터디 요일
     private String intro; //스터디 소개
 
-    @Column(columnDefinition = "INT", nullable = false)
 
     private int num; //멤버수
     private String mod; //스터디 분위기
     private int click;// 클릭횟수 (인기순 조회)
 
-    @Column(columnDefinition = "BOOLEAN", nullable = false)
 
     private boolean onOff; //진행방식 (온오프)
 
-    @Column(columnDefinition = "DATE", nullable = false)
 
     private Date startDate; //스터디 시작 날짜
     private Date endDate; //스터디 끝나는 날짜

@@ -15,7 +15,13 @@ public interface PostsRepository extends JpaRepository<Posts, Long> {
 
     List<Posts> findByTitleContaining(String keyword); //키워드를 통해 스터디그룹을 검색 할 수 있다
 
-    @Query(value = "SELECT * FROM posts ORDER BY click_count DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM posts ORDER BY click DESC", nativeQuery = true)
     List<Posts> findPopularPosts(); //클릭수로 인기순 나열
+
+
+    @Query("SELECT p FROM Posts p WHERE p.rcstart <= :currentDate AND p.rcend >= :currentDate")
+    List<Posts> findGroupInRecruitmentPeriod(); //모집중인 스터디 조회가능
+
+
 }
 //Posts 클래스로 DB를 접근하기 위한 클래스

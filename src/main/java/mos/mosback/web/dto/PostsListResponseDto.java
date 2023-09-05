@@ -11,7 +11,6 @@ public class PostsListResponseDto {
     private String title;
     private String goal; //스터디 목표
     private String rules; //스터디 규칙
-    private String quest; //생성 시 질문
     private String tend; //유저 스터디 성향
     private String category; // 스터디 카테고리
     private String date; //스터디 요일
@@ -32,14 +31,12 @@ public class PostsListResponseDto {
         this.title = entity.getTitle();
         this.goal = entity.getGoal();
         this.rules = entity.getRules();
-        this.quest =entity.getQuest();
         this.tend =entity.getTend();
         this.category =entity.getCategory();
         this.date =entity.getDate();
         this.intro =entity.getIntro();
         this.num = entity.getNum();
         this.mod = entity.getMod();
-        this.click = entity.getClick();
         this.onOff = entity.isOnOff();
         this.startDate = entity.getStartDate();
         this.endDate = entity.getEndDate();
