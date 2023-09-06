@@ -1,4 +1,4 @@
-package mos.mosback.entity;
+package mos.mosback.data.entity;
 
 
 import javax.persistence.*;

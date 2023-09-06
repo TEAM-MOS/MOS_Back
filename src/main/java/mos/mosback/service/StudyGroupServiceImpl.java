@@ -1,7 +1,7 @@
 package mos.mosback.service;
 
 
-import mos.mosback.entity.StudyGroup;
+import mos.mosback.data.entity.StudyGroup;
 import mos.mosback.repository.StudyGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

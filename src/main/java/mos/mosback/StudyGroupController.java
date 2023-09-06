@@ -2,7 +2,7 @@ package mos.mosback;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import mos.mosback.web.dto.StudyGroupRequest;
-import mos.mosback.entity.StudyGroup;
+import mos.mosback.data.entity.StudyGroup;
 import mos.mosback.service.StudyGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;

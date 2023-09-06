@@ -1,11 +1,13 @@
 package mos.mosback.service;
 
 
+import mos.mosback.data.entity.StudyGroup;
+
 import java.util.List;
 
 public interface StudyGroupService {
 
-    void createStudyGroup(mos.mosback.entity.StudyGroup studyGroup);
+    void createStudyGroup(StudyGroup studyGroup);
 
-    List<mos.mosback.entity.StudyGroup> getAllStudyGroups();
+    List<StudyGroup> getAllStudyGroups();
 }
