@@ -16,8 +16,5 @@ public abstract class BaseTimeEntity {
     @CreatedDate //Entity가 생성되어 저장될때 시간이 자동저장
     private LocalDateTime createdDate;
 
-    @LastModifiedDate //조회한 Entity의 값을 변경할 때 시간이 자동저장 (이 기능은 굳이 필요 없을지도 )
-    private LocalDateTime modifiedDate;
-
 }
 //모든 Entity의 상위 클래스가 되어 엔티티들의 생성시간 변경시간을 자동으로 관리하는 클래스

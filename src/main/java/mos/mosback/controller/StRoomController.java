@@ -1,14 +1,15 @@
 package mos.mosback.controller;
-import mos.mosback.web.dto.StRoomSaveRequestDto;
-import mos.mosback.web.dto.StRoomListResponseDto;
-import mos.mosback.web.dto.StRoomUpdateRequestDto;
+import mos.mosback.web.dto.*;
 import mos.mosback.service.StRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/studyRoom") //URL 패턴
@@ -22,59 +23,98 @@ public class StRoomController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> saveroom(@RequestBody StRoomSaveRequestDto requestDto) {
+    public ResponseEntity<String> saveRoom(@RequestBody StRoomSaveRequestDto requestDto) {
         Long stroomId = stRoomService.save(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body("created successfully. ID: " + stroomId);
     }
 
     /**
      * 스터디 방 정보 가져오기
-     * @param roomID
+     * @param //roomId
      * @return
      */
-    @GetMapping("/get/{roomID}")
-    public ResponseEntity<StRoomUpdateRequestDto> getRoom(@PathVariable Long roomID) {
-        StRoomUpdateRequestDto stroom = stRoomService.findById(roomID);
+
+    @GetMapping("get/{roomId}")
+    public ResponseEntity<StRoomResponseDto> FindByID (@PathVariable Long roomId) {
+        StRoomResponseDto stroom = stRoomService.findById(roomId);
         return new ResponseEntity<>(stroom, HttpStatus.OK);
     }
-
     @GetMapping("/search")
-    public ResponseEntity<List<StRoomListResponseDto>> searchrooms(@RequestParam String keyword) {
-        List<StRoomListResponseDto> strooms = stRoomService.findByTitleContaining(keyword);
-        return new ResponseEntity<>(strooms, HttpStatus.OK);
-    }
-
-    @PutMapping("/update/{roomID}")
-    public ResponseEntity<String> updateroom(@PathVariable Long roomID, @RequestBody StRoomUpdateRequestDto requestDto) {
+    public ResponseEntity<?> searchRoom(@RequestParam String keyword) {
         try {
-            stRoomService.update(roomID, requestDto);
+            List<Home_RoomResponseDto> strooms = stRoomService.findByTitleContaining(keyword);
+            return new ResponseEntity<>(strooms, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("status", "404");
+            response.put("message", "NOT FOUND " + keyword);
+            response.put("success", "false");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+    @PutMapping("/update/{roomId}")
+    public ResponseEntity<String> UpdateRoom(@PathVariable Long roomId, @RequestBody StRoomUpdateRequestDto requestDto) {
+        try {
+            stRoomService.update(roomId, requestDto);
             return ResponseEntity.ok("updated.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("NOT FOUND"+"'"+roomID+"'");
-
+                    .body("NOT FOUND "+"'"+roomId+"'");
         }
     }
 
-    @DeleteMapping("/delete/{roomID}")
-    public ResponseEntity<Void> deleteroom(@PathVariable Long roomID) {
-        stRoomService.delete(roomID);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @DeleteMapping("/delete/{roomId}")
+    public ResponseEntity<Map<String, Object>> deleteRoom(@PathVariable Long roomId) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            stRoomService.delete(roomId);
+            response.put("status", 200);
+            response.put("success", true);
+            response.put("message", "deleted"+"'"+roomId+"'");
+            return ResponseEntity.ok(response);
+        } catch (EntityNotFoundException ex) {
+            response.put("status", 404);
+            response.put("success", false);
+            response.put("message", "NOTFOUND"+"'"+roomId+"'");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<StRoomListResponseDto>> getAllrooms() {
-        List<StRoomListResponseDto> strooms = stRoomService.findAllDesc();
-        return new ResponseEntity<>(strooms, HttpStatus.OK);
+    public ResponseEntity<List<Home_RoomResponseDto>> findAllRoomsDesc() {
+        List<Home_RoomResponseDto> rooms = stRoomService.findAllRoomsDesc();
+        return ResponseEntity.ok(rooms);
     }
 
     @GetMapping("/popular")
-    public ResponseEntity<List<StRoomListResponseDto>> getPopularrooms() {
-        List<StRoomListResponseDto> popularrooms = stRoomService.findPopularstrooms();
+    public ResponseEntity<List<StRoomListResponseDto>> getPopularRooms() {
+        List<StRoomListResponseDto> popularrooms = stRoomService.findPopularRoom();
         return new ResponseEntity<>(popularrooms, HttpStatus.OK);
     }
 
+    @GetMapping("/home/studyRoom")
+    public ResponseEntity<List<Home_RoomResponseDto>> findRoomsInHome(){
+        List<Home_RoomResponseDto> roomsInhome = stRoomService.findRoomsInHome();
+        return new ResponseEntity<>(roomsInhome,HttpStatus.OK);
+    }
 
+    @GetMapping("/byCategory/{category}")
+    public ResponseEntity<Map<String, Object>> getStudyRoomsByCategory(@PathVariable String category) {
+        Map<String, Object> response = new HashMap<>();
+        List<Home_RoomResponseDto> studyRooms = stRoomService.findByCategory(category);
+
+        if (studyRooms.isEmpty()) {
+            response.put("status", HttpStatus.NOT_FOUND.value());
+            response.put("success", false);
+            response.put("message", "NOT FOUND: " + category);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
+        response.put("status", HttpStatus.OK.value());
+        response.put("success", true);
+        response.put("studyRooms", studyRooms); // 데이터를 직접 넣음
+        return ResponseEntity.ok(response);
+    }
 }
 //핸들러 메서드 :
 //
@@ -85,4 +125,3 @@ public class StRoomController {
 //deletestroom: 게시물을 삭제하는 엔드포인트.
 //getAllstrooms: 모든 게시물을 조회하는 엔드포인트.
 //getPopularstrooms: 조회순으로 게시물을 조회하는 엔드포인트. (인기순 조회시)
-//getRecruitment : 모집기간인 게시물을 조회하는 엔드포인트.

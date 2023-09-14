@@ -17,9 +17,11 @@ public class StRoomSaveRequestDto {
     private String quest; //생성 시 질문
     private String category; // 스터디 카테고리
     private String intro; //스터디 소개
-    private int num; //멤버수
+    private int maxMember;
     private String mod; //스터디 분위기
     private boolean onOff; //진행방식 (온오프)
+    private String location; //스터디 장소
+    private int online; // 온라인일 경우 1 : 줌 2 : 디코 3: 구글미트 4: 기타
     private Date startDate; //스터디 시작 날짜
     private Date endDate; //스터디 끝나는 날짜
     private List<StudyDaysEntity> studyDayEntities;
@@ -27,8 +29,8 @@ public class StRoomSaveRequestDto {
 
     @Builder
     public StRoomSaveRequestDto(String title, String goal, String rules, String quest, String category,
-                                String intro, int num, String mod, boolean onOff, Date startDate,
-                                Date endDate,List<StudyDaysEntity> studyDayEntities) {
+                                String intro, int maxMember, String mod, boolean onOff,String location,int online,
+                                Date startDate, Date endDate,List<StudyDaysEntity> studyDayEntities) {
         this.title = title;
         this.goal = goal;
         this.rules = rules;
@@ -36,8 +38,10 @@ public class StRoomSaveRequestDto {
         this.category = category;
         this.intro = intro;
         this.mod = mod;
-        this.num = num;
+        this.maxMember = maxMember;
         this.onOff = onOff;
+        this.location = location;
+        this.online = online;
         this.startDate = startDate;
         this.endDate = endDate;
         this.studyDayEntities = studyDayEntities;
@@ -53,11 +57,13 @@ public class StRoomSaveRequestDto {
                 .category(category)
                 .intro(intro)
                 .mod(mod)
-                .num(num)
+                .maxMember(maxMember)
                 .onOff(onOff)
+                .location(location)
+                .online(online)
                 .startDate(startDate)
                 .endDate(endDate)
                 .studyDayEntities(studyDayEntities)
                 .build();
     }
-}
+} //스터디 수정 시 생성 필드에 들어가는 내용수정

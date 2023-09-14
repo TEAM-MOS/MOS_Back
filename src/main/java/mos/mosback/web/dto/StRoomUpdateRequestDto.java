@@ -1,7 +1,7 @@
 package mos.mosback.web.dto;
-
+import lombok.Builder;
 import lombok.Getter;
-import mos.mosback.domain.posts.StRoomEntity;
+import lombok.NoArgsConstructor;
 import mos.mosback.domain.posts.StudyDaysEntity;
 
 import java.util.Date;
@@ -9,40 +9,44 @@ import java.util.List;
 
 
 @Getter
+@NoArgsConstructor
 public class StRoomUpdateRequestDto {
-
+    
     Long roomID;
     private String title;
     private String goal; //스터디 목표
     private String rules; //스터디 규칙
-    private String quest;
+    private String quest; //생성 시 질문
     private String category; // 스터디 카테고리
     private String intro; //스터디 소개
-    private int num; //멤버수
+    private int maxMember; // 모집 멤버수
     private String mod; //스터디 분위기
-    private int click;// 클릭횟수 (인기순 조회)
     private boolean onOff; //진행방식 (온오프)
+    private String location; //스터디 장소
+    private int online; // 온라인일 경우 1 : 줌 2 : 디코 3: 구글미트 4: 기타
     private Date startDate; //스터디 시작 날짜
     private Date endDate; //스터디 끝나는 날짜
-    private Date createDate; // 스터디룸 생성 날짜
     private List<StudyDaysEntity> studyDayEntities;
 
 
-    public StRoomUpdateRequestDto(StRoomEntity entity) {
-
-        this.title = entity.getTitle();
-        this.goal = entity.getGoal();
-        this.rules = entity.getRules();
-        this.quest =entity.getQuest();
-        this.category =entity.getCategory();
-        this.intro =entity.getIntro();
-        this.num = entity.getNum();
-        this.mod = entity.getMod();
-        this.onOff = entity.isOnOff();
-        this.startDate = entity.getStartDate();
-        this.endDate = entity.getEndDate();
-        this.studyDayEntities =entity.getStudyDayEntities();
-
+    @Builder
+    public StRoomUpdateRequestDto(String title, String goal, String rules, String quest, String category,
+                                  String intro, int maxMember ,String mod, boolean onOff,String location,int online,
+                                  Date startDate, Date endDate, List<StudyDaysEntity> studyDayEntities) {
+        this.title = title;
+        this.goal = goal;
+        this.rules = rules;
+        this.quest = quest;
+        this.category = category;
+        this.intro = intro;
+        this.mod = mod;
+        this.maxMember = maxMember;
+        this.onOff = onOff;
+        this.location = location;
+        this.online = online;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.studyDayEntities = studyDayEntities;
 
     }
 

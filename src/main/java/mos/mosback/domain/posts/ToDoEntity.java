@@ -1,6 +1,5 @@
 package mos.mosback.domain.posts;
 import lombok.Builder;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,17 +11,16 @@ import javax.persistence.Id;
 
 @Getter // 롬복 어노테이션
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity //JPA 어노테이션 (주요어노테이션) : 테이블과 링크될 클래스
 public class ToDoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long TodoId;
+    private Long TodoIdx;
 
-    @Column(nullable = false)
+    @Column
     private String todoContent;
 
-    @Column(nullable = false)
+    @Column
     private boolean completed;
     // TodoLists 상태 ( 완료 - true, 미완료 - false)
 
