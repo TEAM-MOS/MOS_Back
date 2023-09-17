@@ -118,8 +118,8 @@ public class StRoomController {
 
     @PostMapping("/memberjoin")
     public ResponseEntity<String> memberJoin(@RequestBody StRoomMemberJoinRequestDto requestDto) {
-        Long stroomId = stRoomService.memberJoin(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("created successfully. ID: " + stroomId);
+        stRoomService.memberJoin(requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body("created successfully.");
     }
 
 
