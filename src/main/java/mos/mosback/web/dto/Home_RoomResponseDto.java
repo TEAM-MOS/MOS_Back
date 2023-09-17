@@ -25,5 +25,6 @@ public class Home_RoomResponseDto {
         this.category = entity.getCategory();
         this.memberNum = entity.getMemberNum();
         this.maxMember = entity.getMaxMember();
+
     }
 }

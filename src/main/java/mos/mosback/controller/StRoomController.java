@@ -115,6 +115,14 @@ public class StRoomController {
         response.put("studyRooms", studyRooms); // 데이터를 직접 넣음
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/memberjoin")
+    public ResponseEntity<String> memberJoin(@RequestBody StRoomMemberJoinRequestDto requestDto) {
+        Long stroomId = stRoomService.memberJoin(requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body("created successfully. ID: " + stroomId);
+    }
+
+
 }
 //핸들러 메서드 :
 //
@@ -125,3 +133,5 @@ public class StRoomController {
 //deletestroom: 게시물을 삭제하는 엔드포인트.
 //getAllstrooms: 모든 게시물을 조회하는 엔드포인트.
 //getPopularstrooms: 조회순으로 게시물을 조회하는 엔드포인트. (인기순 조회시)
+//memberjoin - 스터디 가입 API
+//https://blog.pumpkin-raccoon.com/115#:~:text=1%201.%20%EB%B3%B5%EC%88%98%20%3E%20%EB%8B%A8%EC%88%98%20REST%20API%EC%97%90%EC%84%9C%EB%8A%94%20post%2C,%EC%BB%AC%EB%A0%89%EC%85%98%20%ED%95%84%ED%84%B0%EB%A7%81%3A%20URL%20%EC%BF%BC%EB%A6%AC%20%3E%20%EC%83%88%EB%A1%9C%EC%9A%B4%20API%20

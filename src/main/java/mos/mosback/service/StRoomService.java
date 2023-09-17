@@ -1,7 +1,10 @@
 package mos.mosback.service;
 import lombok.RequiredArgsConstructor;
+import mos.mosback.domain.posts.MemberStatus;
 import mos.mosback.domain.posts.StRoomEntity;
+import mos.mosback.domain.posts.StudyMemberEntity;
 import mos.mosback.repository.StRoomRepository;
+import mos.mosback.repository.StudyMemberRepository;
 import mos.mosback.web.dto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +16,7 @@ import java.util.stream.Collectors;
 @Service
 public class StRoomService {
     private final StRoomRepository stRoomRepository;
+    private final StudyMemberRepository studyMemberRepository;
 
     @Transactional
     public  Long save(StRoomSaveRequestDto requestDto){
@@ -81,5 +85,15 @@ public class StRoomService {
 
     public List<Home_RoomResponseDto> findByCategory(String category) {
         return stRoomRepository.findByCategory(category);
+    }
+
+    public Long memberJoin(StRoomMemberJoinRequestDto requestDto) {
+        StudyMemberEntity studyMember = new StudyMemberEntity();
+        studyMember.setRoomID(requestDto.getRoomID());
+        studyMember.setStatus(MemberStatus.Waiting);
+        studyMember.setAnswer(requestDto.getAnswer());
+        studyMember.setMemberId(); //세션값-멤버아이디 넣어주기
+        studyMemberRepository.save(studyMember);
+
     }
 }
