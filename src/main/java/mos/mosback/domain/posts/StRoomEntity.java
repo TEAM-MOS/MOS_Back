@@ -41,13 +41,9 @@ public class StRoomEntity extends BaseTimeEntity {
     private Date endDate; //스터디 끝나는 날짜
     private Date deadline ; //스터디 모집 마감날짜
 
-    @ManyToOne
-    @JoinColumn(name = "leader_id") // 리더와의 관계를 설정할 외래 키 컬럼
-    private User leader;
-
-    @ManyToOne
+   /* @ManyToOne
     @JoinColumn(name = "User_nick")
-    private User nickname= new User().getStRoom().getNickname();
+    */
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<StudyDaysEntity> studyDayEntities = new ArrayList<>();
@@ -75,8 +71,7 @@ public class StRoomEntity extends BaseTimeEntity {
         this.endDate = endDate;
         this.deadline = deadline;
         this.studyDayEntities = studyDayEntities;
-        this.leader = leader;
-        this.nickname= nickname;
+
     }
 
 
@@ -100,7 +95,7 @@ public class StRoomEntity extends BaseTimeEntity {
         this.startDate = startDate;
         this.endDate = endDate;
         this.studyDayEntities = studyDayEntities;
-        this.leader = leader;
+
     }
 
 }
