@@ -39,11 +39,9 @@ public class StRoomEntity extends BaseTimeEntity {
     private int online; //온라인
     private Date startDate; //스터디 시작 날짜
     private Date endDate; //스터디 끝나는 날짜
-    private Date deadline ; //스터디 모집 마감날짜
+    private boolean recruiting; //모집여부
 
-/*    @ManyToOne
-    @JoinColumn(name = "NICKNAME")
-    private User nickname ;*/
+
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<StudyDaysEntity> studyDayEntities = new ArrayList<>();
@@ -52,8 +50,8 @@ public class StRoomEntity extends BaseTimeEntity {
     public StRoomEntity(String title, String goal, String rules, String quest,
                         String category, String intro, int memberNum, int maxMember
                         ,String mod, boolean onOff, String location,int online,
-                        Date startDate, Date endDate, Date deadline ,
-                        List<StudyDaysEntity> studyDayEntities,User leader,User nickname) {
+                        Date startDate, Date endDate, List<StudyDaysEntity> studyDayEntities,
+                        User leader,User nickname) {
 
         this.title = title;
         this.goal = goal;
@@ -69,7 +67,6 @@ public class StRoomEntity extends BaseTimeEntity {
         this.online = online;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.deadline = deadline;
         this.studyDayEntities = studyDayEntities;
 
     }

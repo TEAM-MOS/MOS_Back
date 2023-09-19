@@ -23,7 +23,6 @@ public class StRoomListResponseDto {
     private boolean onOff; //진행방식 (온오프)
     private Date startDate; //스터디 시작 날짜
     private Date endDate; //스터디 끝나는 날짜
-    private Date deadline;
     private String location;
     private int online; //온라인
 

@@ -17,4 +17,4 @@ public abstract class BaseTimeEntity {
     private LocalDateTime createdDate;
 
 }
-//모든 Entity의 상위 클래스가 되어 엔티티들의 생성시간 변경시간을 자동으로 관리하는 클래스
+//모든 Entity의 상위 클래스가 되어 엔티티들의 생성시간을 자동으로 관리하는 클래스

@@ -1,12 +1,15 @@
 package mos.mosback.controller;
+import mos.mosback.domain.posts.StRoomEntity;
 import mos.mosback.web.dto.*;
 import mos.mosback.service.StRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,15 +126,35 @@ public class StRoomController {
     }
 
 
+    @GetMapping("/recruiting")
+    public ResponseEntity<?> getRecruitingStudies() {
+        List<Home_RoomResponseDto> recruitingStudies = stRoomService.getRecruitingStudies();
+
+        if (!recruitingStudies.isEmpty()) {
+            return ResponseEntity.ok(recruitingStudies);
+        } else {
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", HttpStatus.NOT_FOUND.value());
+            response.put("success", false);
+            response.put("message", "NOT FOUND: recruiting studyRoom ");
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+
+
 }
 //핸들러 메서드 :
 //
-//create: 새 게시물을 생성하는 엔드포인트.
-//getstroom: 특정 roomID에 해당하는 게시물을 조회하는 엔드포인트.( 스터디그룹 조회 )
-//searchstrooms: 키워드가 포함된 게시물을 검색하는 엔드포인트.
-//updatestroom: 게시물을 업데이트하는 엔드포인트.
-//deletestroom: 게시물을 삭제하는 엔드포인트.
-//getAllstrooms: 모든 게시물을 조회하는 엔드포인트.
-//getPopularstrooms: 조회순으로 게시물을 조회하는 엔드포인트. (인기순 조회시)
+//create: 새 게시물을 생성
+///MyStudy/{roomId}: 특정 roomID에 해당하는 게시물을 조회( 스터디그룹 -마이스터디화면 조회 )
+//search: 제목에 키워드가 포함된 게시물을 검색하는 엔드포인트.
+///update/{roomId}: 게시물 수정
+///(Delete) {roomId}: 게시물을 삭제
+//getPopularstrooms: 조회순으로 게시물을 조회(인기순 조회시)
+//all: 전체 스터디 조회
 //memberjoin - 스터디 가입 API
+///byCategory/{category} : 카테고리별로 조회하는 엔프포인트
 //https://blog.pumpkin-raccoon.com/115#:~:text=1%201.%20%EB%B3%B5%EC%88%98%20%3E%20%EB%8B%A8%EC%88%98%20REST%20API%EC%97%90%EC%84%9C%EB%8A%94%20post%2C,%EC%BB%AC%EB%A0%89%EC%85%98%20%ED%95%84%ED%84%B0%EB%A7%81%3A%20URL%20%EC%BF%BC%EB%A6%AC%20%3E%20%EC%83%88%EB%A1%9C%EC%9A%B4%20API%20
+///recruiting : 모집중인 게시물을 조회하는 엔드포인트.
+//

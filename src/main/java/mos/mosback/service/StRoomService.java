@@ -9,7 +9,7 @@ import mos.mosback.repository.StudyMemberRepository;
 import mos.mosback.web.dto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -101,5 +101,12 @@ public class StRoomService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public List<Home_RoomResponseDto> getRecruitingStudies() {
+
+        LocalDateTime now = LocalDateTime.now();
+        List<Home_RoomResponseDto> recruitingStudies = stRoomRepository.findRecruitingStudies();
+
+        return recruitingStudies;
     }
 }
