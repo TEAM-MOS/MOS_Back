@@ -1,7 +1,12 @@
 package mos.mosback.web.dto;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import mos.mosback.domain.posts.StRoomEntity;
 import lombok.Getter;
 
+@Setter
+@Getter
+@NoArgsConstructor
 public class QuestionDto {
     private String question;
 

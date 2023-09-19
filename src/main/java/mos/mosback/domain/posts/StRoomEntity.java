@@ -41,9 +41,9 @@ public class StRoomEntity extends BaseTimeEntity {
     private Date endDate; //스터디 끝나는 날짜
     private Date deadline ; //스터디 모집 마감날짜
 
-   /* @ManyToOne
-    @JoinColumn(name = "User_nick")
-    */
+/*    @ManyToOne
+    @JoinColumn(name = "NICKNAME")
+    private User nickname ;*/
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<StudyDaysEntity> studyDayEntities = new ArrayList<>();

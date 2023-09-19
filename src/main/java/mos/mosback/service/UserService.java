@@ -122,10 +122,13 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public List<Home_nickResponseDto> ReturnNickname()  {
-        List<Home_nickResponseDto> nickname = userRepository.ReturnNickname();
-        return nickname;
+//  @Transactional(readOnly = true)
+//    public List<Home_RoomResponseDto> findRoomsInHome() {
+//
+//        return stRoomRepository.findHomeStRoomField();
+//    }
+
+    public Home_nickResponseDto getNickname() {
+        return userRepository.findNickname();
     }
-
-
 }

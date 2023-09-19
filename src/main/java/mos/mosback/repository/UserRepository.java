@@ -4,6 +4,7 @@ import mos.mosback.data.entity.User;
 import mos.mosback.web.dto.Home_nickResponseDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,9 +26,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
     Optional<User> findById(Long id);
 
-    @Query("SELECT new mos.mosback.web.dto.Home_nickResponseDto(u) FROM User u")
-    List<Home_nickResponseDto> ReturnNickname();
-    @Query("SELECT new mos.mosback.web.dto.Home_nickResponseDto(u) FROM User u")
-    List<Home_nickResponseDto> ReturnNick();
 
+    @Query("SELECT new mos.mosback.web.dto.Home_nickResponseDto(u) FROM User u")
+    Home_nickResponseDto findNickname();
 }

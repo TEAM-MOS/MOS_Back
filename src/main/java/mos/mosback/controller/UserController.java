@@ -78,9 +78,15 @@ public class UserController {
 
         return ResponseEntity.ok("임시 비밀번호 메일 전송, 변경 완료");
     }
-    @GetMapping("get/nick")
-    public ResponseEntity<List<Home_nickResponseDto>> ReturnNickname() {
-        List<Home_nickResponseDto> nickname = userRepository.ReturnNickname();
-        return ResponseEntity.ok(nickname);
+
+    @GetMapping("/nickname")
+    public ResponseEntity<String> findNicknameO() {
+        Home_nickResponseDto nicknameDto = userService.getNickname();
+
+        if (nicknameDto != null) {
+            return ResponseEntity.ok(nicknameDto.getNickname());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

@@ -47,7 +47,6 @@ public class StRoomListResponseDto {
     }
     public StRoomListResponseDto(Home_RoomResponseDto homeRoomResponseDto) {
         this.title = homeRoomResponseDto.getTitle();
-        this.deadline = homeRoomResponseDto.getDeadline();
         this.location = homeRoomResponseDto.getLocation();
         this.online = homeRoomResponseDto.getOnline();
         this.category = homeRoomResponseDto.getCategory();

@@ -93,7 +93,7 @@ public class StRoomService {
     public void memberJoin(StRoomMemberJoinRequestDto requestDto) {
         try {
             StudyMemberEntity studyMember = new StudyMemberEntity();
-            studyMember.setRoomID(requestDto.getRoomID());
+            studyMember.setRoomId(requestDto.getRoomID());
             studyMember.setStatus(MemberStatus.Waiting);
             studyMember.setAnswer(requestDto.getAnswer());
             /*studyMember.setMemberId(); //세션값-멤버아이디 넣어주기*/

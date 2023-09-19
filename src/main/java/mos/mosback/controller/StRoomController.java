@@ -34,7 +34,7 @@ public class StRoomController {
      * @return
      */
 
-    @GetMapping("get/{roomId}")
+    @GetMapping("/MyStudy/{roomId}")
     public ResponseEntity<StRoomResponseDto> FindByID (@PathVariable Long roomId) {
         StRoomResponseDto stroom = stRoomService.findById(roomId);
         return new ResponseEntity<>(stroom, HttpStatus.OK);
@@ -63,7 +63,7 @@ public class StRoomController {
         }
     }
 
-    @DeleteMapping("/delete/{roomId}")
+    @DeleteMapping("/{roomId}")
     public ResponseEntity<Map<String, Object>> deleteRoom(@PathVariable Long roomId) {
         Map<String, Object> response = new HashMap<>();
         try {
