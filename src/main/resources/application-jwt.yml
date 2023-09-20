@@ -1,0 +1,10 @@
+jwt:
+  secretKey: 'dfadfekndchnsdifqld125654x8sdfnjldsncuelsdfs45x321df'
+
+  access:
+    expiration: 360000000 # 1??(60?) (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h))
+    header: Authorization
+
+  refresh:
+    expiration: 1209600000 #  (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h) * 24L(h -> ??) * 14(2?))
+    header: Authorization-refresh
