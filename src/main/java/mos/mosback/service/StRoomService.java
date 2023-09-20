@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import mos.mosback.domain.posts.MemberStatus;
 import mos.mosback.domain.posts.StRoomEntity;
 import mos.mosback.domain.posts.StudyMemberEntity;
+import mos.mosback.login.domain.user.repository.UserRepository;
 import mos.mosback.repository.StRoomRepository;
 import mos.mosback.repository.StudyMemberRepository;
 import mos.mosback.web.dto.*;
@@ -122,4 +123,5 @@ public class StRoomService {
          return responseDTO;
 
     }
+
 }

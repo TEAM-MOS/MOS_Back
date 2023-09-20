@@ -112,6 +112,8 @@ public class StRoomController {
         response.put("studyRooms", studyRooms); // 데이터를 직접 넣음
         return ResponseEntity.ok(response);
     }
+
+
     @GetMapping("/question/{roomId}")
     public ResponseEntity<?> getQuestionById(@PathVariable Long roomId) {
         try {

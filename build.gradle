@@ -60,6 +60,8 @@ dependencies {
 
     implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.3'
 
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'com.auth0:java-jwt:4.2.1'
 
 
     // lombok

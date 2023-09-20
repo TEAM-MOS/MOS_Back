@@ -3,11 +3,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import mos.mosback.data.entity.User;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.*;
 
 @Getter // 롬복 어노테이션
@@ -50,8 +47,8 @@ public class StRoomEntity extends BaseTimeEntity {
     public StRoomEntity(String title, String goal, String rules, String quest,
                         String category, String intro, int memberNum, int maxMember
                         ,String mod, boolean onOff, String location,int online,
-                        Date startDate, Date endDate, List<StudyDaysEntity> studyDayEntities,
-                        User leader,User nickname) {
+                        Date startDate, Date endDate, List<StudyDaysEntity> studyDayEntities
+                       ) {
 
         this.title = title;
         this.goal = goal;

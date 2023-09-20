@@ -1,5 +1,5 @@
 package mos.mosback.web.dto;
-import mos.mosback.data.entity.User;
+import mos.mosback.login.domain.user.User;
 import lombok.Getter;
 
 
