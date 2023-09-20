@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -36,11 +37,13 @@ public class UserController {
 
     //로그인
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO, HttpSession session) {
         if(userService.isEmailDuplicate(loginDTO.getEmail())) {
-            if(userService.comparePassword(loginDTO.getEmail(),loginDTO.getPassword())) {
+            if(userService.comparePassword(loginDTO.getEmail(), loginDTO.getPassword())) {
                 User user = userRepository.findByEmail(loginDTO.getEmail());
                 if(user != null) {
+                    // 세션에 유저 객체를 저장
+                    session.setAttribute("user", user);
                     return ResponseEntity.ok("로그인 성공");
                 }
                 return ResponseEntity.status(400).body("사용자를 찾을 수 없습니다.");

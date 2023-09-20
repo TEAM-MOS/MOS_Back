@@ -27,6 +27,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findById(Long id);
 
 
-    @Query("SELECT new mos.mosback.web.dto.Home_nickResponseDto(u) FROM User u")
+    @Query("SELECT Home_nickResponseDto(u) FROM User u")
     Home_nickResponseDto findNickname();
 }

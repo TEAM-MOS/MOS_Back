@@ -96,7 +96,7 @@ public class StRoomService {
             studyMember.setRoomId(requestDto.getRoomID());
             studyMember.setStatus(MemberStatus.Waiting);
             studyMember.setAnswer(requestDto.getAnswer());
-            /*studyMember.setMemberId(); //세션값-멤버아이디 넣어주기*/
+            /*studyMember.setMemberId(requestDto.getID()); //세션값-멤버아이디 넣어주기*/
             studyMemberRepository.save(studyMember);
         } catch (Exception e) {
             e.printStackTrace();
