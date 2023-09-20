@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 @Getter // 롬복 어노테이션
 @Setter
-@NoArgsConstructor // 롬복 어노테이션 (필수는 아님 그냥 코드 단순화용)
+@NoArgsConstructor
 @Entity
 public class StudyMemberEntity implements Serializable {
 

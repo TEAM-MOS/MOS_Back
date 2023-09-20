@@ -52,7 +52,6 @@ public class UserController {
         }
         return ResponseEntity.status(400).body("사용자를 찾을 수 없습니다.");
     }
-
     //이메일 중복확인
     @GetMapping("/user-emails/{email}/exists")
     public ResponseEntity<Boolean> isEmailDuplicate(@PathVariable String email){

@@ -9,6 +9,8 @@ import mos.mosback.repository.StudyMemberRepository;
 import mos.mosback.web.dto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -96,7 +98,7 @@ public class StRoomService {
             studyMember.setRoomId(requestDto.getRoomID());
             studyMember.setStatus(MemberStatus.Waiting);
             studyMember.setAnswer(requestDto.getAnswer());
-            /*studyMember.setMemberId(requestDto.getID()); //세션값-멤버아이디 넣어주기*/
+           studyMember.setMemberId(studyMember.getMemberId());
             studyMemberRepository.save(studyMember);
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,5 +110,16 @@ public class StRoomService {
         List<Home_RoomResponseDto> recruitingStudies = stRoomRepository.findRecruitingStudies();
 
         return recruitingStudies;
+    }
+
+    public QuestionDto getQuestionById(Long roomId) {
+         StRoomEntity stRoomEntity = stRoomRepository.findById(roomId)
+                 .orElseThrow(() -> new EntityNotFoundException("Room not found"));
+
+         QuestionDto responseDTO = new QuestionDto();
+         responseDTO.setQuestion(stRoomEntity.getQuest());
+
+         return responseDTO;
+
     }
 }
