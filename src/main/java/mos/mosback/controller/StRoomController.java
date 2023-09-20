@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/studyRoom") //URL 패턴
+@RequestMapping("/studyRoom") //URL 패턴
 public class StRoomController {
 
     private final StRoomService stRoomService; // stRoomService를 주입.
