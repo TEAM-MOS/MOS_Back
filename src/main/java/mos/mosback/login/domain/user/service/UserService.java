@@ -4,7 +4,7 @@ import mos.mosback.login.domain.user.Role;
 import mos.mosback.login.domain.user.User;
 import mos.mosback.login.domain.user.dto.FindPWDto;
 import mos.mosback.login.domain.user.dto.MailDto;
-import mos.mosback.login.domain.user.dto.UserInfoDto;
+
 import mos.mosback.login.domain.user.dto.UserSignUpDto;
 import mos.mosback.login.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -75,14 +75,16 @@ public class UserService {
     }
 
     public boolean findPassword(FindPWDto findPWDto) {
-        User user = userRepository.findByEmail(findPWDto.getEmail()).get();
-        if(user.getName().equals(findPWDto.getName())) {
-            return true;
+        Optional<User> userOptional = userRepository.findByEmail(findPWDto.getEmail());
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if (user.getEmail() != null && user.getEmail().equals(findPWDto.getEmail())) {
+                return true;
+            }
         }
-        else{
-            return false;
-        }
+        return false;
     }
+
     //랜덤함수로 임시비밀번호 구문 만들기
     public String getTempPassword(){
         char[] charSet = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
@@ -115,9 +117,6 @@ public class UserService {
         return userRepository.findByEmail(userEmail);
     }
 
-    public void save(UserInfoDto userInfoDto) {
-
-    }
 
 
 }
