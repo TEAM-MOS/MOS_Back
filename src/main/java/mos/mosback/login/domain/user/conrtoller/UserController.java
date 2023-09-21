@@ -2,10 +2,7 @@ package mos.mosback.login.domain.user.conrtoller;
 
 import lombok.RequiredArgsConstructor;
 import mos.mosback.login.domain.user.User;
-import mos.mosback.login.domain.user.dto.FindPWDto;
-import mos.mosback.login.domain.user.dto.MailDto;
-import mos.mosback.login.domain.user.dto.UserInfo;
-import mos.mosback.login.domain.user.dto.UserSignUpDto;
+import mos.mosback.login.domain.user.dto.*;
 import mos.mosback.login.domain.user.repository.UserRepository;
 import mos.mosback.login.domain.user.service.UserService;
 import mos.mosback.login.global.jwt.service.JwtService;
@@ -33,6 +30,12 @@ public class UserController {
         userService.signUp(userSignUpDto);
         return "회원가입 성공";
     }
+
+//    @PostMapping("/profile")
+//    public String  createUser(@RequestBody UserProfileDto userProfileDto) throws Exception{
+//        userService.createUser(userProfileDto);
+//        return "회원정보 등록 성공";
+//    }
 
 
     @GetMapping("/jwt-test")

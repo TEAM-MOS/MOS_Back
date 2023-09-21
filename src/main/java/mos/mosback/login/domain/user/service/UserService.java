@@ -5,12 +5,16 @@ import mos.mosback.login.domain.user.User;
 import mos.mosback.login.domain.user.dto.FindPWDto;
 import mos.mosback.login.domain.user.dto.MailDto;
 
+import mos.mosback.login.domain.user.dto.UserProfileDto;
 import mos.mosback.login.domain.user.dto.UserSignUpDto;
 import mos.mosback.login.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,30 +36,86 @@ public class UserService {
             throw new Exception("이미 존재하는 이메일입니다.");
         }
 
-        if (userRepository.findByNickname(userSignUpDto.getNickname()).isPresent()) {
-            throw new Exception("이미 존재하는 닉네임입니다.");
-        }
+
 
         User user = User.builder()
                 .email(userSignUpDto.getEmail())
                 .password(userSignUpDto.getPassword())
-                .nickname(userSignUpDto.getNickname())
-                .duration(userSignUpDto.getDuration())
-                .message(userSignUpDto.getMessage())
-                .company(userSignUpDto.getCompany())
-                .role(Role.USER)
+                .role(Role.GUEST)
                 .build();
 
         user.passwordEncode(passwordEncoder);
         userRepository.save(user);
     }
 
+
+
+    private User getUserByEmail(String email) throws Exception {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            return optionalUser.get();
+        } else {
+            throw new Exception("현재 로그인한 사용자를 찾을 수 없습니다.");
+        }
+    }
+
+    public void createUser(String currentEmail, UserProfileDto userProfileDto) throws Exception {
+        if (userRepository.findByNickname(userProfileDto.getNickname()).isPresent()) {
+            throw new Exception("이미 존재하는 닉네임입니다.");
+        }
+
+        try {
+            User user = getUserByEmail(currentEmail);
+
+            // 회원 정보 생성
+            user.setNickname(userProfileDto.getNickname());
+            user.setStr_duration(userProfileDto.getStr_duration());
+            user.setEnd_duration(userProfileDto.getEnd_duration());
+            user.setMessage(userProfileDto.getMessage());
+            user.setCompany(userProfileDto.getCompany());
+
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new Exception("회원 정보를 생성하는 동안 오류가 발생했습니다.", e);
+        }
+    }
+
+    public void updateUserProfile(String currentEmail, UserProfileDto userProfileDto) throws Exception {
+        try {
+            User user = getUserByEmail(currentEmail);
+
+            // 회원 정보 업데이트
+            user.setNickname(userProfileDto.getNickname());
+            user.setStr_duration(userProfileDto.getStr_duration());
+            user.setEnd_duration(userProfileDto.getEnd_duration());
+            user.setMessage(userProfileDto.getMessage());
+            user.setCompany(userProfileDto.getCompany());
+
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new Exception("회원 정보를 업데이트하는 동안 오류가 발생했습니다.", e);
+        }
+    }
+
 //    public boolean checkEmailDuplicate(String email){
 //        return userRepository.existsByEmail(email);
 //    }
 
-
-    // 메일 내용을 생성하고 임시 비밀번호로 회원 비밀번호를 변경
+//    public boolean comparePassword(String email,String password) {
+//        User findUser = userRepository.findByEmail(email).get();
+//
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        boolean isMatched = passwordEncoder.matches(password, findUser.getPassword());
+//
+//        if(isMatched) {
+//            return true;
+//        }
+//        else{
+//            return false;
+//        }
+//    }
+//
+// 메일 내용을 생성하고 임시 비밀번호로 회원 비밀번호를 변경
     public MailDto createMailAndChangePassword(String userEmail) {
         String tempPassword = getTempPassword();
         MailDto mailDTO = new MailDto();

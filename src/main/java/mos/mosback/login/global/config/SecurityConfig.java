@@ -20,10 +20,15 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+
+import java.util.Map;
 
 /**
  * 인증은 CustomJsonUsernamePasswordAuthenticationFilter에서 authenticate()로 인증된 사용자로 처리
@@ -62,7 +67,7 @@ public class SecurityConfig {
                 // 아이콘, css, js 관련
                 // 기본 페이지, css, image, js 하위 폴더에 있는 자료들은 모두 접근 가능, h2-console에 접근 가능
                 .antMatchers("/","/css/**","/images/**","/js/**","/favicon.ico","/h2-console/**").permitAll()
-                .antMatchers("/sign-up","/send/email").permitAll() // 회원가입 접근 가능
+                .antMatchers("/sign-up").permitAll() // 회원가입 접근 가능
                 .antMatchers("/user-emails/{email}/exists").permitAll() // 중복 체크 엔드포인트를 예외로 처리
                 .anyRequest().authenticated() // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
                 .and()
@@ -81,9 +86,26 @@ public class SecurityConfig {
         return http.build();
     }
 
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+//    }
+
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        String idForEncode = "bcrypt"; // 기본적으로 BCrypt 알고리즘을 사용합니다.
+//        PasswordEncoder defaultEncoder = new BCryptPasswordEncoder();
+//        PasswordEncoder customEncoder = new Pbkdf2PasswordEncoder(); // 원하는 다른 인코딩 알고리즘을 추가할 수 있습니다.
+//
+//        DelegatingPasswordEncoder delegatingPasswordEncoder = new DelegatingPasswordEncoder(idForEncode, (Map<String, PasswordEncoder>) defaultEncoder);
+//        delegatingPasswordEncoder.setDefaultPasswordEncoderForMatches(customEncoder);
+//
+//        return delegatingPasswordEncoder;
+//    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        return new BCryptPasswordEncoder();
     }
 
     /**
