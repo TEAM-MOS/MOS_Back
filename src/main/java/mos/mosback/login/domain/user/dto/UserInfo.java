@@ -1,6 +1,6 @@
 package mos.mosback.login.domain.user.dto;
 
-public class UserInfoDto {
+public class UserInfo {
 
     private String email;
     private String password;
@@ -22,5 +22,19 @@ public class UserInfoDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    private String nickname;
+
+    public UserInfo(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

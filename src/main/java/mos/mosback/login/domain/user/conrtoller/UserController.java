@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import mos.mosback.login.domain.user.User;
 import mos.mosback.login.domain.user.dto.FindPWDto;
 import mos.mosback.login.domain.user.dto.MailDto;
+import mos.mosback.login.domain.user.dto.UserInfo;
 import mos.mosback.login.domain.user.dto.UserSignUpDto;
 import mos.mosback.login.domain.user.repository.UserRepository;
 import mos.mosback.login.domain.user.service.UserService;
@@ -12,14 +13,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
+//@RequestMapping("/api")
 public class UserController {
 
     private final UserService userService;
     private final UserRepository userRepository;
+
+    private Map<Long, User> userMap = new HashMap<>();
 
     private JwtService jwtService;
     @PostMapping("/sign-up")
@@ -46,6 +52,7 @@ public class UserController {
             return ResponseEntity.ok("사용할 수 있는 이메일입니다.");
         }
     }
+
 
     @Transactional
     @PostMapping("/send/email")
