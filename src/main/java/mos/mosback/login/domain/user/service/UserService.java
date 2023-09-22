@@ -2,6 +2,7 @@ package mos.mosback.login.domain.user.service;
 
 import mos.mosback.login.domain.user.Role;
 import mos.mosback.login.domain.user.User;
+<<<<<<< Updated upstream
 import mos.mosback.login.domain.user.dto.FindPWDto;
 import mos.mosback.login.domain.user.dto.MailDto;
 
@@ -14,6 +15,13 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+=======
+import mos.mosback.login.domain.user.dto.UserSignUpDto;
+import mos.mosback.login.domain.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import mos.mosback.web.dto.Home_nickResponseDto;
+import org.springframework.data.jpa.repository.Query;
+>>>>>>> Stashed changes
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,26 +36,44 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+<<<<<<< Updated upstream
     private final JavaMailSender mailSender;
 
+=======
+>>>>>>> Stashed changes
     public void signUp(UserSignUpDto userSignUpDto) throws Exception {
 
         if (userRepository.findByEmail(userSignUpDto.getEmail()).isPresent()) {
             throw new Exception("이미 존재하는 이메일입니다.");
         }
 
+<<<<<<< Updated upstream
 
+=======
+        if (userRepository.findByNickname(userSignUpDto.getNickname()).isPresent()) {
+            throw new Exception("이미 존재하는 닉네임입니다.");
+        }
+>>>>>>> Stashed changes
 
         User user = User.builder()
                 .email(userSignUpDto.getEmail())
                 .password(userSignUpDto.getPassword())
+<<<<<<< Updated upstream
                 .role(Role.GUEST)
+=======
+                .nickname(userSignUpDto.getNickname())
+                .duration(userSignUpDto.getDuration())
+                .message(userSignUpDto.getMessage())
+                .company(userSignUpDto.getCompany())
+                .role(Role.USER)
+>>>>>>> Stashed changes
                 .build();
 
         user.passwordEncode(passwordEncoder);
         userRepository.save(user);
     }
 
+<<<<<<< Updated upstream
 
 
     private User getUserByEmail(String email) throws Exception {
@@ -106,6 +132,17 @@ public class UserService {
 //
 //        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 //        boolean isMatched = passwordEncoder.matches(password, findUser.getPassword());
+=======
+//    public boolean isEmailDuplicate(String email) {
+//        Optional<User> findUser = userRepository.findByEmail(email);
+//        return findUser != null;
+//    }
+//    public boolean comparePassword(String email,String password) {
+//        Optional<User> findUser = userRepository.findByEmail(email);
+//
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        boolean isMatched = passwordEncoder.matches(password, userRepository.findByPassword());
+>>>>>>> Stashed changes
 //
 //        if(isMatched) {
 //            return true;
@@ -114,6 +151,7 @@ public class UserService {
 //            return false;
 //        }
 //    }
+<<<<<<< Updated upstream
 //
 // 메일 내용을 생성하고 임시 비밀번호로 회원 비밀번호를 변경
     public MailDto createMailAndChangePassword(String userEmail) {
@@ -177,6 +215,8 @@ public class UserService {
         return userRepository.findByEmail(userEmail);
     }
 
+=======
+>>>>>>> Stashed changes
 
 
 }

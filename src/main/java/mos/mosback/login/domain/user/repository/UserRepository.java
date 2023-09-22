@@ -3,7 +3,13 @@ package mos.mosback.login.domain.user.repository;
 
 import mos.mosback.login.domain.user.SocialType;
 import mos.mosback.login.domain.user.User;
+<<<<<<< Updated upstream
 import org.springframework.data.jpa.repository.JpaRepository;
+=======
+import mos.mosback.web.dto.Home_nickResponseDto;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+>>>>>>> Stashed changes
 
 import java.util.Optional;
 
@@ -11,12 +17,19 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
      Optional<User> findByEmail(String email);
 
+<<<<<<< Updated upstream
 
     //Optional<User> findByNickName(String nickname);
 
     Optional<User> findByNickname(String nickname);
 
     boolean existsByEmail(String email);
+=======
+    Optional<User> findByNickname(String nickname);
+
+
+    Optional<User> findById(Long userId);
+>>>>>>> Stashed changes
 
     Optional<User> findByRefreshToken(String refreshToken);
 
@@ -28,4 +41,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * 따라서 추가 정보를 입력받아 회원 가입을 진행할 때 소셜 타입, 식별자로 해당 회원을 찾기 위한 메소드
      */
     Optional<User> findBySocialTypeAndSocialId(SocialType socialType, String socialId);
+<<<<<<< Updated upstream
+=======
+
+
+
+
+>>>>>>> Stashed changes
 }

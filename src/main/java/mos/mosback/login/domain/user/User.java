@@ -2,7 +2,10 @@ package mos.mosback.login.domain.user;
 
 
 import lombok.*;
+<<<<<<< Updated upstream
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+=======
+>>>>>>> Stashed changes
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
@@ -23,6 +26,7 @@ public class User {
 
     private String email; // 이메일
     private String password; // 비밀번호
+<<<<<<< Updated upstream
 
     private String name;
     private String nickname; // 닉네임
@@ -30,6 +34,11 @@ public class User {
     private Date str_duration;
 
     private Date end_duration;
+=======
+    private String nickname; // 닉네임
+    private String imageUrl; // 프로필 이미지
+    private Date duration;
+>>>>>>> Stashed changes
     private String message;
     private String company;
     @Enumerated(EnumType.STRING)
@@ -52,6 +61,7 @@ public class User {
         this.password = passwordEncoder.encode(this.password);
     }
 
+<<<<<<< Updated upstream
     //==setter==//
 
 
@@ -135,17 +145,24 @@ public class User {
         this.company = company;
     }
 
+=======
+>>>>>>> Stashed changes
     //== 유저 필드 업데이트 ==//
     public void updateNickname(String updateNickname) {
         this.nickname = updateNickname;
     }
 
+<<<<<<< Updated upstream
     public void updateStr_duration(Date updateStr_Duration) {
         this.str_duration = updateStr_Duration;
     }
 
     public void updateEnd_duration(Date updateEnd_duration) {
         this.end_duration = updateEnd_duration;
+=======
+    public void updateDuration(Date updateDuration) {
+        this.duration = updateDuration;
+>>>>>>> Stashed changes
     }
 
     public void updateMessage(String updateMessage) {
@@ -161,6 +178,7 @@ public class User {
         this.password = passwordEncoder.encode(updatePassword);
     }
 
+<<<<<<< Updated upstream
     public void updatePw(String password) {
         this.password = cryptopassword(password);
     }
@@ -170,6 +188,8 @@ public class User {
         return encodedPassword;
     }
 
+=======
+>>>>>>> Stashed changes
     public void updateRefreshToken(String updateRefreshToken) {
         this.refreshToken = updateRefreshToken;
     }
