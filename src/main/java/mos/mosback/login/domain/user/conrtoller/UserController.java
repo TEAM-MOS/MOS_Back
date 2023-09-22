@@ -28,7 +28,7 @@ public class UserController {
     private Map<Long, User> userMap = new HashMap<>();
 
     private JwtService jwtService;
-    @PostMapping("/signup")
+    @PostMapping("/sign-up")
     public String signUp(@RequestBody UserSignUpDto userSignUpDto) throws Exception {
         userService.signUp(userSignUpDto);
         return "회원가입 성공";
