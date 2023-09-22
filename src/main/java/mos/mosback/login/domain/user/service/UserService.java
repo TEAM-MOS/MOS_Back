@@ -36,8 +36,6 @@ public class UserService {
             throw new Exception("이미 존재하는 이메일입니다.");
         }
 
-
-
         User user = User.builder()
                 .email(userSignUpDto.getEmail())
                 .password(userSignUpDto.getPassword())
@@ -59,6 +57,7 @@ public class UserService {
         }
     }
 
+    //마이페이지정보입력
     public void createUser(String currentEmail, UserProfileDto userProfileDto) throws Exception {
         if (userRepository.findByNickname(userProfileDto.getNickname()).isPresent()) {
             throw new Exception("이미 존재하는 닉네임입니다.");
@@ -80,6 +79,7 @@ public class UserService {
         }
     }
 
+    //마이페이지 업데이트
     public void updateUserProfile(String currentEmail, UserProfileDto userProfileDto) throws Exception {
         try {
             User user = getUserByEmail(currentEmail);
@@ -97,24 +97,23 @@ public class UserService {
         }
     }
 
-//    public boolean checkEmailDuplicate(String email){
-//        return userRepository.existsByEmail(email);
-//    }
+    public void upadateUserPassword(String currentEmail, UserSignUpDto userSignUpDto) throws Exception{
+        try {
+            User user = getUserByEmail(currentEmail);
+            // BCryptPasswordEncoder를 사용하여 새로운 비밀번호 해싱
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String hashedPassword = passwordEncoder.encode(userSignUpDto.getPassword());
 
-//    public boolean comparePassword(String email,String password) {
-//        User findUser = userRepository.findByEmail(email).get();
-//
-//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//        boolean isMatched = passwordEncoder.matches(password, findUser.getPassword());
-//
-//        if(isMatched) {
-//            return true;
-//        }
-//        else{
-//            return false;
-//        }
-//    }
-//
+            // 회원 정보 업데이트
+            user.setPassword(hashedPassword);
+
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new Exception("비밀번호 업데이트 하는 동안 오류가 발생했습니다..", e);
+        }
+    }
+
+
 // 메일 내용을 생성하고 임시 비밀번호로 회원 비밀번호를 변경
     public MailDto createMailAndChangePassword(String userEmail) {
         String tempPassword = getTempPassword();
