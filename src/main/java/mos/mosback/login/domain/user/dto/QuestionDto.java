@@ -1,4 +1,4 @@
-package mos.mosback.web.dto;
+package mos.mosback.login.domain.user.dto;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mos.mosback.domain.posts.StRoomEntity;

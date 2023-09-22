@@ -1,4 +1,4 @@
-package mos.mosback.web.dto;
+package mos.mosback.login.domain.user.dto;
 import lombok.Getter;
 import mos.mosback.domain.posts.StRoomEntity;
 import java.util.Date;

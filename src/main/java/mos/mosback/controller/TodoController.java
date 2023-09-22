@@ -8,7 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/todo") //URL 패턴
+@RequestMapping("/todo") //URL 패턴
+
 public class TodoController {
     private final ToDoService toDoService;
 
