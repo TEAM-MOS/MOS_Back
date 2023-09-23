@@ -22,11 +22,12 @@ public class TodoController {
     @PostMapping("/add")
     public ResponseEntity<String> addTodo(@RequestBody ToDoRequestDto requestDto) {
 
-        ToDoEntity todo = toDoService.addTodo(requestDto.getWeekOfYear(),
+        ToDoEntity todo = toDoService.addTodo(
                 requestDto.getDayOfWeek(), requestDto.getTodoContent());
 
         return ResponseEntity.status(HttpStatus.CREATED).body("TodoList 추가 완료. index : " +todo.getTodoId());
     }
+
     @GetMapping("/ByWeek-and-Day")
     public ResponseEntity<List<ToDoEntity>> getTodoByWeekAndDay(
             @RequestParam("weekOfYear") String weekOfYear,
@@ -44,7 +45,7 @@ public class TodoController {
     public ResponseEntity<String> updateTodo(@PathVariable Long TodoIdx, @RequestBody ToDoRequestDto requestDto) {
         try {
             ToDoEntity updatedToDo = toDoService.updateTodo(TodoIdx, requestDto.getTodoContent(),
-                    requestDto.isCompleted(),requestDto.getDayOfWeek(),requestDto.toEntity().getWeekOfYear());
+                    requestDto.isCompleted(),requestDto.getDayOfWeek());
             return ResponseEntity.ok("ToDo 업데이트 완료. Index: " + TodoIdx);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
