@@ -1,8 +1,9 @@
-package mos.mosback.web.dto;
+package mos.mosback.stRoom.dto;
 import lombok.Getter;
-import mos.mosback.domain.posts.StRoomEntity;
-import mos.mosback.domain.posts.StudyDaysEntity;
+import mos.mosback.domain.stRoom.StRoomEntity;
+import mos.mosback.domain.stRoom.StudyDaysEntity;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class StRoomResponseDto {
     private String mod; //스터디 분위기
     private boolean onOff; //진행방식 (온오프)
     private Date startDate; //스터디 시작 날짜
-    private Date endDate; //스터디 끝나는 날짜
+    private LocalDate endDate; //스터디 끝나는 날짜
     private List<StudyDaysEntity> studyDayEntities;
     /*유저프로필 + 사진*/
 

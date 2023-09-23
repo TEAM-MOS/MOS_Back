@@ -1,9 +1,11 @@
-package mos.mosback.web.dto;
+package mos.mosback.stRoom.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import mos.mosback.domain.posts.StRoomEntity;
-import mos.mosback.domain.posts.StudyDaysEntity;
+import mos.mosback.domain.stRoom.StRoomEntity;
+import mos.mosback.domain.stRoom.StudyDaysEntity;
+
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -23,14 +25,14 @@ public class StRoomSaveRequestDto {
     private String location; //스터디 장소
     private int online; // 온라인일 경우 1 : 줌 2 : 디코 3: 구글미트 4: 기타
     private Date startDate; //스터디 시작 날짜
-    private Date endDate; //스터디 끝나는 날짜
+    private LocalDate endDate; //스터디 끝나는 날짜
     private List<StudyDaysEntity> studyDayEntities;
 
 
     @Builder
     public StRoomSaveRequestDto(String title, String goal, String rules, String quest, String category,
                                 String intro, int maxMember, String mod, boolean onOff,String location,int online,
-                                Date startDate, Date endDate,List<StudyDaysEntity> studyDayEntities) {
+                                Date startDate, LocalDate endDate,List<StudyDaysEntity> studyDayEntities) {
         this.title = title;
         this.goal = goal;
         this.rules = rules;

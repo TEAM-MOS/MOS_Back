@@ -1,13 +1,13 @@
 package mos.mosback.service;
 
 import lombok.RequiredArgsConstructor;
-import mos.mosback.domain.posts.MemberStatus;
-import mos.mosback.domain.posts.StRoomEntity;
-import mos.mosback.domain.posts.StudyMemberEntity;
-import mos.mosback.login.domain.user.repository.UserRepository;
+import mos.mosback.domain.stRoom.MemberStatus;
+import mos.mosback.domain.stRoom.StRoomEntity;
+import mos.mosback.domain.stRoom.StudyMemberEntity;
 import mos.mosback.repository.StRoomRepository;
 import mos.mosback.repository.StudyMemberRepository;
-import mos.mosback.web.dto.*;
+import mos.mosback.stRoom.dto.StRoomSaveRequestDto;
+import mos.mosback.stRoom.dto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,12 +23,20 @@ public class StRoomService {
     private final StRoomRepository stRoomRepository;
     private final StudyMemberRepository studyMemberRepository;
 
-    @Transactional
     public Long save(StRoomSaveRequestDto requestDto) {
-        return stRoomRepository.save(requestDto.toEntity()).getRoomID();
-    }
-    //스터디를 생성하고 아이디를 반환.
+        try {
+            StudyMemberEntity studyMember = new StudyMemberEntity();
+            studyMember.setRoomId(requestDto.getRoomID());
+            studyMember.setStatus(MemberStatus.Leader);
+            studyMember.setMemberId(studyMember.getMemberId());
+            studyMemberRepository.save(studyMember);
+            return stRoomRepository.save(requestDto.toEntity()).getRoomID();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
 
+}
     @Transactional
     public void update(Long roomID, StRoomUpdateRequestDto requestDto) {
         StRoomEntity stroomEntity = stRoomRepository.findById(roomID)
@@ -99,7 +107,7 @@ public class StRoomService {
             studyMember.setRoomId(requestDto.getRoomID());
             studyMember.setStatus(MemberStatus.Waiting);
             studyMember.setAnswer(requestDto.getAnswer());
-           studyMember.setMemberId(studyMember.getMemberId());
+          /* studyMember.setMemberId(studyMember.getMemberId());*/
             studyMemberRepository.save(studyMember);
         } catch (Exception e) {
             e.printStackTrace();

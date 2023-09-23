@@ -1,10 +1,10 @@
-package mos.mosback.web.dto;
+package mos.mosback.stRoom.dto;
 import lombok.Getter;
-import mos.mosback.domain.posts.ToDoEntity;
+import mos.mosback.domain.stRoom.ToDoEntity;
 
 @Getter
 public class ToDoResponseDto {
-    private Long TodoId;
+
     private String todoContent;
     private boolean completed;
 

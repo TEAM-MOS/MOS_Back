@@ -1,15 +1,16 @@
-package mos.mosback.web.dto;
+package mos.mosback.stRoom.dto;
 import lombok.Getter;
-import mos.mosback.domain.posts.StRoomEntity;
-import mos.mosback.domain.posts.StudyDaysEntity;
+import mos.mosback.domain.stRoom.StRoomEntity;
+import mos.mosback.domain.stRoom.StudyDaysEntity;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
 
 @Getter
 public class StRoomListResponseDto {
-    private Long roomID;
+
     private String title;
     private String goal; //스터디 목표
     private String rules; //스터디 규칙
@@ -22,7 +23,7 @@ public class StRoomListResponseDto {
     private int click;// 클릭횟수 (인기순 조회)
     private boolean onOff; //진행방식 (온오프)
     private Date startDate; //스터디 시작 날짜
-    private Date endDate; //스터디 끝나는 날짜
+    private LocalDate endDate; //스터디 끝나는 날짜
     private String location;
     private int online; //온라인
 

@@ -1,4 +1,4 @@
-package mos.mosback.login.domain.user.dto;
+package mos.mosback.stRoom.dto;
 import mos.mosback.login.domain.user.User;
 import lombok.Getter;
 

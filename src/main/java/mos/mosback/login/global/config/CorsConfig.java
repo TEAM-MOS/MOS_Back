@@ -10,10 +10,7 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 public class CorsConfig {
 
     @Bean
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
@@ -24,8 +21,4 @@ public class CorsConfig {
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter();
     }
-<<<<<<< Updated upstream
 }
-=======
-}
->>>>>>> Stashed changes

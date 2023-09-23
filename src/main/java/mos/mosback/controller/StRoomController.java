@@ -1,15 +1,13 @@
 package mos.mosback.controller;
-import mos.mosback.domain.posts.StRoomEntity;
-import mos.mosback.web.dto.*;
+import mos.mosback.stRoom.dto.*;
+
 import mos.mosback.service.StRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +28,6 @@ public class StRoomController {
         Long stroomId = stRoomService.save(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body("created successfully. ID: " + stroomId);
     }
-
     @GetMapping("/MyStudy/{roomId}")
     public ResponseEntity<StRoomResponseDto> FindByID (@PathVariable Long roomId) {
         StRoomResponseDto stroom = stRoomService.findById(roomId);

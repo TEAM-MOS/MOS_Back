@@ -1,10 +1,11 @@
-package mos.mosback.domain.posts;
+package mos.mosback.domain.stRoom;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.*;
 
 @Getter // 롬복 어노테이션
@@ -35,10 +36,14 @@ public class StRoomEntity extends BaseTimeEntity {
     private String location;
     private int online; //온라인
     private Date startDate; //스터디 시작 날짜
-    private Date endDate; //스터디 끝나는 날짜
+    private LocalDate endDate; //스터디 끝나는 날짜
     private boolean recruiting; //모집여부
+    private String leader;
 
 
+
+    @OneToMany(mappedBy = "stRoom", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ToDoEntity> todoEntities = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<StudyDaysEntity> studyDayEntities = new ArrayList<>();
@@ -47,8 +52,8 @@ public class StRoomEntity extends BaseTimeEntity {
     public StRoomEntity(String title, String goal, String rules, String quest,
                         String category, String intro, int memberNum, int maxMember
                         ,String mod, boolean onOff, String location,int online,
-                        Date startDate, Date endDate, List<StudyDaysEntity> studyDayEntities
-                       ) {
+                        Date startDate, LocalDate endDate, List<StudyDaysEntity> studyDayEntities
+                        ,String leader ) {
 
         this.title = title;
         this.goal = goal;
@@ -65,6 +70,7 @@ public class StRoomEntity extends BaseTimeEntity {
         this.startDate = startDate;
         this.endDate = endDate;
         this.studyDayEntities = studyDayEntities;
+        this.leader = leader;
 
     }
 
@@ -74,7 +80,7 @@ public class StRoomEntity extends BaseTimeEntity {
     public void update(String title, String goal, String rules, String quest,
                        String category, String intro, int maxMember,
                        String mod, boolean onOff,String location,int online, Date startDate,
-                       Date endDate,List<StudyDaysEntity> studyDayEntities) {
+                       LocalDate endDate,List<StudyDaysEntity> studyDayEntities) {
         this.title = title;
         this.goal = goal;
         this.rules = rules;

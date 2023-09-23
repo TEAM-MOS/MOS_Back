@@ -1,4 +1,4 @@
-package mos.mosback.web.dto;
+package mos.mosback.stRoom.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

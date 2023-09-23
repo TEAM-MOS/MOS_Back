@@ -1,4 +1,4 @@
-package mos.mosback.domain.posts;
+package mos.mosback.domain.stRoom;
 
 public enum MemberStatus {
     Leader,

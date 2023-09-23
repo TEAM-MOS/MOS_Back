@@ -1,9 +1,7 @@
-package mos.mosback.login.domain.user.dto;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.Getter;
-import mos.mosback.domain.posts.StudyDaysEntity;
+package mos.mosback.stRoom.dto;
+import mos.mosback.domain.stRoom.StudyDaysEntity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -14,7 +12,7 @@ public class StRoomDetailResponseDto {
     private boolean recruiting;
     private String location;
     private Date startDate;
-    private Date endDate;
+    private LocalDate endDate;
     private LocalDateTime createdDate;
     private Date deadline;
     private int memberNum; //현재 멤버수
@@ -22,7 +20,7 @@ public class StRoomDetailResponseDto {
 
     private String mod; //스터디 분위기
 
-    //+스터디장 닉네임
+    private String leader; //스터디리더 닉네임
 
     private List<StudyDaysEntity> studyDayEntities;
     private String goal;
