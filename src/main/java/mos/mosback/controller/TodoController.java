@@ -19,6 +19,7 @@ public class TodoController {
         this.toDoService = toDoService;
     }
 
+    @GetMapping("/add")
     public ResponseEntity<String> addTodo(@RequestBody ToDoRequestDto requestDto) {
 
         ToDoEntity todo = toDoService.addTodo(requestDto.getWeekOfYear(),
