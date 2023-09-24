@@ -5,13 +5,13 @@ spring:
         registration:
           google:
             client-id: 729954756779-2usa0d48vh0048r4vmmljtlrlstvcjdh.apps.googleusercontent.com
-            client-secret: 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
+            client-secret: google-client-sercret
             scope: profile, email
 
 
           naver:
             client-id: jg5_V_oaR2k60xfasDRa
-            client-secret: XJ2kRT_oa8
+            client-secret: naver-client-secret
             redirect-uri: http://localhost:8080/login/oauth2/code/naver
             authorization-grant-type: authorization_code
             scope: name, email, profile_image
@@ -20,7 +20,7 @@ spring:
 
           kakao:
             client-id: bbe971abb2538851ddabe4ef20d76744
-            client-secret: oScTITuccuMT1o8C6X4Vv1arBKJkNzSE
+            client-secret: kakao-client-secret
             redirect-uri: http://localhost:8080/login/oauth2/code/kakao
             client-authentication-method: POST
             authorization-grant-type: authorization_code
