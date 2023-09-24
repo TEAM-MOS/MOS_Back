@@ -3,7 +3,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.*;
@@ -38,14 +37,12 @@ public class StRoomEntity extends BaseTimeEntity {
     private Date startDate; //스터디 시작 날짜
     private LocalDate endDate; //스터디 끝나는 날짜
     private boolean recruiting; //모집여부
-    private String leader;
-
 
 
     @OneToMany(mappedBy = "stRoom", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ToDoEntity> todoEntities = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<StudyDaysEntity> studyDayEntities = new ArrayList<>();
 
     @Builder
@@ -53,7 +50,7 @@ public class StRoomEntity extends BaseTimeEntity {
                         String category, String intro, int memberNum, int maxMember
                         ,String mod, boolean onOff, String location,int online,
                         Date startDate, LocalDate endDate, List<StudyDaysEntity> studyDayEntities
-                        ,String leader ) {
+                        ) {
 
         this.title = title;
         this.goal = goal;
@@ -70,7 +67,7 @@ public class StRoomEntity extends BaseTimeEntity {
         this.startDate = startDate;
         this.endDate = endDate;
         this.studyDayEntities = studyDayEntities;
-        this.leader = leader;
+
 
     }
 

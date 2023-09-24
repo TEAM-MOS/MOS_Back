@@ -18,6 +18,7 @@ public class StudyMemberEntity implements Serializable {
     @Column(name = "memberID")
     private Long memberId;
 
+
     @JoinColumn(name = "roomID")
     private Long roomId;
 

@@ -2,6 +2,7 @@ package mos.mosback.stRoom.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import mos.mosback.domain.stRoom.StRoomEntity;
 import mos.mosback.domain.stRoom.StudyDaysEntity;
 
@@ -10,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class StRoomSaveRequestDto {
     Long roomID;
@@ -26,6 +28,7 @@ public class StRoomSaveRequestDto {
     private int online; // 온라인일 경우 1 : 줌 2 : 디코 3: 구글미트 4: 기타
     private Date startDate; //스터디 시작 날짜
     private LocalDate endDate; //스터디 끝나는 날짜
+    private String email; // 사용자 이메일
     private List<StudyDaysEntity> studyDayEntities;
 
 

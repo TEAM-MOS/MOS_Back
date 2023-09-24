@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import mos.mosback.domain.stRoom.MemberStatus;
 import mos.mosback.domain.stRoom.StRoomEntity;
 import mos.mosback.domain.stRoom.StudyMemberEntity;
+import mos.mosback.login.domain.user.User;
+import mos.mosback.login.domain.user.repository.UserRepository;
+import mos.mosback.login.domain.user.service.UserService;
 import mos.mosback.repository.StRoomRepository;
 import mos.mosback.repository.StudyMemberRepository;
 import mos.mosback.stRoom.dto.StRoomSaveRequestDto;
@@ -22,13 +25,15 @@ import java.util.stream.Collectors;
 public class StRoomService {
     private final StRoomRepository stRoomRepository;
     private final StudyMemberRepository studyMemberRepository;
+    private final UserService userService;
 
     public Long save(StRoomSaveRequestDto requestDto) {
         try {
             StudyMemberEntity studyMember = new StudyMemberEntity();
             studyMember.setRoomId(requestDto.getRoomID());
             studyMember.setStatus(MemberStatus.Leader);
-            studyMember.setMemberId(studyMember.getMemberId());
+            User user = userService.getUserByEmail(requestDto.getEmail());
+            studyMember.setMemberId(user.getId());
             studyMemberRepository.save(studyMember);
             return stRoomRepository.save(requestDto.toEntity()).getRoomID();
         } catch (Exception e) {
@@ -107,7 +112,8 @@ public class StRoomService {
             studyMember.setRoomId(requestDto.getRoomID());
             studyMember.setStatus(MemberStatus.Waiting);
             studyMember.setAnswer(requestDto.getAnswer());
-          /* studyMember.setMemberId(studyMember.getMemberId());*/
+            User user = userService.getUserByEmail(requestDto.getEmail());
+            studyMember.setMemberId(user.getId());
             studyMemberRepository.save(studyMember);
         } catch (Exception e) {
             e.printStackTrace();

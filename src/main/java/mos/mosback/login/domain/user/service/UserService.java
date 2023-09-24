@@ -48,7 +48,7 @@ public class UserService {
 
 
 
-    private User getUserByEmail(String email) throws Exception {
+    public User getUserByEmail(String email) throws Exception {
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isPresent()) {
             return optionalUser.get();

@@ -5,6 +5,8 @@ import mos.mosback.service.StRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -25,6 +27,10 @@ public class StRoomController {
 
     @PostMapping("/create")
     public ResponseEntity<String> saveRoom(@RequestBody StRoomSaveRequestDto requestDto) {
+        // 현재 로그인한 사용자의 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentEmail = authentication.getName(); // 현재 사용자의 이메일
+        requestDto.setEmail(currentEmail);
         Long stroomId = stRoomService.save(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body("created successfully. ID: " + stroomId);
     }
@@ -126,6 +132,10 @@ public class StRoomController {
     }
     @PostMapping("/memberjoin")
     public ResponseEntity<String> memberJoin(@RequestBody StRoomMemberJoinRequestDto requestDto) {
+        // 현재 로그인한 사용자의 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentEmail = authentication.getName(); // 현재 사용자의 이메일
+        requestDto.setEmail(currentEmail);
         stRoomService.memberJoin(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body("joined successfully.");
     }
