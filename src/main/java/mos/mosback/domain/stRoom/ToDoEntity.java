@@ -27,12 +27,15 @@ public class ToDoEntity {
     @Column
     private boolean completed;
     // TodoLists 상태 ( 완료 - true, 미완료 - false)
-
+    @Column
+    private int year;
+    @Column
+    private int month;
+    @Column
+    private int weekOfYear;   // 몇 주차인지 저장 (1주차, 2주차, ...)
     @Column
     private String dayOfWeek; // 선택한 요일 (월요일, 화요일, ...)
-    private int weekOfYear;   // 몇 주차인지 저장 (1주차, 2주차, ...)
-    private int year;
-    private int month;
+
 
 
     @Builder //해당 클래스의 빌더 클래스 생성. 생성자 상단에 선언 시 생성자에 포함된 필드만 빌더에 포함

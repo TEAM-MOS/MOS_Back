@@ -1,7 +1,9 @@
 package mos.mosback.controller;
 import mos.mosback.domain.stRoom.ToDoEntity;
 import mos.mosback.service.ToDoService;
+import mos.mosback.stRoom.dto.ToDoDateDto;
 import mos.mosback.stRoom.dto.ToDoRequestDto;
+import mos.mosback.stRoom.dto.ToDoContentResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,36 +30,42 @@ public class TodoController {
         return ResponseEntity.status(HttpStatus.CREATED).body("TodoList 추가 완료. index : " +todo.getTodoId());
     }
 
-    @GetMapping("/ByWeek-and-Day")
-    public ResponseEntity<List<ToDoEntity>> getTodoByWeekAndDay(
-            @RequestParam("weekOfYear") String weekOfYear,
-            @RequestParam("dayOfWeek") int dayOfWeek) {
+    @GetMapping("/{year}/{month}/{weekOfYear}/{dayOfWeek}")
+    public ResponseEntity<List<ToDoContentResponseDto>> FindByDate(@PathVariable int year, @PathVariable int month, @PathVariable int weekOfYear, @PathVariable String dayOfWeek) {
 
-        List<ToDoEntity> todoList = toDoService.findByWeekOfYearAndDayOfWeek(weekOfYear, dayOfWeek);
+        List<ToDoContentResponseDto> todos = toDoService.findByDate(year, month, weekOfYear, dayOfWeek);
+            return new ResponseEntity<>(todos, HttpStatus.OK);
 
-        if (!todoList.isEmpty()) {
-            return ResponseEntity.ok(todoList);
+    }
+    @GetMapping("/date")
+    public ResponseEntity<List<ToDoDateDto>> getTodoDate() {
+        List<ToDoDateDto> todoDates = toDoService.getTodoDate();
+
+        if (!todoDates.isEmpty()) {
+            return new ResponseEntity<>(todoDates, HttpStatus.OK);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
-    @PutMapping("/update/{TodoIdx}")
-    public ResponseEntity<String> updateTodo(@PathVariable Long TodoIdx, @RequestBody ToDoRequestDto requestDto) {
+
+
+    @PutMapping("/update/{TodoId}")
+    public ResponseEntity<String> updateTodo(@PathVariable Long TodoId, @RequestBody ToDoRequestDto requestDto) {
         try {
-            ToDoEntity updatedToDo = toDoService.updateTodo(TodoIdx, requestDto.getTodoContent(),
+            ToDoEntity updatedToDo = toDoService.updateTodo(TodoId, requestDto.getTodoContent(),
                     requestDto.isCompleted(),requestDto.getDayOfWeek());
-            return ResponseEntity.ok("ToDo 업데이트 완료. Index: " + TodoIdx);
+            return ResponseEntity.ok("ToDo 업데이트 완료. Index: " + TodoId);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("NOT FOUND TODO");
         }
     }
 
-    @DeleteMapping("/delete/{TodoIdx}")
-    public ResponseEntity<String> deleteTodo(@PathVariable Long TodoIdx) {
+    @DeleteMapping("/delete/{TodoId}")
+    public ResponseEntity<String> deleteTodo(@PathVariable Long TodoId) {
         try {
-            toDoService.deleteTodo(TodoIdx);
-            return ResponseEntity.ok("ToDo 삭제 완료. Index: " + TodoIdx);
+            toDoService.deleteTodo(TodoId);
+            return ResponseEntity.ok("ToDo 삭제 완료. Index: " + TodoId);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("NOT FOUND TODO");

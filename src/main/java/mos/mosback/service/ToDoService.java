@@ -2,14 +2,13 @@ package mos.mosback.service;
 import lombok.RequiredArgsConstructor;
 import mos.mosback.domain.stRoom.ToDoEntity;
 import mos.mosback.repository.ToDoRepository;
-import org.springframework.http.ResponseEntity;
+import mos.mosback.stRoom.dto.ToDoDateDto;
+import mos.mosback.stRoom.dto.ToDoContentResponseDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.Month;
-import java.time.MonthDay;
 import java.util.List;
 
 
@@ -59,7 +58,7 @@ public class ToDoService {
                 int daysToAddToNextMonth = DayOfWeek.MONDAY.getValue() - firstDayOfNextMonthOfWeek.getValue();
 
                 if (daysToAddToNextMonth < 0) {
-                    daysToAddToNextMonth += 7; // If it's before Monday, move to the next Monday
+                    daysToAddToNextMonth += 7;
                 }
 
                 LocalDate firstMondayOfNextMonth = firstDayOfNextMonth.plusDays(daysToAddToNextMonth);
@@ -70,6 +69,14 @@ public class ToDoService {
 
         return weekOfMonth;
     }
+//  @Transactional
+//    public ToDoResponseDto findById(Long todoId) {
+//        Optional<ToDoEntity> optionalToDoEntity = toDoRepository.findById(todoId);
+//
+//        // ToDoEntity를 ToDoResponseDto로 변환하여 반환
+//        return optionalToDoEntity.map(ToDoResponseDto::new).orElse(null); // 또는 예외 처리를 수행
+//    }
+
     @Transactional
     public void deleteTodo(Long todoId) {
         ToDoEntity toDoEntity = toDoRepository.findById(todoId)
@@ -88,5 +95,13 @@ public class ToDoService {
     }
     public List<ToDoEntity> findByWeekOfYearAndDayOfWeek(String weekOfYear, int dayOfWeek) {
         return toDoRepository.findByDayOfWeekAndWeekOfYear(weekOfYear, dayOfWeek);
+    }
+
+    public List<ToDoContentResponseDto> findByDate(int year, int month, int weekOfYear, String dayOfWeek) {
+        return toDoRepository.findByDate(year, month, weekOfYear, dayOfWeek);
+    }
+
+    public List<ToDoDateDto> getTodoDate(){
+        return toDoRepository.getTodoDate();
     }
 }
