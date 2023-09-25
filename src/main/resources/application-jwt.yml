@@ -1,5 +1,5 @@
 jwt:
-  secretKey: 'dfadfekndchnsdifqld125654x8sdfnjldsncuelsdfs45x321df'
+  secretKey: secretkey
 
   access:
     expiration: 360000000 # 1??(60?) (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h))
