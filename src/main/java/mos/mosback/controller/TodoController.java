@@ -30,13 +30,7 @@ public class TodoController {
         return ResponseEntity.status(HttpStatus.CREATED).body("TodoList 추가 완료. index : " +todo.getTodoId());
     }
 
-    @GetMapping("/{year}/{month}/{weekOfYear}/{dayOfWeek}")
-    public ResponseEntity<List<ToDoContentResponseDto>> FindByDate(@PathVariable int year, @PathVariable int month, @PathVariable int weekOfYear, @PathVariable String dayOfWeek) {
 
-        List<ToDoContentResponseDto> todos = toDoService.findByDate(year, month, weekOfYear, dayOfWeek);
-            return new ResponseEntity<>(todos, HttpStatus.OK);
-
-    }
     @GetMapping("/date")
     public ResponseEntity<List<ToDoDateDto>> getTodoDate() {
         List<ToDoDateDto> todoDates = toDoService.getTodoDate();
@@ -49,23 +43,23 @@ public class TodoController {
     }
 
 
-    @PutMapping("/update/{TodoId}")
-    public ResponseEntity<String> updateTodo(@PathVariable Long TodoId, @RequestBody ToDoRequestDto requestDto) {
+    @PutMapping("/update/{todoId}")
+    public ResponseEntity<String> updateTodo(@PathVariable Long todoId, @RequestBody ToDoRequestDto requestDto) {
         try {
-            ToDoEntity updatedToDo = toDoService.updateTodo(TodoId, requestDto.getTodoContent(),
+            ToDoEntity updatedToDo = toDoService.updateTodo(todoId, requestDto.getTodoContent(),
                     requestDto.isCompleted(),requestDto.getDayOfWeek());
-            return ResponseEntity.ok("ToDo 업데이트 완료. Index: " + TodoId);
+            return ResponseEntity.ok("ToDo 업데이트 완료. Index: " + todoId);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("NOT FOUND TODO");
         }
     }
 
-    @DeleteMapping("/delete/{TodoId}")
-    public ResponseEntity<String> deleteTodo(@PathVariable Long TodoId) {
+    @DeleteMapping("/delete/{todoId}")
+    public ResponseEntity<String> deleteTodo(@PathVariable Long todoId) {
         try {
-            toDoService.deleteTodo(TodoId);
-            return ResponseEntity.ok("ToDo 삭제 완료. Index: " + TodoId);
+            toDoService.deleteTodo(todoId);
+            return ResponseEntity.ok("ToDo 삭제 완료. Index: " + todoId);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("NOT FOUND TODO");

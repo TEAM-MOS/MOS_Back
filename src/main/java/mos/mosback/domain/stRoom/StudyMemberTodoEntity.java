@@ -1,4 +1,5 @@
 package mos.mosback.domain.stRoom;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @Entity
-public class StudyMemberEntity implements Serializable {
+public class StudyMemberTodoEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,18 +23,11 @@ public class StudyMemberEntity implements Serializable {
     @JoinColumn(name = "roomID")
     private StRoomEntity stRoom;
 
+    @ManyToOne
+    @JoinColumn(name = "todoId")
+    private ToDoEntity toDoEntity;
+
     // 다른 필드와 매핑
-
     @Enumerated(EnumType.STRING)
-    private MemberStatus status;
-
-    @Column
-    private String answer; // 스터디 답변
-
-
-    @Builder
-    public StudyMemberEntity(MemberStatus status){
-        this.status = status;
-    }
-
+    private TodoStatus status;
 }

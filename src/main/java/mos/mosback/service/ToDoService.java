@@ -29,7 +29,7 @@ public class ToDoService {
         List<ToDoEntity> existingTodos = toDoRepository.findByDayOfWeekAndWeekOfYear(dayOfWeek, weekOfMonth);
 
 
-        ToDoEntity todo = new ToDoEntity(todoContent, false, dayOfWeek, weekOfMonth, currentDate.getYear(),currentDate.getMonthValue());
+        ToDoEntity todo = new ToDoEntity(todoContent, dayOfWeek, weekOfMonth, currentDate.getYear(),currentDate.getMonthValue());
         return toDoRepository.save(todo);
     }
 
@@ -90,7 +90,8 @@ public class ToDoService {
         ToDoEntity toDoEntity = toDoRepository.findById(todoId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ToDo를 찾을 수 없습니다."));
 
-        toDoEntity.updateToDo(todoContent, completed,dayOfWeek);
+        toDoEntity.updateToDo(todoContent, dayOfWeek);
+        toDoRepository.save(toDoEntity);
         return toDoEntity;
     }
     public List<ToDoEntity> findByWeekOfYearAndDayOfWeek(String weekOfYear, int dayOfWeek) {

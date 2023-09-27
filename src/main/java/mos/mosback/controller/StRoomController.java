@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,13 +27,17 @@ public class StRoomController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> saveRoom(@RequestBody StRoomSaveRequestDto requestDto) {
+    public ResponseEntity<String> saveRoom(@RequestBody StRoomSaveRequestDto requestDto, HttpServletRequest req) {
         // 현재 로그인한 사용자의 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentEmail = authentication.getName(); // 현재 사용자의 이메일
         requestDto.setEmail(currentEmail);
-        Long stroomId = stRoomService.save(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("created successfully. ID: " + stroomId);
+        Long stroomId = stRoomService.save(requestDto, req);
+        if (stroomId != null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body("created successfully. ID: " + stroomId);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Server error!");
+        }
     }
     @GetMapping("/MyStudy/{roomId}")
     public ResponseEntity<StRoomResponseDto> FindByID (@PathVariable Long roomId) {

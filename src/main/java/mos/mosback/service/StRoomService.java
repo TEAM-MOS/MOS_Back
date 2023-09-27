@@ -7,6 +7,7 @@ import mos.mosback.domain.stRoom.StudyMemberEntity;
 import mos.mosback.login.domain.user.User;
 import mos.mosback.login.domain.user.repository.UserRepository;
 import mos.mosback.login.domain.user.service.UserService;
+import mos.mosback.login.global.jwt.service.JwtService;
 import mos.mosback.repository.StRoomRepository;
 import mos.mosback.repository.StudyMemberRepository;
 import mos.mosback.stRoom.dto.StRoomSaveRequestDto;
@@ -15,8 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletRequest;
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -26,16 +30,31 @@ public class StRoomService {
     private final StRoomRepository stRoomRepository;
     private final StudyMemberRepository studyMemberRepository;
     private final UserService userService;
+    private final JwtService jwtService;
 
-    public Long save(StRoomSaveRequestDto requestDto) {
+    public Long save(StRoomSaveRequestDto requestDto, HttpServletRequest req) {
         try {
+            // 1. Study Room 저장
+            StRoomEntity stRoom = stRoomRepository.save(requestDto.toEntity());
+
+            // 2. 스터디 멤버 정보 저장할 변수 선언
             StudyMemberEntity studyMember = new StudyMemberEntity();
-            studyMember.setRoomId(requestDto.getRoomID());
-            studyMember.setStatus(MemberStatus.Leader);
-            User user = userService.getUserByEmail(requestDto.getEmail());
+
+            // 3. Access Token 가져오기
+            String accessToken = Optional.ofNullable(jwtService.extractAccessToken(req)).get().orElse("");
+
+            // 4. Access Token으로 스터디 멤버 정보 가져오기 (User Entity를)
+            String loginUserEmail = Optional.ofNullable(jwtService.extractEmail(accessToken)).get().orElse("");
+            User user = userService.getUserByEmail(loginUserEmail);
+
+            // 4. 정보 대입
             studyMember.setMemberId(user.getId());
+
+            // 5. Study Member 저장
+            studyMember.setStRoom(stRoom);
+            studyMember.setStatus(MemberStatus.Leader);
             studyMemberRepository.save(studyMember);
-            return stRoomRepository.save(requestDto.toEntity()).getRoomID();
+            return stRoom.getRoomID();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -56,6 +75,7 @@ public class StRoomService {
                 requestDto.getOnline(), requestDto.getStartDate(),
                 requestDto.getEndDate(), requestDto.getStudyDayEntities());
 
+        stRoomRepository.save(stroomEntity);
     }  //stroomsRepository를 사용하여 데이터베이스에서 주어진 id에 해당하는 게시물을 찾기
 
 
@@ -108,12 +128,21 @@ public class StRoomService {
 
     public void memberJoin(StRoomMemberJoinRequestDto requestDto) {
         try {
+            // 1. save할 변수 선언
             StudyMemberEntity studyMember = new StudyMemberEntity();
-            studyMember.setRoomId(requestDto.getRoomID());
-            studyMember.setStatus(MemberStatus.Waiting);
-            studyMember.setAnswer(requestDto.getAnswer());
+
+            // 2. 가입 시에는 룸ID를 요청 파라미터에서 받아서 StRoom 조회
+            StRoomEntity stRoomEntity = stRoomRepository.findById(requestDto.getRoomID())
+                    .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id =" + requestDto.getRoomID()));
+
+            // 3. 사용자 이메일 조회해서 save 전에 주입
             User user = userService.getUserByEmail(requestDto.getEmail());
             studyMember.setMemberId(user.getId());
+
+            // 4. 조회된 정보 토대로 StudyMember save 처리
+            studyMember.setStRoom(stRoomEntity);
+            studyMember.setStatus(MemberStatus.Waiting);
+            studyMember.setAnswer(requestDto.getAnswer());
             studyMemberRepository.save(studyMember);
         } catch (Exception e) {
             e.printStackTrace();
