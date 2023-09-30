@@ -64,7 +64,7 @@ public class UserProfileController {
             }
         }
 
-    // 다른 컨트롤러 메서드...
+
 
 }
 

@@ -73,6 +73,7 @@ public class UserService {
             user.setMessage(userProfileDto.getMessage());
             user.setCompany(userProfileDto.getCompany());
 
+            user.setRole(Role.USER);
             userRepository.save(user);
         } catch (Exception e) {
             throw new Exception("회원 정보를 생성하는 동안 오류가 발생했습니다.", e);
@@ -115,6 +116,7 @@ public class UserService {
 
 
     // 메일 내용을 생성하고 임시 비밀번호로 회원 비밀번호를 변경
+
     public MailDto createMailAndChangePassword(String userEmail) {
         String tempPassword = getTempPassword();
         MailDto mailDTO = new MailDto();

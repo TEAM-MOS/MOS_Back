@@ -10,6 +10,8 @@ import java.util.Date;
 @Getter
 public class UserProfileDto {
     private String nickname;
+
+    private String name;
     private Date str_duration;
     private Date end_duration;
     private String message;

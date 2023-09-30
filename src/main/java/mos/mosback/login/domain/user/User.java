@@ -158,6 +158,13 @@ public class User {
         this.company = updateCompany;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
     public void updatePassword(String updatePassword, PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(updatePassword);
