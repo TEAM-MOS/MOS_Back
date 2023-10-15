@@ -17,10 +17,10 @@ spring:
       settings:
         web-allow-others: true
 
-    datasource:
-       url: jdbc:mysql://mosback.cr44edacdfoo.ap-northeast-2.rds.amazonaws.com:3306/mosback
-       username: mosback
-       password: ${DATABASE_PASSWORD}
+  datasource:
+    url: jdbc:mysql://mosback.cr44edacdfoo.ap-northeast-2.rds.amazonaws.com:3306/mosback
+    username: mosback
+    password: ${DATABASE_PASSWORD}
 
 
   main:
