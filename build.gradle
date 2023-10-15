@@ -1,12 +1,17 @@
-plugins {
-    id 'org.springframework.boot' version '2.7.3'
-    id 'io.spring.dependency-management' version '1.0.13.RELEASE'
+plugins { // (1)
+    id 'org.springframework.boot' version '2.4.1'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'java'
+    id 'maven-publish'
 }
 
-group = 'login'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+group = 'mos'
+version '1.0-SNAPSHOT'
 
 configurations {
     compileOnly {
@@ -16,6 +21,23 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven {
+        url 'https://repo.clojars.org'
+        name 'Clojars'
+    }
+}
+jar {
+    enabled = false
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'mos.mosback.Application'
+    }
+}
+// for Junit 5
+test { // (2)
+    useJUnitPlatform()
 }
 jar {
     enabled = false
@@ -32,28 +54,45 @@ test { // (2)
 }
 
 dependencies {
+
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'com.auth0:java-jwt:4.2.1'
+    implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation 'io:io:0.2.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
+    implementation 'org.mariadb.jdbc:mariadb-java-client'
     annotationProcessor 'org.projectlombok:lombok'
-    testCompileOnly 'org.projectlombok:lombok'
-    testAnnotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-mail' //메일 의존성
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
-    implementation 'org.springframework.boot:spring-boot-starter-mail' //메일 의존성
-//    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 
-    //    로그인 jwt 의존성
+//    로그인 jwt 의존성
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.23'
-}
 
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.2'
+
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'com.auth0:java-jwt:4.2.1'
+
+    // lombok
+    implementation('org.projectlombok:lombok:1.18.20')
+    testImplementation 'junit:junit:4.13.1'
+    annotationProcessor('org.projectlombok:lombok:1.18.20')
+    testImplementation('org.projectlombok:lombok:1.18.20')
+    testAnnotationProcessor('org.projectlombok:lombok:1.18.20')
+}
 tasks.named('test') {
     useJUnitPlatform()
 }
+
