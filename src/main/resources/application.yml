@@ -17,11 +17,10 @@ spring:
       settings:
         web-allow-others: true
 
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password:
+    datasource:
+       url: jdbc:mysql://mosback.cr44edacdfoo.ap-northeast-2.rds.amazonaws.com:3306/mosback
+       username: mosback
+       password: ${DATABASE_PASSWORD}
 
 
   main:
