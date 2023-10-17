@@ -44,6 +44,9 @@ public class StRoomEntity extends BaseTimeEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<StudyMemberEntity> studyMemberEntities = new ArrayList<>();
 
+    @OneToMany (fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<StudyMemberTodoEntity> studyMemberTodoEntities = new ArrayList<>();
+
     @Builder
     public StRoomEntity(String title, String goal, String rules, String quest,
                         String category, String intro, int memberNum, int maxMember

@@ -31,9 +31,5 @@ public class StudyMemberEntity implements Serializable {
     private String answer; // 스터디 답변
 
 
-    @Builder
-    public StudyMemberEntity(MemberStatus status){
-        this.status = status;
-    }
 
 }
