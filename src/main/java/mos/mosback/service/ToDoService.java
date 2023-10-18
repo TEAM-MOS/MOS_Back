@@ -64,6 +64,7 @@ public class ToDoService {
 
     }
 
+    @Transactional
     public StudyMemberTodoEntity addMemberTodo(StudyMemberToDoRequestDto requestDto) throws Exception {
         StudyMemberTodoEntity toDoEntity = new StudyMemberTodoEntity();
         toDoEntity.setTodoContent(requestDto.getTodoContent());

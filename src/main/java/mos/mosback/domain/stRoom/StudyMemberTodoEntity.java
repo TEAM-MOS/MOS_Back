@@ -1,6 +1,5 @@
 package mos.mosback.domain.stRoom;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +11,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @Entity
+@IdClass(StudyMemberTodoEntity.class)
 public class StudyMemberTodoEntity implements Serializable {
 
     @Id
