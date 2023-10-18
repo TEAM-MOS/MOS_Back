@@ -1,5 +1,4 @@
 package mos.mosback.domain.stRoom;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,6 +28,6 @@ public class ToDoEntity extends BaseTimeEntity {
 
 
 
-// 스터디 방에 대한 Todo 정보를 담는 엔티티
+// 스터디 방에 대한 투두 정보를 담는 엔티티
 
 }

@@ -19,10 +19,15 @@ public class StudyMemberTodoEntity implements Serializable {
     @Column(name = "memberID")
     private Long memberId;
 
+    @Id
+    @Column
+    private String todoContent;
+
     @ManyToOne
     @JoinColumn(name = "roomID")
     private StRoomEntity stRoom;
 
+    @Id
     @ManyToOne
     @JoinColumn(name = "todoId")
     private ToDoEntity toDoEntity;
@@ -30,4 +35,7 @@ public class StudyMemberTodoEntity implements Serializable {
     // 다른 필드와 매핑
     @Enumerated(EnumType.STRING)
     private TodoStatus status;
+
+    private String day; // 사용자가 선택한 요일
+
 }

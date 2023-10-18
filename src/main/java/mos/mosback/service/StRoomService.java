@@ -60,7 +60,8 @@ public class StRoomService {
             return null;
         }
 
-}
+    }
+
     @Transactional
     public void update(Long roomID, StRoomUpdateRequestDto requestDto) {
         StRoomEntity stroomEntity = stRoomRepository.findById(roomID)
@@ -148,6 +149,7 @@ public class StRoomService {
             e.printStackTrace();
         }
     }
+
     public List<Home_RoomResponseDto> getRecruitingStudies() {
 
         LocalDateTime now = LocalDateTime.now();
@@ -157,14 +159,23 @@ public class StRoomService {
     }
 
     public QuestionDto getQuestionById(Long roomId) {
-         StRoomEntity stRoomEntity = stRoomRepository.findById(roomId)
-                 .orElseThrow(() -> new EntityNotFoundException("Room not found"));
+        StRoomEntity stRoomEntity = stRoomRepository.findById(roomId)
+                .orElseThrow(() -> new EntityNotFoundException("Room not found"));
 
-         QuestionDto responseDTO = new QuestionDto();
-         responseDTO.setQuestion(stRoomEntity.getQuest());
+        QuestionDto responseDTO = new QuestionDto();
+        responseDTO.setQuestion(stRoomEntity.getQuest());
 
-         return responseDTO;
+        return responseDTO;
 
     }
 
+    public String getMyInfo(String email) throws Exception {
+        // 3. 사용자 이메일 조회해서 save 전에 주입
+        User user = userService.getUserByEmail(email);
+
+        List<StudyMemberEntity> memberJoinList = studyMemberRepository.findAllByMemberId(user.getId());
+
+        // study member 가입이력이 있다면 "Y" , 없으면 "N"
+        return !memberJoinList.isEmpty() ? "Y" : "N";
+    }
 }

@@ -135,16 +135,17 @@ public class StRoomController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
-    @PostMapping("/memberjoin")
-    public ResponseEntity<String> memberJoin(@RequestBody StRoomMemberJoinRequestDto requestDto) {
+    @PostMapping("/memberjoin/{roomId}")
+    public ResponseEntity<String> memberJoin(@PathVariable Long roomId,
+                                             @RequestBody StRoomMemberJoinRequestDto requestDto) {
         // 현재 로그인한 사용자의 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentEmail = authentication.getName(); // 현재 사용자의 이메일
         requestDto.setEmail(currentEmail);
+        requestDto.setRoomID(roomId);
         stRoomService.memberJoin(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body("joined successfully.");
     }
-
 
     @GetMapping("/recruiting")
     public ResponseEntity<?> getRecruitingStudies() {
@@ -160,6 +161,23 @@ public class StRoomController {
 
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
+    }
+
+    /**
+     * 스터디 가입여부를 조회하는 API
+     * @return
+     */
+    @GetMapping("/my-info")
+    public ResponseEntity<Map<String, Object>> getMyInfo() throws Exception {
+        // 현재 로그인한 사용자의 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName(); // 현재 사용자의 이메일
+        String joinYn = stRoomService.getMyInfo(email);
+        Map<String, Object> response = new HashMap<>();
+        response.put("joinYn", joinYn);
+        response.put("success", true);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
 

@@ -3,10 +3,10 @@ import lombok.Getter;
 import mos.mosback.domain.stRoom.ToDoEntity;
 
 @Getter
-public class ToDoContentResponseDto {
+public class StRoomToDoResponseDto {
     private String todoContent;
 
-    public ToDoContentResponseDto(ToDoEntity entity) {
+    public StRoomToDoResponseDto(ToDoEntity entity) {
         this.todoContent = entity.getTodoContent();
     }
 }
