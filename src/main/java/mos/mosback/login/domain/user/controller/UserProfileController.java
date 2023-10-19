@@ -12,6 +12,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/profile")
 public class UserProfileController {
@@ -33,54 +36,48 @@ public class UserProfileController {
 
 
     @PostMapping
-    public ResponseEntity<String> createUserProfile(@RequestBody UserProfileDto userProfileDto) throws Exception {
-        // 현재 로그인한 사용자의 정보 가져오기
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentEmail = authentication.getName(); // 현재 사용자의 이메일
-        try{
-        // 회원 정보 생성
-        userService.createUser(currentEmail, userProfileDto);
+    public Map<String, Object> createUserProfile(@RequestBody UserProfileDto userProfileDto) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            // 현재 로그인한 사용자의 정보 가져오기
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String currentEmail = authentication.getName(); // 현재 사용자의 이메일
 
-        return ResponseEntity.ok("회원 정보가 생성되었습니다.");
-        } catch (Exception e){
+            // 회원 정보 생성
+            userService.createUser(currentEmail, userProfileDto);
+
+            response.put("status", 200);
+            response.put("success", true);
+            response.put("message", "회원 정보가 생성되었습니다.");
+        } catch (Exception e) {
             e.printStackTrace(); // 이 코드는 예외의 스택 트레이스를 콘솔에 출력합니다.
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("오류가 발생했습니다.");
+            response.put("status", 500);
+            response.put("success", false);
+            response.put("message", "오류가 발생했습니다.");
         }
-
+        return response;
     }
 
+
     @PutMapping
-    public ResponseEntity<String> updateUserProfile(@RequestBody UserProfileDto userProfileDto) throws Exception {
+    public Map<String, Object> updateUserProfile(@RequestBody UserProfileDto userProfileDto) throws Exception {
         // 현재 로그인한 사용자의 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentEmail = authentication.getName(); // 현재 사용자의 이메일
+        Map<String, Object> response = new HashMap<>();
         try{
         // 회원 정보 업데이트
         userService.updateUserProfile(currentEmail, userProfileDto);
-
-        return ResponseEntity.ok("회원 정보가 업데이트되었습니다.");
+            response.put("status", 200);
+            response.put("success", true);
+            response.put("message", "회원 정보가 업데이트되었습니다.");
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("오류가 발생했습니다.");
+            response.put("status", 500);
+            response.put("success", false);
+            response.put("message", "오류가 발생했습니다.");
             }
-        }
 
-//    @PostMapping("/image")
-//    public ResponseEntity<String> uploadProfileImage(@RequestParam("file") MultipartFile file) {
-//        try {
-//            byte[] imageBytes = file.getBytes();
-//            String filename = file.getOriginalFilename();
-//
-//            s4service.uploadProfileImage(filename, imageBytes);
-//
-//            return ResponseEntity.ok("Profile image uploaded successfully");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload profile image");
-//        }
-//    }
-
-
-
-}
+    return response;
+}}
 
