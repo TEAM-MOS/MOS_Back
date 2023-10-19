@@ -74,16 +74,22 @@ public class UserController {
 
 
     @GetMapping("/user-emails/{email}/exists")
-    public ResponseEntity<String> checkEmailExists(@PathVariable String email) {
+    public Map<String, Object> checkEmailExists(@PathVariable String email) {
+        Map<String, Object> response = new HashMap<>();
         Optional<User> existingUser = userRepository.findByEmail(email);
 
         if (existingUser.isPresent()) {
-            User user = existingUser.get();
-            return ResponseEntity.ok("이메일이 이미 존재합니다.");
+            response.put("status", 500);
+            response.put("success", true);
+            response.put("message", "이메일이 이미 존재합니다.");
         } else {
-            return ResponseEntity.ok("사용할 수 있는 이메일입니다.");
+            response.put("status", 200);
+            response.put("success", true);
+            response.put("message", "사용할 수 있는 이메일입니다.");
         }
+        return response;
     }
+
 
 
     @Transactional
