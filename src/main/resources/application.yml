@@ -1,9 +1,11 @@
 spring:
   profiles:
     group:
-      "local": "local, jwt, oauth"
-    active: local
+      local : "local, jwt, oauth"
+    active : local
 
+---
+spring:
   config:
     activate:
       on-profile: "local"
@@ -12,14 +14,15 @@ spring:
     console:
       enabled: true
       path: /h2-console
-    settings:
-      web-allow-others: true
+      settings:
+        web-allow-others: true
 
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:testdb
     username: sa
     password:
+
 
   main:
     allow-circular-references: true
@@ -31,8 +34,10 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+
     hibernate:
       ddl-auto: create
+
 
   mail:
     host: smtp.naver.com # 이메일 서버 호스트 (Gmail 사용 예)
@@ -46,10 +51,9 @@ spring:
           starttls:
             enable: true # TLS를 사용하려면 true, SSL을 사용하려면 false
         debug: true # 디버그 모드 활성화
-
-logging:
-  level:
-    root: DEBUG
-
+  logging:
+    level:
+      root: DEBUG
+---
 server:
   port: 8090
