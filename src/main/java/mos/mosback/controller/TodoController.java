@@ -2,7 +2,7 @@ package mos.mosback.controller;
 import mos.mosback.domain.stRoom.StudyMemberTodoEntity;
 import mos.mosback.domain.stRoom.ToDoEntity;
 import mos.mosback.service.ToDoService;
-import mos.mosback.stRoom.dto.MemberToDoRequestDto;
+import mos.mosback.stRoom.dto.stRoomToDoRequestDto;
 import mos.mosback.stRoom.dto.StudyMemberToDoRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ public class TodoController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> addTodo(@RequestBody MemberToDoRequestDto requestDto) {
+    public ResponseEntity<String> addTodo(@RequestBody stRoomToDoRequestDto requestDto) {
         ToDoEntity todo = toDoService.addTodo(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body("TodoList 추가 완료. index : " +todo.getTodoId());
     }
@@ -42,9 +42,9 @@ public class TodoController {
 
 
     @PutMapping("/{todoId}")
-    public ResponseEntity<String> updateTodo(@PathVariable Long todoId, @RequestBody MemberToDoRequestDto requestDto) {
+    public ResponseEntity<String> updateTodo(@PathVariable Long todoId, @RequestBody stRoomToDoRequestDto requestDto) {
         try {
-            ToDoEntity updatedToDo = toDoService.updateTodo(todoId, requestDto.getTodoContent());
+            ToDoEntity updatedToDo = toDoService.updateTodo(todoId, requestDto.getTodoContent(),requestDto.getStatus());
             return ResponseEntity.ok("ToDo 업데이트 완료. Index: " + todoId);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)

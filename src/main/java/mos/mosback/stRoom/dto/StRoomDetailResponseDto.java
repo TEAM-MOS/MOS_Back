@@ -26,7 +26,6 @@ public class StRoomDetailResponseDto {
     private String goal;
     private String rules;
     private String intro;
-    //+스터디원 사진..리스트??
-    //+웨이팅멤버 사진
-    //+스터디 투두리스트
+    //+스터디원 사진
+    //+스터디룸 투두리스트
 }

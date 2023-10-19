@@ -36,6 +36,5 @@ public class StudyMemberTodoEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private TodoStatus status;
 
-    private String day; // 사용자가 선택한 요일
 
 }

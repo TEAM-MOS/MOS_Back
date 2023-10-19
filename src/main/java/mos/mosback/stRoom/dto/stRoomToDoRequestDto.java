@@ -1,15 +1,16 @@
 package mos.mosback.stRoom.dto;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import mos.mosback.domain.stRoom.TodoStatus;
 
 
 @Setter
 @Getter
 @NoArgsConstructor
-public class MemberToDoRequestDto {
+public class stRoomToDoRequestDto {
+
     private String todoContent;
-    private boolean completed; // TodoLists 상태 ( 완료 - true, 미완료 - false)
+    private TodoStatus status;
     private Long roomID;
 }

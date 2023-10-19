@@ -21,9 +21,14 @@ public class ToDoEntity extends BaseTimeEntity {
     @Column
     private String todoContent;
 
-    public void update(String todoContent)
+    @Enumerated(EnumType.STRING)
+    private TodoStatus status;
+
+    public void update(String todoContent, TodoStatus status)
     {
+
         this.todoContent = todoContent;
+        this.status = status;
     }
 
 

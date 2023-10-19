@@ -3,6 +3,7 @@ package mos.mosback.stRoom.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import mos.mosback.domain.stRoom.TodoStatus;
 
 
 @Setter
@@ -10,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class StudyMemberToDoRequestDto {
     private String todoContent;
-    private boolean completed; // TodoLists 상태 ( 완료 - true, 미완료 - false)
+    private TodoStatus status;
     private Long roomID;
     private Long todoId;
     private String currentEmail;

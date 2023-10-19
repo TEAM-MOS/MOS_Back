@@ -178,4 +178,7 @@ public class StRoomService {
         // study member 가입이력이 있다면 "Y" , 없으면 "N"
         return !memberJoinList.isEmpty() ? "Y" : "N";
     }
+
+
+
 }

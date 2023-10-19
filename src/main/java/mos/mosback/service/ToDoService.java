@@ -9,12 +9,10 @@ import mos.mosback.login.domain.user.service.UserService;
 import mos.mosback.repository.MemberTodoRepository;
 import mos.mosback.repository.StRoomRepository;
 import mos.mosback.repository.ToDoRepository;
-import mos.mosback.stRoom.dto.MemberToDoRequestDto;
+import mos.mosback.stRoom.dto.stRoomToDoRequestDto;
 import mos.mosback.stRoom.dto.StudyMemberToDoRequestDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -27,10 +25,10 @@ public class ToDoService {
     private final UserService userService;
 
     @Transactional
-    public ToDoEntity addTodo(MemberToDoRequestDto requestDto) {
+    public ToDoEntity addTodo(stRoomToDoRequestDto requestDto) {
         ToDoEntity toDoEntity = new ToDoEntity();
         toDoEntity.setTodoContent(requestDto.getTodoContent());
-
+        toDoEntity.setStatus(TodoStatus.Waiting);
         StRoomEntity stRoomEntity = stRoomRepository.findById(requestDto.getRoomID())
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id =" + requestDto.getRoomID()));
 
@@ -40,11 +38,11 @@ public class ToDoService {
 
 
     @Transactional
-    public ToDoEntity updateTodo(Long todoId, String todoContent) {
+    public ToDoEntity updateTodo(Long todoId, String todoContent,TodoStatus status) {
         ToDoEntity toDoEntity = toDoRepository.findById(todoId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ToDo를 찾을 수 없습니다."));
 
-        toDoEntity.update(todoContent);
+        toDoEntity.update(todoContent, status);
         return toDoEntity;
     }
 
