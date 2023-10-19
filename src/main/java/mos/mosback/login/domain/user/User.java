@@ -2,8 +2,6 @@ package mos.mosback.login.domain.user;
 
 
 import lombok.*;
-import mos.mosback.domain.stRoom.StRoomEntity;
-import mos.mosback.domain.stRoom.StudyMemberEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
