@@ -47,19 +47,23 @@ public class UserController {
 
 
     @PutMapping("/update/password")
-    public ResponseEntity<String> updateUserPassword(@RequestBody UserSignUpDto userSignUpDto) throws Exception {
+    public Map<String, Object> updateUserPassword(@RequestBody UserSignUpDto userSignUpDto) throws Exception {
         // 현재 로그인한 사용자의 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentEmail = authentication.getName(); // 현재 사용자의 이메일
+        Map<String, Object> response = new HashMap<>();
         try{
             // 회원 정보 업데이트
             userService.upadateUserPassword(currentEmail, userSignUpDto);
-
-            return ResponseEntity.ok("비밀번호 수정이 완료되었습니다.");
+            response.put("status", 200);
+            response.put("success", true);
+            response.put("message", "비밀번호 수정이 완료되었습니다.");
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("오류가 발생했습니다.");
+            response.put("status", 500);
+            response.put("success", false);
+            response.put("message", "비밀번호 수정 실패: " + e.getMessage());
         }
+            return response;
     }
 
 
