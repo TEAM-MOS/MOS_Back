@@ -28,11 +28,23 @@ public class UserController {
     private Map<Long, User> userMap = new HashMap<>();
 
     private JwtService jwtService;
-    @PostMapping("/sign-up")
-    public String signUp(@RequestBody UserSignUpDto userSignUpDto) throws Exception {
+   @PostMapping("/sign-up")
+public ResponseEntity<Map<String, Object>> signUp(@RequestBody UserSignUpDto userSignUpDto) {
+    Map<String, Object> response = new HashMap<>();
+    try {
         userService.signUp(userSignUpDto);
-        return "회원가입 성공";
+        response.put("status", 200);
+        response.put("success", true);
+        response.put("message", "회원가입 성공");
+        return ResponseEntity.ok(response);
+    } catch (Exception ex) {
+        response.put("status", 500);
+        response.put("success", false);
+        response.put("message", "회원가입 실패: " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
+}
+
 
 
     @PutMapping("/update/password")
