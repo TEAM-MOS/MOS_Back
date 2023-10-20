@@ -34,16 +34,20 @@ public class StRoomController {
         requestDto.setEmail(currentEmail);
         Long stroomId = stRoomService.save(requestDto, req);
         if (stroomId != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body("created successfully. ID: " + stroomId);
+            return ResponseEntity.status(HttpStatus.CREATED).body
+                    ("message: created successfully. ID:" + stroomId +"\nsuccess:true \nstatus:201");
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Server error!");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body
+                    ("message: Bad Request \nsuccess:false \nstatus:400");
         }
     }
-    @GetMapping("/MyStudy/{roomId}")
+    @GetMapping("/my{roomId}")
     public ResponseEntity<StRoomResponseDto> FindByID (@PathVariable Long roomId) {
-        StRoomResponseDto stroom = stRoomService.findById(roomId);
-        return new ResponseEntity<>(stroom, HttpStatus.OK);
+
+            StRoomResponseDto stroom = stRoomService.findById(roomId);
+            return new ResponseEntity<>(stroom, HttpStatus.OK);
     }
+
     @GetMapping("/search")
     public ResponseEntity<?> searchRoom(@RequestParam String keyword) {
         try {
@@ -61,10 +65,11 @@ public class StRoomController {
     public ResponseEntity<String> UpdateRoom(@PathVariable Long roomId, @RequestBody StRoomUpdateRequestDto requestDto) {
         try {
             stRoomService.update(roomId, requestDto);
-            return ResponseEntity.ok("updated.");
+            return ResponseEntity.ok
+                    ("message: updated successfully. roomId:"+roomId+"\nsuccess:true\nstatus:200");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("NOT FOUND "+"'"+roomId+"'");
+                    .body("message: NOT FOUND "+"'"+roomId+"'"+"\nsuccess:false\nstatus:404");
         }
     }
 
@@ -86,9 +91,10 @@ public class StRoomController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Home_RoomResponseDto>> findAllRoomsDesc() {
-        List<Home_RoomResponseDto> rooms = stRoomService.findAllRoomsDesc();
-        return ResponseEntity.ok(rooms);
+    public ResponseEntity<List<Home_RoomResponseDto>> findAllRoomsDesc(){
+
+           List<Home_RoomResponseDto> rooms = stRoomService.findAllRoomsDesc();
+           return ResponseEntity.ok(rooms);
     }
 
     @GetMapping("/popular")
@@ -131,7 +137,7 @@ public class StRoomController {
             Map<String, Object> response = new HashMap<>();
             response.put("status:", HttpStatus.NOT_FOUND.value());
             response.put("success", false);
-            response.put("message", "NOT FOUND: Quest with roomID " + roomId);
+            response.put("message", "NOT FOUND");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
@@ -144,7 +150,8 @@ public class StRoomController {
         requestDto.setEmail(currentEmail);
         requestDto.setRoomID(roomId);
         stRoomService.memberJoin(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("joined successfully.");
+        return ResponseEntity.status(HttpStatus.CREATED).body
+                ("message : joined successfully.\nstatus : 201\n success: true");
     }
 
     @GetMapping("/recruiting")
@@ -157,7 +164,7 @@ public class StRoomController {
             Map<String, Object> response = new HashMap<>();
             response.put("status", HttpStatus.NOT_FOUND.value());
             response.put("success", false);
-            response.put("message", "NOT FOUND: recruiting studyRoom ");
+            response.put("message", "NOT FOUND");
 
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }

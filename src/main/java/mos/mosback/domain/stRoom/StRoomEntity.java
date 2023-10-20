@@ -23,6 +23,7 @@ public class StRoomEntity extends BaseTimeEntity {
 
     @Column(nullable = false)
     private String goal; //스터디 목표
+    @Column(nullable = false)
     private String rules; //스터디 규칙
     private String quest; //생성 시 질문
     private String category; // 스터디 카테고리
@@ -34,7 +35,7 @@ public class StRoomEntity extends BaseTimeEntity {
     private boolean onOff; //진행방식 (온오프)
     private String location;
     private int online; //온라인
-    private Date startDate; //스터디 시작 날짜
+    private LocalDate startDate; //스터디 시작 날짜
     private LocalDate endDate; //스터디 끝나는 날짜
     private boolean recruiting; //모집여부
 
@@ -49,7 +50,7 @@ public class StRoomEntity extends BaseTimeEntity {
     public StRoomEntity(String title, String goal, String rules, String quest,
                         String category, String intro, int memberNum, int maxMember
             ,String mod, boolean onOff, String location,int online,
-                        Date startDate, LocalDate endDate, List<StudyDaysEntity> studyDayEntities
+                        LocalDate startDate, LocalDate endDate, List<StudyDaysEntity> studyDayEntities
     ) {
         this.title = title;
         this.goal = goal;
@@ -72,7 +73,7 @@ public class StRoomEntity extends BaseTimeEntity {
 
     public void update(String title, String goal, String rules, String quest,
                        String category, String intro, int maxMember,
-                       String mod, boolean onOff,String location,int online, Date startDate,
+                       String mod, boolean onOff,String location,int online,LocalDate startDate,
                        LocalDate endDate,List<StudyDaysEntity> studyDayEntities) {
         this.title = title;
         this.goal = goal;

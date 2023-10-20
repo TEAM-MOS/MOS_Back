@@ -11,10 +11,8 @@ public class StRoomDetailResponseDto {
     private String category;
     private boolean recruiting;
     private String location;
-    private Date startDate;
+    private LocalDate startDate;
     private LocalDate endDate;
-    private LocalDateTime createdDate;
-    private Date deadline;
     private int memberNum; //현재 멤버수
     private int maxMember; //모집 멤버수
 

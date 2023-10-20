@@ -5,7 +5,6 @@ import mos.mosback.domain.stRoom.MemberStatus;
 import mos.mosback.domain.stRoom.StRoomEntity;
 import mos.mosback.domain.stRoom.StudyMemberEntity;
 import mos.mosback.login.domain.user.User;
-import mos.mosback.login.domain.user.repository.UserRepository;
 import mos.mosback.login.domain.user.service.UserService;
 import mos.mosback.login.global.jwt.service.JwtService;
 import mos.mosback.repository.StRoomRepository;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;

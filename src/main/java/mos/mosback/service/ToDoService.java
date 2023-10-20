@@ -25,12 +25,12 @@ public class ToDoService {
     private final UserService userService;
 
     @Transactional
-    public ToDoEntity addTodo(stRoomToDoRequestDto requestDto) {
+    public ToDoEntity addTodo(stRoomToDoRequestDto requestDto, Long roomID) {
         ToDoEntity toDoEntity = new ToDoEntity();
         toDoEntity.setTodoContent(requestDto.getTodoContent());
         toDoEntity.setStatus(TodoStatus.Waiting);
-        StRoomEntity stRoomEntity = stRoomRepository.findById(requestDto.getRoomID())
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id =" + requestDto.getRoomID()));
+        StRoomEntity stRoomEntity = stRoomRepository.findById(roomID)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id =" + roomID));
 
         toDoEntity.setStRoom(stRoomEntity);
         return toDoRepository.save(toDoEntity);
@@ -70,7 +70,7 @@ public class ToDoService {
         StRoomEntity stRoomEntity = stRoomRepository.findById(requestDto.getRoomID())
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id =" + requestDto.getRoomID()));
 
-        // 2. 사용자 이메일 조회해서 save 전에 주입
+        // 사용자 이메일 조회해서 save 전에 주입
         User user = userService.getUserByEmail(requestDto.getCurrentEmail());
         toDoEntity.setMemberId(user.getId());
         toDoEntity.setStatus(TodoStatus.Waiting);

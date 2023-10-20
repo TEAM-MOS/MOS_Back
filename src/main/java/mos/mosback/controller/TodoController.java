@@ -22,12 +22,12 @@ public class TodoController {
         this.toDoService = toDoService;
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<String> addTodo(@RequestBody stRoomToDoRequestDto requestDto) {
-        ToDoEntity todo = toDoService.addTodo(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("TodoList 추가 완료. index : " +todo.getTodoId());
+    @PostMapping("/add/{roomID}")
+    public ResponseEntity<String> addTodo(@RequestBody stRoomToDoRequestDto requestDto, @PathVariable Long roomID) {
+        ToDoEntity todo = toDoService.addTodo(requestDto, roomID);
+        return ResponseEntity.status(HttpStatus.CREATED).body
+                ("TodoList 추가 완료. index : " + todo.getTodoId()+"\nstatus:201\nsuccess:true");
     }
-
     @PostMapping("/member/add")
     public ResponseEntity<String> addMemberTodo(@RequestBody StudyMemberToDoRequestDto requestDto) throws Exception {
         // 현재 로그인한 사용자의 정보 가져오기
@@ -45,7 +45,7 @@ public class TodoController {
     public ResponseEntity<String> updateTodo(@PathVariable Long todoId, @RequestBody stRoomToDoRequestDto requestDto) {
         try {
             ToDoEntity updatedToDo = toDoService.updateTodo(todoId, requestDto.getTodoContent(),requestDto.getStatus());
-            return ResponseEntity.ok("ToDo 업데이트 완료. Index: " + todoId);
+            return ResponseEntity.ok("ToDo 업데이트 완료. Index: " + todoId+"\nstatus:200\nsuccess:true");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("NOT FOUND TODO");

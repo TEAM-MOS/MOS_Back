@@ -22,7 +22,7 @@ public class StRoomListResponseDto {
     private String mod; //스터디 분위기
     private int click;// 클릭횟수 (인기순 조회)
     private boolean onOff; //진행방식 (온오프)
-    private Date startDate; //스터디 시작 날짜
+    private LocalDate startDate; //스터디 시작 날짜
     private LocalDate endDate; //스터디 끝나는 날짜
     private String location;
     private int online; //온라인

@@ -1,6 +1,8 @@
 package mos.mosback.stRoom.dto;
 import lombok.Getter;
 import mos.mosback.domain.stRoom.StRoomEntity;
+
+import java.time.LocalDate;
 import java.util.Date;
 
 
@@ -13,13 +15,15 @@ public class Home_RoomResponseDto {
     private int maxMember; //모집 멤버수
     private String location; //스터디장소
     private int online; //온라인
-    private Date startDate; //스터디 시작날짜
+    private LocalDate startDate; //스터디 시작날짜
+    private LocalDate endDate;
 
     //+ 유저프로필사진
 
     public Home_RoomResponseDto(StRoomEntity entity) {
         this.title = entity.getTitle();
         this.startDate = entity.getStartDate();
+        this.endDate = entity.getEndDate();
         this.location = entity.getLocation();
         this.online = entity.getOnline();
         this.category = entity.getCategory();

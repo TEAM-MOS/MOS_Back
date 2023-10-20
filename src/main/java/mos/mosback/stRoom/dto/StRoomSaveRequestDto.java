@@ -26,7 +26,7 @@ public class StRoomSaveRequestDto {
     private boolean onOff; //진행방식 (온오프)
     private String location; //스터디 장소
     private int online; // 온라인일 경우 1 : 줌 2 : 디코 3: 구글미트 4: 기타
-    private Date startDate; //스터디 시작 날짜
+    private LocalDate startDate; //스터디 시작 날짜
     private LocalDate endDate; //스터디 끝나는 날짜
     private String email; // 사용자 이메일
     private List<StudyDaysEntity> studyDayEntities;
@@ -35,7 +35,7 @@ public class StRoomSaveRequestDto {
     @Builder
     public StRoomSaveRequestDto(String title, String goal, String rules, String quest, String category,
                                 String intro, int maxMember, String mod, boolean onOff,String location,int online,
-                                Date startDate, LocalDate endDate,List<StudyDaysEntity> studyDayEntities) {
+                                LocalDate startDate, LocalDate endDate,List<StudyDaysEntity> studyDayEntities) {
         this.title = title;
         this.goal = goal;
         this.rules = rules;
