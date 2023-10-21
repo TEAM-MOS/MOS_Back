@@ -1,5 +1,4 @@
 package mos.mosback.service;
-
 import lombok.RequiredArgsConstructor;
 import mos.mosback.domain.stRoom.MemberStatus;
 import mos.mosback.domain.stRoom.StRoomEntity;
@@ -16,10 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -108,11 +108,8 @@ public class StRoomService {
 
 
     @Transactional(readOnly = true)
-    public List<StRoomListResponseDto> findPopularRoom() {
-        List<Home_RoomResponseDto> popularStrooms = stRoomRepository.findPopularRoom();
-        return popularStrooms.stream()
-                .map(StRoomListResponseDto::new)
-                .collect(Collectors.toList());
+    public List<Home_RoomResponseDto> findPopularRoom() {
+       return stRoomRepository.findPopularRoom();
     }
 
     @Transactional(readOnly = true)
@@ -176,7 +173,16 @@ public class StRoomService {
         // study member 가입이력이 있다면 "Y" , 없으면 "N"
         return !memberJoinList.isEmpty() ? "Y" : "N";
     }
-
+    public String isRecruiting(Long roomID) {
+        Optional<StRoomEntity> optionalRoom = stRoomRepository.findById(roomID);
+        StRoomEntity stRoom = optionalRoom.get();
+        if (stRoom.getStartDate().isAfter(LocalDate.now())) {
+            stRoom.setRecruiting(true);
+        } else {
+            stRoom.setRecruiting(false);
+        }
+        return stRoom.isRecruiting() ? "true" : "false";
+    }
 
 
 }

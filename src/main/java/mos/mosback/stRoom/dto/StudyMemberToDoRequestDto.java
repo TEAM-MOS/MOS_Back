@@ -15,4 +15,5 @@ public class StudyMemberToDoRequestDto {
     private Long roomID;
     private Long todoId;
     private String currentEmail;
+
 }

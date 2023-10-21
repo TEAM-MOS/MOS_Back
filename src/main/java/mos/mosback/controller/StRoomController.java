@@ -92,15 +92,14 @@ public class StRoomController {
 
     @GetMapping("/all")
     public ResponseEntity<List<Home_RoomResponseDto>> findAllRoomsDesc(){
-
-           List<Home_RoomResponseDto> rooms = stRoomService.findAllRoomsDesc();
+        List<Home_RoomResponseDto> rooms = stRoomService.findAllRoomsDesc();
            return ResponseEntity.ok(rooms);
     }
 
     @GetMapping("/popular")
-    public ResponseEntity<List<StRoomListResponseDto>> getPopularRooms() {
-        List<StRoomListResponseDto> popularrooms = stRoomService.findPopularRoom();
-        return new ResponseEntity<>(popularrooms, HttpStatus.OK);
+    public ResponseEntity<List<Home_RoomResponseDto>> getPopularRooms() {
+        List<Home_RoomResponseDto> rooms = stRoomService.findPopularRoom();
+        return ResponseEntity.ok(rooms);
     }
 
     @GetMapping("/home/studyRoom")
@@ -187,7 +186,16 @@ public class StRoomController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @GetMapping("/recruitInfo/{roomId}")
+    public ResponseEntity<Map<String, Object>> recruitInfo(@PathVariable Long roomId) {
+        String recruitInfo = stRoomService.isRecruiting(roomId);
 
+        Map<String, Object> response = new HashMap<>();
+        response.put("모집", recruitInfo);
+        response.put("status", HttpStatus.OK.value());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+
+    }
 }
 
 
@@ -205,4 +213,4 @@ public class StRoomController {
 ///byCategory/{category} : 카테고리별로 조회하는 엔프포인트
 //https://blog.pumpkin-raccoon.com/115#:~:text=1%201.%20%EB%B3%B5%EC%88%98%20%3E%20%EB%8B%A8%EC%88%98%20REST%20API%EC%97%90%EC%84%9C%EB%8A%94%20post%2C,%EC%BB%AC%EB%A0%89%EC%85%98%20%ED%95%84%ED%84%B0%EB%A7%81%3A%20URL%20%EC%BF%BC%EB%A6%AC%20%3E%20%EC%83%88%EB%A1%9C%EC%9A%B4%20API%20
 ///recruiting : 모집중인 게시물을 조회하는 엔드포인트.
-//
+///my-info : 스터디 가입여부 조회

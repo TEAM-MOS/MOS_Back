@@ -71,7 +71,6 @@ public class StRoomEntity extends BaseTimeEntity {
         this.studyDayEntities = studyDayEntities;
     }
 
-    // 다른 필요한 Getter 및 Setter 메서드
 
     public void update(String title, String goal, String rules, String quest,
                        String category, String intro, int maxMember,
@@ -92,4 +91,7 @@ public class StRoomEntity extends BaseTimeEntity {
         this.endDate = endDate;
         this.studyDayEntities = studyDayEntities;
     }
+
+
+
 }

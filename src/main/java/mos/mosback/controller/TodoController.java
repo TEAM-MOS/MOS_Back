@@ -17,7 +17,6 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/todo") //URL 패턴
 
 public class TodoController {
     private final ToDoService toDoService;
@@ -27,13 +26,13 @@ public class TodoController {
         this.toDoService = toDoService;
     }
 
-    @PostMapping("/add/{roomID}")
+    @PostMapping("todo/add/{roomID}")
     public ResponseEntity<String> addTodo(@RequestBody stRoomToDoRequestDto requestDto, @PathVariable Long roomID) {
         try{
             ToDoEntity todo = toDoService.addTodo(requestDto, roomID);
             return ResponseEntity.status(HttpStatus.CREATED).body
                     ("TodoList 추가 완료." +
-                            "\ntodoIndex : " + todo.getTodoId()+"" +
+                            "\ntodoIndex : " + todo.getTodoId() +
                             "\nstatus:201" +
                             "\nsuccess:true");
         }catch(IllegalArgumentException ex) {
@@ -45,7 +44,7 @@ public class TodoController {
 
     }
     @PostMapping("/member/todo/add")
-    public ResponseEntity<String> addMemberTodo(@RequestBody StudyMemberToDoRequestDto requestDto) throws Exception {
+    public ResponseEntity<String> addMemberTodo(@RequestBody StudyMemberToDoRequestDto requestDto) throws Exception{
         // 현재 로그인한 사용자의 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentEmail = authentication.getName(); // 현재 사용자의 이메일
@@ -54,10 +53,10 @@ public class TodoController {
         return ResponseEntity.status(HttpStatus.CREATED).body("TodoList 추가 완료. index : " +todo.getMemberId());
     }
  //todo개수만큼 프론트에서 호출해줘야함
+//
 
 
-
-    @PutMapping("/{todoId}")
+    @PutMapping("todo/{todoId}")
     public ResponseEntity<String> updateTodo(@PathVariable Long todoId, @RequestBody stRoomToDoRequestDto requestDto) {
         try {
             ToDoEntity updatedToDo = toDoService.updateTodo(todoId, requestDto.getTodoContent(),requestDto.getStatus());
@@ -94,7 +93,7 @@ public class TodoController {
         }
     }
 
-    @DeleteMapping("/{todoId}")
+    @DeleteMapping("todo/{todoId}")
     public ResponseEntity<String> deleteTodo(@PathVariable Long todoId) {
         try {
             toDoService.deleteTodo(todoId);
@@ -129,7 +128,7 @@ public class TodoController {
         }
     }
 
-    @GetMapping("/{roomId}")
+    @GetMapping("todo/{roomId}")
     public ResponseEntity<List<StRoomToDoResponseDto>> findStRoomTodoByRoomId(@PathVariable Long roomId) {
         List<StRoomToDoResponseDto> todo = toDoService.findStRoomTodoByRoomId(roomId);
         return new ResponseEntity<>(todo, HttpStatus.OK);
@@ -144,4 +143,6 @@ public class TodoController {
         StudyMemberRoomInfoResponseDto todo = toDoService.getMemberRoomInfo(roomId, currentEmail);
         return new ResponseEntity<>(todo, HttpStatus.OK);
     }
+
+
 }

@@ -14,8 +14,9 @@ public interface StRoomRepository extends JpaRepository<StRoomEntity, Long> {
     @Query("SELECT new mos.mosback.stRoom.dto.Home_RoomResponseDto(s) FROM StRoomEntity s ORDER BY s.roomID DESC")
     List<Home_RoomResponseDto> findAllDesc();
 
-    @Query("SELECT new mos.mosback.stRoom.dto.Home_RoomResponseDto(s) FROM StRoomEntity s WHERE s.title LIKE %:keyword%")
+    @Query("SELECT new mos.mosback.stRoom.dto.Home_RoomResponseDto(s) FROM StRoomEntity s WHERE s.title LIKE %:keyword% OR s.intro LIKE %:keyword%")
     List<Home_RoomResponseDto> findByTitleContaining(@Param("keyword") String keyword);//키워드를 통해 스터디그룹을 검색 할 수 있다
+
 
     @Query(value = "SELECT new mos.mosback.stRoom.dto.Home_RoomResponseDto(s)FROM StRoomEntity s ORDER BY s.click DESC")
     List<Home_RoomResponseDto> findPopularRoom();
@@ -28,7 +29,5 @@ public interface StRoomRepository extends JpaRepository<StRoomEntity, Long> {
 
     @Query("SELECT new mos.mosback.stRoom.dto.Home_RoomResponseDto(s) FROM StRoomEntity s WHERE s.startDate > current_timestamp")
     List<Home_RoomResponseDto> findRecruitingStudies();
-
-
 
 }

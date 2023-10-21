@@ -98,19 +98,17 @@ public class ToDoService {
         return toDoRepository.findByStRoomId(roomId);
     }
 
-    @Transactional
     public StudyMemberTodoEntity addMemberTodo(StudyMemberToDoRequestDto requestDto) throws Exception {
         StudyMemberTodoEntity toDoEntity = new StudyMemberTodoEntity();
         toDoEntity.setTodoContent(requestDto.getTodoContent());
-
         StRoomEntity stRoomEntity = stRoomRepository.findById(requestDto.getRoomID())
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id =" + requestDto.getRoomID()));
-
         // 사용자 이메일 조회해서 save 전에 주입
         User user = userService.getUserByEmail(requestDto.getCurrentEmail());
         toDoEntity.setMemberId(user.getId());
         toDoEntity.setStatus(TodoStatus.Waiting);
         toDoEntity.setStRoom(stRoomEntity);
+
         return studyMemberToDoRepository.save(toDoEntity);
     }
 
