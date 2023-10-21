@@ -37,4 +37,9 @@ public class StudyMemberTodoEntity implements Serializable {
     private TodoStatus status;
 
 
+    public void update(String todoContent, TodoStatus status) {
+        this.todoContent = todoContent;
+        this.status = status;
+    }
+
 }

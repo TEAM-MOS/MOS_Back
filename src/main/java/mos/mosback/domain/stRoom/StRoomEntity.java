@@ -25,7 +25,9 @@ public class StRoomEntity extends BaseTimeEntity {
     private String goal; //스터디 목표
     @Column(nullable = false)
     private String rules; //스터디 규칙
+    @Column(nullable = false)
     private String quest; //생성 시 질문
+    @Column(nullable = false)
     private String category; // 스터디 카테고리
     private String intro; //스터디 소개
     private int memberNum; //현재 멤버수

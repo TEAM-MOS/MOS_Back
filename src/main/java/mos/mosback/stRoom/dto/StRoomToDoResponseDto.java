@@ -1,9 +1,13 @@
 package mos.mosback.stRoom.dto;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import mos.mosback.domain.stRoom.ToDoEntity;
 import mos.mosback.domain.stRoom.TodoStatus;
 
+@Setter
 @Getter
+@NoArgsConstructor
 public class StRoomToDoResponseDto {
     private String todoContent;
     private TodoStatus status;

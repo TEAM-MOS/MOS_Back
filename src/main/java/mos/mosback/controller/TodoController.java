@@ -1,7 +1,10 @@
 package mos.mosback.controller;
 import mos.mosback.domain.stRoom.StudyMemberTodoEntity;
 import mos.mosback.domain.stRoom.ToDoEntity;
+import mos.mosback.login.domain.user.User;
 import mos.mosback.service.ToDoService;
+import mos.mosback.stRoom.dto.StRoomToDoResponseDto;
+import mos.mosback.stRoom.dto.StudyMemberRoomInfoResponseDto;
 import mos.mosback.stRoom.dto.stRoomToDoRequestDto;
 import mos.mosback.stRoom.dto.StudyMemberToDoRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/todo") //URL 패턴
@@ -24,11 +29,22 @@ public class TodoController {
 
     @PostMapping("/add/{roomID}")
     public ResponseEntity<String> addTodo(@RequestBody stRoomToDoRequestDto requestDto, @PathVariable Long roomID) {
-        ToDoEntity todo = toDoService.addTodo(requestDto, roomID);
-        return ResponseEntity.status(HttpStatus.CREATED).body
-                ("TodoList 추가 완료. index : " + todo.getTodoId()+"\nstatus:201\nsuccess:true");
+        try{
+            ToDoEntity todo = toDoService.addTodo(requestDto, roomID);
+            return ResponseEntity.status(HttpStatus.CREATED).body
+                    ("TodoList 추가 완료." +
+                            "\ntodoIndex : " + todo.getTodoId()+"" +
+                            "\nstatus:201" +
+                            "\nsuccess:true");
+        }catch(IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body
+                    ("TodoList 추가 실패" +
+                    "\nstatus:404" +
+                    "\nsuccess:false");
+        }
+
     }
-    @PostMapping("/member/add")
+    @PostMapping("/member/todo/add")
     public ResponseEntity<String> addMemberTodo(@RequestBody StudyMemberToDoRequestDto requestDto) throws Exception {
         // 현재 로그인한 사용자의 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -45,10 +61,36 @@ public class TodoController {
     public ResponseEntity<String> updateTodo(@PathVariable Long todoId, @RequestBody stRoomToDoRequestDto requestDto) {
         try {
             ToDoEntity updatedToDo = toDoService.updateTodo(todoId, requestDto.getTodoContent(),requestDto.getStatus());
-            return ResponseEntity.ok("ToDo 업데이트 완료. Index: " + todoId+"\nstatus:200\nsuccess:true");
+            return ResponseEntity.ok
+                    ("ToDo 업데이트 완료. \nIndex: " + todoId+
+                    "\nstatus:200" +
+                    "\nsuccess:true");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("NOT FOUND TODO");
+                    .body("NOT FOUND TODO"+
+                            "\nstatus:401" +
+                            "\nsuccess:false");
+        }
+    }
+
+    @PutMapping("/member/todo/{todoId}")
+    public ResponseEntity<String> updateMemberTodo(@PathVariable Long todoId,
+                                                   @RequestBody stRoomToDoRequestDto requestDto) throws Exception {
+        // 현재 로그인한 사용자의 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentEmail = authentication.getName(); // 현재 사용자의 이메일
+        try {
+            StudyMemberTodoEntity updatedToDo = toDoService.updateMemberTodo(todoId, requestDto.getTodoContent(),
+                    requestDto.getStatus(), currentEmail);
+            return ResponseEntity.ok
+                    ("Study Member ToDo 업데이트 완료. \nIndex: " + todoId +
+                            "\nstatus:200" +
+                            "\nsuccess:true");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("NOT FOUND TODO"+
+                            "\nstatus:401" +
+                            "\nsuccess:false");
         }
     }
 
@@ -56,12 +98,50 @@ public class TodoController {
     public ResponseEntity<String> deleteTodo(@PathVariable Long todoId) {
         try {
             toDoService.deleteTodo(todoId);
-            return ResponseEntity.ok("ToDo 삭제 완료. Index: " + todoId);
+            return ResponseEntity.ok
+                    ("ToDo 삭제 완료. Index: " + todoId+
+                    "\nstatus:200" +
+                    "\nsuccess:true");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("NOT FOUND TODO");
+                    .body("NOT FOUND TODO"+
+                            "\nstatus:401" +
+                            "\nsuccess:false");
         }
     }
 
+    @DeleteMapping("/member/todo/{todoId}")
+    public ResponseEntity<String> deleteMemberTodo(@PathVariable Long todoId) throws Exception{
+        // 현재 로그인한 사용자의 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentEmail = authentication.getName(); // 현재 사용자의 이메일
+        try {
+            toDoService.deleteMemberTodo(todoId, currentEmail);
+            return ResponseEntity.ok
+                    ("Study Member ToDo 삭제 완료. Index: " + todoId+
+                            "\nstatus:200" +
+                            "\nsuccess:true");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("NOT FOUND TODO"+
+                            "\nstatus:401" +
+                            "\nsuccess:false");
+        }
+    }
 
+    @GetMapping("/{roomId}")
+    public ResponseEntity<List<StRoomToDoResponseDto>> findStRoomTodoByRoomId(@PathVariable Long roomId) {
+        List<StRoomToDoResponseDto> todo = toDoService.findStRoomTodoByRoomId(roomId);
+        return new ResponseEntity<>(todo, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/member/room/{roomId}")
+    public ResponseEntity<StudyMemberRoomInfoResponseDto> getMemberRoomInfo(@PathVariable Long roomId) throws Exception {
+        // 현재 로그인한 사용자의 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentEmail = authentication.getName(); // 현재 사용자의 이메일
+        StudyMemberRoomInfoResponseDto todo = toDoService.getMemberRoomInfo(roomId, currentEmail);
+        return new ResponseEntity<>(todo, HttpStatus.OK);
+    }
 }
