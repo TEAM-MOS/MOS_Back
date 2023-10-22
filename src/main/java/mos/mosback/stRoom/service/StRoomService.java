@@ -1,14 +1,15 @@
-package mos.mosback.service;
+package mos.mosback.stRoom.service;
 import lombok.RequiredArgsConstructor;
-import mos.mosback.domain.stRoom.MemberStatus;
-import mos.mosback.domain.stRoom.StRoomEntity;
-import mos.mosback.domain.stRoom.StudyMemberEntity;
+import mos.mosback.stRoom.domain.stRoom.MemberStatus;
+import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
+import mos.mosback.stRoom.domain.stRoom.StudyMemberEntity;
 import mos.mosback.login.domain.user.User;
 import mos.mosback.login.domain.user.service.UserService;
 import mos.mosback.login.global.jwt.service.JwtService;
-import mos.mosback.repository.StRoomRepository;
-import mos.mosback.repository.StudyMemberRepository;
-import mos.mosback.stRoom.dto.StRoomSaveRequestDto;
+import mos.mosback.stRoom.repository.StRoomRepository;
+import mos.mosback.stRoom.repository.StudyMemberRepository;
+import mos.mosback.stduy.dto.*;
+import mos.mosback.study.dto.*;
 import mos.mosback.stRoom.dto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,9 +61,9 @@ public class StRoomService {
     }
 
     @Transactional
-    public void update(Long roomID, StRoomUpdateRequestDto requestDto) {
-        StRoomEntity stroomEntity = stRoomRepository.findById(roomID)
-                .orElseThrow(() -> new IllegalArgumentException(roomID + " NOT FOUND"));
+    public void update(Long roomId, StRoomUpdateRequestDto requestDto) {
+        StRoomEntity stroomEntity = stRoomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException(roomId + " NOT FOUND"));
 
         // 나머지 필드 업데이트
         stroomEntity.update(
@@ -79,9 +79,9 @@ public class StRoomService {
 
 
     @Transactional(readOnly = true)
-    public StRoomResponseDto findById(Long roomID) {
-        StRoomEntity stRoomEntity = stRoomRepository.findById(roomID)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id=" + roomID));
+    public StRoomResponseDto findById(Long roomId) {
+        StRoomEntity stRoomEntity = stRoomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id=" + roomId));
 
         return new StRoomResponseDto(stRoomEntity);
     }
@@ -91,9 +91,9 @@ public class StRoomService {
     }
 
     @Transactional
-    public void delete(Long roomID) {
-        StRoomEntity stroomEntity = stRoomRepository.findById(roomID)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id =" + roomID));
+    public void delete(Long roomId) {
+        StRoomEntity stroomEntity = stRoomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id =" + roomId));
 
         stRoomRepository.delete(stroomEntity); //JpaRepository 에서 이미 delete 메소드를 지원하고 있으므로 활용
         //엔티티를 파라미터로 살제할 수도 있고, deleteById 메서드를 이용하면 id로 삭제할 수 있음
@@ -173,8 +173,8 @@ public class StRoomService {
         // study member 가입이력이 있다면 "Y" , 없으면 "N"
         return !memberJoinList.isEmpty() ? "Y" : "N";
     }
-    public String isRecruiting(Long roomID) {
-        Optional<StRoomEntity> optionalRoom = stRoomRepository.findById(roomID);
+    public String isRecruiting(Long roomId) {
+        Optional<StRoomEntity> optionalRoom = stRoomRepository.findById(roomId);
         StRoomEntity stRoom = optionalRoom.get();
         if (stRoom.getStartDate().isAfter(LocalDate.now())) {
             stRoom.setRecruiting(true);

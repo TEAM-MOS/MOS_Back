@@ -1,8 +1,7 @@
-package mos.mosback.controller;
-import mos.mosback.domain.stRoom.StudyMemberTodoEntity;
-import mos.mosback.domain.stRoom.ToDoEntity;
-import mos.mosback.login.domain.user.User;
-import mos.mosback.service.ToDoService;
+package mos.mosback.stRoom.controller;
+import mos.mosback.stRoom.domain.stRoom.StudyMemberTodoEntity;
+import mos.mosback.stRoom.domain.stRoom.ToDoEntity;
+import mos.mosback.stRoom.service.ToDoService;
 import mos.mosback.stRoom.dto.StRoomToDoResponseDto;
 import mos.mosback.stRoom.dto.StudyMemberRoomInfoResponseDto;
 import mos.mosback.stRoom.dto.stRoomToDoRequestDto;
@@ -26,10 +25,10 @@ public class TodoController {
         this.toDoService = toDoService;
     }
 
-    @PostMapping("todo/add/{roomID}")
-    public ResponseEntity<String> addTodo(@RequestBody stRoomToDoRequestDto requestDto, @PathVariable Long roomID) {
+    @PostMapping("todo/add/{roomId}")
+    public ResponseEntity<String> addTodo(@RequestBody stRoomToDoRequestDto requestDto, @PathVariable Long roomId) {
         try{
-            ToDoEntity todo = toDoService.addTodo(requestDto, roomID);
+            ToDoEntity todo = toDoService.addTodo(requestDto, roomId);
             return ResponseEntity.status(HttpStatus.CREATED).body
                     ("TodoList 추가 완료." +
                             "\ntodoIndex : " + todo.getTodoId() +

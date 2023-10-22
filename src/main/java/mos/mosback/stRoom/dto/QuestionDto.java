@@ -1,7 +1,7 @@
 package mos.mosback.stRoom.dto;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import mos.mosback.domain.stRoom.StRoomEntity;
+import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
 import lombok.Getter;
 
 @Setter

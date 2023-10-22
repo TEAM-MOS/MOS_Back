@@ -1,6 +1,6 @@
-package mos.mosback.repository;
+package mos.mosback.stRoom.repository;
 
-import mos.mosback.domain.stRoom.StudyMemberEntity;
+import mos.mosback.stRoom.domain.stRoom.StudyMemberEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

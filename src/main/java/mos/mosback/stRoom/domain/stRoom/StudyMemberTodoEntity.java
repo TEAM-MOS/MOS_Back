@@ -1,4 +1,4 @@
-package mos.mosback.domain.stRoom;
+package mos.mosback.stRoom.domain.stRoom;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +24,7 @@ public class StudyMemberTodoEntity implements Serializable {
     private String todoContent;
 
     @ManyToOne
-    @JoinColumn(name = "roomID")
+    @JoinColumn(name = "roomId")
     private StRoomEntity stRoom;
 
     @Id

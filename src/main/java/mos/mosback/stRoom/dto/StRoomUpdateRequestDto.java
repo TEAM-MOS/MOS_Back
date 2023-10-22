@@ -2,10 +2,9 @@ package mos.mosback.stRoom.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import mos.mosback.domain.stRoom.StudyDaysEntity;
+import mos.mosback.stRoom.domain.stRoom.StudyDaysEntity;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 
@@ -13,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class StRoomUpdateRequestDto {
     
-    Long roomID;
+    Long roomId;
     private String title;
     private String goal; //스터디 목표
     private String rules; //스터디 규칙

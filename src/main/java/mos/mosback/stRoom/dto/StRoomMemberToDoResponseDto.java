@@ -1,8 +1,8 @@
 package mos.mosback.stRoom.dto;
 
 import lombok.Data;
-import mos.mosback.domain.stRoom.StudyMemberTodoEntity;
-import mos.mosback.domain.stRoom.TodoStatus;
+import mos.mosback.stRoom.domain.stRoom.StudyMemberTodoEntity;
+import mos.mosback.stRoom.domain.stRoom.TodoStatus;
 
 @Data
 public class StRoomMemberToDoResponseDto {

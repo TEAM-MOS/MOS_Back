@@ -1,4 +1,4 @@
-package mos.mosback.domain.stRoom;
+package mos.mosback.stRoom.domain.stRoom;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +18,7 @@ public class StudyMemberEntity implements Serializable {
     private Long memberId;
 
     @ManyToOne
-    @JoinColumn(name = "roomID")
+    @JoinColumn(name = "roomId")
     private StRoomEntity stRoom;
 
     // 다른 필드와 매핑

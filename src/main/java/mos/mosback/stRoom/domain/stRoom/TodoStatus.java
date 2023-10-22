@@ -1,4 +1,4 @@
-package mos.mosback.domain.stRoom;
+package mos.mosback.stRoom.domain.stRoom;
 
 public enum TodoStatus {
     Waiting,

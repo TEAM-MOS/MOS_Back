@@ -1,9 +1,7 @@
 package mos.mosback.stRoom.dto;
-import mos.mosback.domain.stRoom.StudyDaysEntity;
+import mos.mosback.stRoom.domain.stRoom.StudyDaysEntity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 public class StRoomDetailResponseDto {

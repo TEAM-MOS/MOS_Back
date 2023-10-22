@@ -1,10 +1,9 @@
 package mos.mosback.stRoom.dto;
 import lombok.Getter;
-import mos.mosback.domain.stRoom.StRoomEntity;
-import mos.mosback.domain.stRoom.StudyDaysEntity;
+import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
+import mos.mosback.stRoom.domain.stRoom.StudyDaysEntity;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 

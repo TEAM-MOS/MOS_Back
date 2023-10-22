@@ -1,16 +1,15 @@
 package mos.mosback.stRoom.dto;
 import lombok.Getter;
-import mos.mosback.domain.stRoom.StRoomEntity;
-import mos.mosback.domain.stRoom.StudyDaysEntity;
+import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
+import mos.mosback.stRoom.domain.stRoom.StudyDaysEntity;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 
 @Getter
 public class StRoomResponseDto {
-    Long roomID;
+    Long roomId;
     private String title;
     private String goal; //스터디 목표
     private String rules; //스터디 규칙
@@ -26,7 +25,7 @@ public class StRoomResponseDto {
 
     public StRoomResponseDto(StRoomEntity entity) {
 
-        this.roomID = entity.getRoomID();
+        this.roomId = entity.getRoomID();
         this.title = entity.getTitle();
         this.goal = entity.getGoal();
         this.rules = entity.getRules();

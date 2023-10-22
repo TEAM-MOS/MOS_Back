@@ -1,4 +1,4 @@
-package mos.mosback.domain.stRoom;
+package mos.mosback.stRoom.domain.stRoom;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;

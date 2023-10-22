@@ -1,4 +1,4 @@
-package mos.mosback.domain.stRoom;
+package mos.mosback.stRoom.domain.stRoom;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,7 +15,7 @@ public class ToDoEntity extends BaseTimeEntity {
     private Long todoId;
 
     @ManyToOne
-    @JoinColumn(name = "roomID")
+    @JoinColumn(name = "roomId")
     private StRoomEntity stRoom;
 
     @Column

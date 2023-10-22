@@ -1,7 +1,9 @@
-package mos.mosback.controller;
+package mos.mosback.stRoom.controller;
 import mos.mosback.stRoom.dto.*;
 
-import mos.mosback.service.StRoomService;
+import mos.mosback.stRoom.service.StRoomService;
+import mos.mosback.stduy.dto.*;
+import mos.mosback.study.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -202,7 +204,7 @@ public class StRoomController {
 //핸들러 메서드 :
 
 //create: 새 게시물을 생성
-///MyStudy/{roomId}: 특정 roomID에 해당하는 게시물을 조회( 스터디그룹 -마이스터디화면 조회 )
+///MyStudy/{roomId}: 특정 roomId에 해당하는 게시물을 조회( 스터디그룹 -마이스터디화면 조회 )
 //search: 제목에 키워드가 포함된 게시물을 검색하는 엔드포인트.
 ///update/{roomId}: 게시물 수정
 ///(Delete) {roomId}: 게시물을 삭제

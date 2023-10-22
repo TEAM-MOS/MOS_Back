@@ -1,12 +1,16 @@
-package mos.mosback.service;
+package mos.mosback.stRoom.service;
 import lombok.RequiredArgsConstructor;
 import mos.mosback.domain.stRoom.*;
 import mos.mosback.login.domain.user.User;
 import mos.mosback.login.domain.user.service.UserService;
-import mos.mosback.repository.MemberTodoRepository;
-import mos.mosback.repository.StRoomRepository;
-import mos.mosback.repository.ToDoRepository;
+import mos.mosback.stRoom.domain.stRoom.*;
+import mos.mosback.stRoom.repository.MemberTodoRepository;
+import mos.mosback.stRoom.repository.StRoomRepository;
+import mos.mosback.stRoom.repository.ToDoRepository;
 import mos.mosback.stRoom.dto.*;
+import mos.mosback.stRoom.Entity.*;
+import mos.mosback.stduy.dto.*;
+import mos.mosback.study.dto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,12 +30,12 @@ public class ToDoService {
     private final UserService userService;
 
     @Transactional
-    public ToDoEntity addTodo(stRoomToDoRequestDto requestDto, Long roomID) {
+    public ToDoEntity addTodo(stRoomToDoRequestDto requestDto, Long roomId) {
         ToDoEntity toDoEntity = new ToDoEntity();
         toDoEntity.setTodoContent(requestDto.getTodoContent());
         toDoEntity.setStatus(TodoStatus.Waiting);
-        StRoomEntity stRoomEntity = stRoomRepository.findById(roomID)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id =" + roomID));
+        StRoomEntity stRoomEntity = stRoomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id =" + roomId));
 
         toDoEntity.setStRoom(stRoomEntity);
         return toDoRepository.save(toDoEntity);
@@ -49,7 +53,7 @@ public class ToDoService {
 
 
     @Transactional
-    public StudyMemberTodoEntity updateMemberTodo(Long todoId, String todoContent,TodoStatus status, String currentEmail) throws Exception {
+    public StudyMemberTodoEntity updateMemberTodo(Long todoId, String todoContent, TodoStatus status, String currentEmail) throws Exception {
         ToDoEntity toDoEntity = toDoRepository.findById(todoId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ToDo를 찾을 수 없습니다."));
         User user = userService.getUserByEmail(currentEmail);
@@ -124,7 +128,7 @@ public class ToDoService {
         for (StudyMemberTodoEntity item : todoEntityList) {
             todoList.add(new StRoomMemberToDoResponseDto(item));
         }
-        // 스터디 룸에 대한 현재 Todo 평균값
+        // 스터디 룸에 대한 현재 투두평균값
 
         StudyRoomTodoInfoDto studyRoomTodoAverage = null;
         double average = 0;

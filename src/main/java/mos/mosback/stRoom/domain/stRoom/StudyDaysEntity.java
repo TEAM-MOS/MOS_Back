@@ -1,4 +1,4 @@
-package mos.mosback.domain.stRoom;
+package mos.mosback.stRoom.domain.stRoom;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

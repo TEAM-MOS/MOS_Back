@@ -1,9 +1,8 @@
 package mos.mosback.stRoom.dto;
 import lombok.Getter;
-import mos.mosback.domain.stRoom.StRoomEntity;
+import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 
 @Getter

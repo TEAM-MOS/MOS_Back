@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class StRoomMemberJoinRequestDto {
-    private Long roomID;
+    private Long roomId;
     private String answer;
     private String email;
 
