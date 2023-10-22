@@ -48,7 +48,7 @@ public class UserService {
 
 
 
-    private User getUserByEmail(String email) throws Exception {
+    public User getUserByEmail(String email) throws Exception {
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isPresent()) {
             return optionalUser.get();
@@ -115,7 +115,8 @@ public class UserService {
     }
 
 
-// 메일 내용을 생성하고 임시 비밀번호로 회원 비밀번호를 변경
+    // 메일 내용을 생성하고 임시 비밀번호로 회원 비밀번호를 변경
+
     public MailDto createMailAndChangePassword(String userEmail) {
         String tempPassword = getTempPassword();
         MailDto mailDTO = new MailDto();
@@ -180,5 +181,3 @@ public class UserService {
 
 
 }
-
-

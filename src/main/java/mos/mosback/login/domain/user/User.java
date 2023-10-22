@@ -2,11 +2,14 @@ package mos.mosback.login.domain.user;
 
 
 import lombok.*;
+import mos.mosback.domain.stRoom.StRoomEntity;
+import mos.mosback.domain.stRoom.StudyMemberEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -41,6 +44,7 @@ public class User {
     private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인인 경우 null)
 
     private String refreshToken; // 리프레시 토큰
+
 
     // 유저 권한 설정 메소드
     public void authorizeUser() {
