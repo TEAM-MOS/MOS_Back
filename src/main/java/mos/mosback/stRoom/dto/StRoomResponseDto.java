@@ -25,7 +25,7 @@ public class StRoomResponseDto {
 
     public StRoomResponseDto(StRoomEntity entity) {
 
-        this.roomId = entity.getRoomID();
+        this.roomId = entity.getRoomId();
         this.title = entity.getTitle();
         this.goal = entity.getGoal();
         this.rules = entity.getRules();

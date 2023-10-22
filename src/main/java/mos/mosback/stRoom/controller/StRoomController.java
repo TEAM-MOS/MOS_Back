@@ -2,8 +2,6 @@ package mos.mosback.stRoom.controller;
 import mos.mosback.stRoom.dto.*;
 
 import mos.mosback.stRoom.service.StRoomService;
-import mos.mosback.stduy.dto.*;
-import mos.mosback.study.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -149,7 +147,7 @@ public class StRoomController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentEmail = authentication.getName(); // 현재 사용자의 이메일
         requestDto.setEmail(currentEmail);
-        requestDto.setRoomID(roomId);
+        requestDto.setRoomId(roomId);
         stRoomService.memberJoin(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body
                 ("message : joined successfully.\nstatus : 201\n success: true");

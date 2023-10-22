@@ -8,8 +8,6 @@ import mos.mosback.login.domain.user.service.UserService;
 import mos.mosback.login.global.jwt.service.JwtService;
 import mos.mosback.stRoom.repository.StRoomRepository;
 import mos.mosback.stRoom.repository.StudyMemberRepository;
-import mos.mosback.stduy.dto.*;
-import mos.mosback.study.dto.*;
 import mos.mosback.stRoom.dto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +50,7 @@ public class StRoomService {
             studyMember.setStRoom(stRoom);
             studyMember.setStatus(MemberStatus.Leader);
             studyMemberRepository.save(studyMember);
-            return stRoom.getRoomID();
+            return stRoom.getRoomId();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -128,8 +126,8 @@ public class StRoomService {
             StudyMemberEntity studyMember = new StudyMemberEntity();
 
             // 2. 가입 시에는 룸ID를 요청 파라미터에서 받아서 StRoom 조회
-            StRoomEntity stRoomEntity = stRoomRepository.findById(requestDto.getRoomID())
-                    .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id =" + requestDto.getRoomID()));
+            StRoomEntity stRoomEntity = stRoomRepository.findById(requestDto.getRoomId())
+                    .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id =" + requestDto.getRoomId()));
 
             // 3. 사용자 이메일 조회해서 save 전에 주입
             User user = userService.getUserByEmail(requestDto.getEmail());

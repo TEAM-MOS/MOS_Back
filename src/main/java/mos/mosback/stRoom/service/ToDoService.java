@@ -1,16 +1,12 @@
 package mos.mosback.stRoom.service;
 import lombok.RequiredArgsConstructor;
-import mos.mosback.domain.stRoom.*;
 import mos.mosback.login.domain.user.User;
 import mos.mosback.login.domain.user.service.UserService;
 import mos.mosback.stRoom.domain.stRoom.*;
+import mos.mosback.stRoom.dto.*;
 import mos.mosback.stRoom.repository.MemberTodoRepository;
 import mos.mosback.stRoom.repository.StRoomRepository;
 import mos.mosback.stRoom.repository.ToDoRepository;
-import mos.mosback.stRoom.dto.*;
-import mos.mosback.stRoom.Entity.*;
-import mos.mosback.stduy.dto.*;
-import mos.mosback.study.dto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -105,8 +101,8 @@ public class ToDoService {
     public StudyMemberTodoEntity addMemberTodo(StudyMemberToDoRequestDto requestDto) throws Exception {
         StudyMemberTodoEntity toDoEntity = new StudyMemberTodoEntity();
         toDoEntity.setTodoContent(requestDto.getTodoContent());
-        StRoomEntity stRoomEntity = stRoomRepository.findById(requestDto.getRoomID())
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id =" + requestDto.getRoomID()));
+        StRoomEntity stRoomEntity = stRoomRepository.findById(requestDto.getRoomId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id =" + requestDto.getRoomId()));
         // 사용자 이메일 조회해서 save 전에 주입
         User user = userService.getUserByEmail(requestDto.getCurrentEmail());
         toDoEntity.setMemberId(user.getId());
