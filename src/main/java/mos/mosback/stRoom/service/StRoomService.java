@@ -45,11 +45,14 @@ public class StRoomService {
 
             // 4. 정보 대입
             studyMember.setMemberId(user.getId());
+            user.getStRooms().add(stRoom);
+
 
             // 5. Study Member 저장
             studyMember.setStRoom(stRoom);
             studyMember.setStatus(MemberStatus.Leader);
             studyMemberRepository.save(studyMember);
+
             return stRoom.getRoomId();
         } catch (Exception e) {
             e.printStackTrace();

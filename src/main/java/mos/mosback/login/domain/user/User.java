@@ -1,13 +1,16 @@
 package mos.mosback.login.domain.user;
 
-
+import java.util.ArrayList;
+import java.util.List;
 import lombok.*;
+import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.Date;
 
+@Setter
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -20,6 +23,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
+
+    @OneToMany
+    private List<StRoomEntity> stRooms= new ArrayList<>();
+
 
     private String email; // 이메일
     private String password; // 비밀번호

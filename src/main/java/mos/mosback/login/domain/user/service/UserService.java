@@ -9,6 +9,9 @@ import mos.mosback.login.domain.user.dto.UserProfileDto;
 import mos.mosback.login.domain.user.dto.UserSignUpDto;
 import mos.mosback.login.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
+import mos.mosback.stRoom.domain.stRoom.StudyMemberEntity;
+import mos.mosback.stRoom.dto.StRoomSaveRequestDto;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
@@ -18,6 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.Optional;
 @Service
@@ -177,7 +181,6 @@ public class UserService {
     public Optional<User> loadUserByUsername(String userEmail) throws UsernameNotFoundException {
         return userRepository.findByEmail(userEmail);
     }
-
 
 
 }
