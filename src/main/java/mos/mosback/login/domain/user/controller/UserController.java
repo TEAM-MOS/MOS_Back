@@ -91,16 +91,23 @@ public class UserController {
     }
 
 
-
     @Transactional
     @PostMapping("/send/email")
-    public ResponseEntity<String> sendTemporaryPassword(@RequestBody FindPWDto findPWDto) {
+    public ResponseEntity<Map<String, Object>> sendTemporaryPassword(@RequestBody FindPWDto findPWDto) {
+        Map<String, Object> response = new HashMap<>();
         if (userService.findPassword(findPWDto)) {
             MailDto mailDto = userService.createMailAndChangePassword(findPWDto.getEmail());
             userService.mailSend(mailDto);
-            return ResponseEntity.ok("임시 비밀번호 메일 전송 및 변경 완료");
+            response.put("status", 200);
+            response.put("success", true);
+            response.put("message", "임시 비밀번호 메일 전송 및 변경 완료");
+            return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.status(400).body("이메일이 존재하지 않거나 이름이 일치하지 않습니다.");
+            response.put("status", 400);
+            response.put("success", false);
+            response.put("message", "이메일이 존재하지 않거나 이름이 일치하지 않습니다.");
+            return ResponseEntity.status(400).body(response);
         }
     }
+
 }
