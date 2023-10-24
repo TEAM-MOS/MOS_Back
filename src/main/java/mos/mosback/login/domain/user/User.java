@@ -24,7 +24,7 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(name="rooom_id")
+    @Column(name="room_id")
     private Long roomId;
 
     private String email; // 이메일
