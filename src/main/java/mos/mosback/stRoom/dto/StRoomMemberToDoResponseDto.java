@@ -6,13 +6,13 @@ import mos.mosback.stRoom.domain.stRoom.TodoStatus;
 
 @Data
 public class StRoomMemberToDoResponseDto {
-    private Long todoId;
+    private Long idx;
     private String todoContent;
     private TodoStatus status;
 
 
     public StRoomMemberToDoResponseDto (StudyMemberTodoEntity entity) {
-        this.todoId = entity.getToDoEntity().getTodoId();
+        this.idx = entity.getIdx();
         this.status = entity.getStatus();
         this.todoContent = entity.getTodoContent();
     }

@@ -53,10 +53,7 @@ public class ToDoService {
         ToDoEntity toDoEntity = toDoRepository.findById(todoId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ToDo를 찾을 수 없습니다."));
         User user = userService.getUserByEmail(currentEmail);
-        StudyMemberTodoKey key = new StudyMemberTodoKey();
-        key.setMemberId(user.getId());
-        key.setTodoContent(toDoEntity.getTodoContent());
-        StudyMemberTodoEntity studyMemberTodoEntity = studyMemberToDoRepository.findById(key)
+        StudyMemberTodoEntity studyMemberTodoEntity = studyMemberToDoRepository.findByMemberIdAndTodoContent(user.getId(), toDoEntity.getTodoContent())
                 .orElseThrow(() -> new IllegalArgumentException("해당 ToDo를 찾을 수 없습니다."));
 
         studyMemberTodoEntity.update(todoContent, status);
@@ -76,21 +73,10 @@ public class ToDoService {
         ToDoEntity toDoEntity = toDoRepository.findById(todoId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ToDo를 찾을 수 없습니다."));
         User user = userService.getUserByEmail(currentEmail);
-        StudyMemberTodoKey key = new StudyMemberTodoKey();
-        key.setMemberId(user.getId());
-        key.setTodoContent(toDoEntity.getTodoContent());
-        StudyMemberTodoEntity studyMemberTodoEntity = studyMemberToDoRepository.findById(key)
+        StudyMemberTodoEntity studyMemberTodoEntity = studyMemberToDoRepository.findByMemberIdAndTodoContent(user.getId(), toDoEntity.getTodoContent())
                 .orElseThrow(() -> new IllegalArgumentException("해당 Study Member ToDo를 찾을 수 없습니다."));
 
         studyMemberToDoRepository.delete(studyMemberTodoEntity);
-    }
-    @Transactional
-    public void getTodo(Long todoId){
-        ToDoEntity toDoEntity = toDoRepository.findById(todoId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ToDo를 찾을 수 없습니다."));
-
-        toDoRepository.findById(todoId);
-
     }
 
     @Transactional
@@ -100,7 +86,6 @@ public class ToDoService {
 
     public StudyMemberTodoEntity addMemberTodo(StudyMemberToDoRequestDto requestDto) throws Exception {
         StudyMemberTodoEntity toDoEntity = new StudyMemberTodoEntity();
-        toDoEntity.setTodoContent(requestDto.getTodoContent());
         StRoomEntity stRoomEntity = stRoomRepository.findById(requestDto.getRoomId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id =" + requestDto.getRoomId()));
         // 사용자 이메일 조회해서 save 전에 주입
@@ -108,6 +93,7 @@ public class ToDoService {
         toDoEntity.setMemberId(user.getId());
         toDoEntity.setStatus(TodoStatus.Waiting);
         toDoEntity.setStRoom(stRoomEntity);
+        toDoEntity.setTodoContent(requestDto.getTodoContent());
 
         return studyMemberToDoRepository.save(toDoEntity);
     }

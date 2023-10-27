@@ -11,26 +11,21 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @Entity
-@IdClass(StudyMemberTodoEntity.class)
 public class StudyMemberTodoEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idx;
+
     @Column(name = "memberID")
     private Long memberId;
 
-    @Id
-    @Column
+    @Column(name = "todoContent")
     private String todoContent;
 
     @ManyToOne
     @JoinColumn(name = "roomId")
     private StRoomEntity stRoom;
-
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "todoId")
-    private ToDoEntity toDoEntity;
 
     // 다른 필드와 매핑
     @Enumerated(EnumType.STRING)

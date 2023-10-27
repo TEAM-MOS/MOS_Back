@@ -49,7 +49,7 @@ public class TodoController {
         String currentEmail = authentication.getName(); // 현재 사용자의 이메일
         requestDto.setCurrentEmail(currentEmail);
         StudyMemberTodoEntity todo = toDoService.addMemberTodo(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("TodoList 추가 완료. index : " +todo.getMemberId());
+        return ResponseEntity.status(HttpStatus.CREATED).body("TodoList 추가 완료. index : " +todo.getIdx());
     }
  //todo개수만큼 프론트에서 호출해줘야함
 //

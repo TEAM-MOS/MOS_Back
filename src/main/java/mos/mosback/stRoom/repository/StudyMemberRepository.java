@@ -1,5 +1,6 @@
 package mos.mosback.stRoom.repository;
 
+import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
 import mos.mosback.stRoom.domain.stRoom.StudyMemberEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -9,4 +10,5 @@ public interface StudyMemberRepository extends JpaRepository<StudyMemberEntity, 
 
     List<StudyMemberEntity> findAllByMemberId(Long memberId);
 
+    List<StudyMemberEntity> findAllByStRoom(StRoomEntity stRoom);
 }

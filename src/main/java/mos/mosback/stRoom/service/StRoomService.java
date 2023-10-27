@@ -16,6 +16,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,11 +45,11 @@ public class StRoomService {
             User user = userService.getUserByEmail(loginUserEmail);
 
             // 4. 정보 대입
-            studyMember.setMemberId(user.getId());
-            user.getStRooms().add(stRoom);
-
+//            user.getStRooms().add(stRoom);
+//            stRoom.setMemberNum(1);
 
             // 5. Study Member 저장
+            studyMember.setMemberId(user.getId());
             studyMember.setStRoom(stRoom);
             studyMember.setStatus(MemberStatus.Leader);
             studyMemberRepository.save(studyMember);
@@ -146,6 +147,7 @@ public class StRoomService {
         }
     }
 
+
     public List<Home_RoomResponseDto> getRecruitingStudies() {
 
         LocalDateTime now = LocalDateTime.now();
@@ -186,4 +188,17 @@ public class StRoomService {
     }
 
 
+    public List<StRoomMemberResponseDto> getStudyRoomMemberList(Long roomId) {
+        StRoomEntity stRoom = stRoomRepository.findById(roomId)
+                .orElseThrow(() -> new EntityNotFoundException("Room not found"));
+        List<StudyMemberEntity> memberEntityList = studyMemberRepository.findAllByStRoom(stRoom);
+        List<StRoomMemberResponseDto> memberList = new ArrayList<>();
+        for (StudyMemberEntity item : memberEntityList) {
+            StRoomMemberResponseDto dto = new StRoomMemberResponseDto();
+            dto.setMemberId(item.getMemberId());
+            dto.setStatus(item.getStatus());
+            memberList.add(dto);
+        }
+        return memberList;
+    }
 }

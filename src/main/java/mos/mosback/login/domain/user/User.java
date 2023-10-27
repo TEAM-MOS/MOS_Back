@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
 import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
+import mos.mosback.stRoom.domain.stRoom.StudyMemberEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -26,6 +27,9 @@ public class User {
 
     @OneToMany
     private List<StRoomEntity> stRooms= new ArrayList<>();
+
+    @OneToMany
+    private List<StudyMemberEntity> members = new ArrayList<>();
 
 
     private String email; // 이메일

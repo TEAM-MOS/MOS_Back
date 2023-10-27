@@ -1,7 +1,9 @@
 package mos.mosback.stRoom.controller;
+import lombok.RequiredArgsConstructor;
 import mos.mosback.stRoom.dto.*;
 
 import mos.mosback.stRoom.service.StRoomService;
+import mos.mosback.stRoom.service.ToDoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,16 +17,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/studyRoom") //URL 패턴
 public class StRoomController {
 
     private final StRoomService stRoomService; // stRoomService를 주입.
-
-    @Autowired
-    public StRoomController(StRoomService stRoomService) {
-        this.stRoomService = stRoomService;
-    }
+    private final ToDoService toDoService;
 
     @PostMapping("/create")
     public ResponseEntity<String> saveRoom(@RequestBody StRoomSaveRequestDto requestDto, HttpServletRequest req) {
@@ -153,6 +152,7 @@ public class StRoomController {
                 ("message : joined successfully.\nstatus : 201\n success: true");
     }
 
+
     @GetMapping("/recruiting")
     public ResponseEntity<?> getRecruitingStudies() {
         List<Home_RoomResponseDto> recruitingStudies = stRoomService.getRecruitingStudies();
@@ -189,10 +189,15 @@ public class StRoomController {
     @GetMapping("/recruitInfo/{roomId}")
     public ResponseEntity<Map<String, Object>> recruitInfo(@PathVariable Long roomId) {
         String recruitInfo = stRoomService.isRecruiting(roomId);
+        StRoomResponseDto stroom = stRoomService.findById(roomId);
+        List<StRoomToDoResponseDto> todoList = toDoService.findStRoomTodoByRoomId(roomId);
+        List<StRoomMemberResponseDto> studyRoomMemberList = stRoomService.getStudyRoomMemberList(roomId);
 
         Map<String, Object> response = new HashMap<>();
         response.put("모집", recruitInfo);
-        response.put("status", HttpStatus.OK.value());
+        response.put("stroom", stroom);
+        response.put("todoList", todoList);
+        response.put("studyRoomMemberList", studyRoomMemberList);
         return ResponseEntity.status(HttpStatus.OK).body(response);
 
     }
