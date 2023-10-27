@@ -1,16 +1,13 @@
 package mos.mosback.stRoom.controller;
 import lombok.RequiredArgsConstructor;
 import mos.mosback.stRoom.dto.*;
-
 import mos.mosback.stRoom.service.StRoomService;
 import mos.mosback.stRoom.service.ToDoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -139,6 +136,23 @@ public class StRoomController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
+
+    @GetMapping("/QnA/{memberId}/{roomId}")
+    public ResponseEntity<?> getQuestionandAnswerById(@PathVariable("memberId") Long memberId, @PathVariable("roomId") Long roomId) {
+        {
+           try {
+               QuestionAndAnswerResponseDto QnA = stRoomService.getQuestionAndAnswerById(memberId,roomId);
+               return ResponseEntity.ok(QnA);
+           }catch (EntityNotFoundException ex) {
+               Map<String, Object> response = new HashMap<>();
+               response.put("status:", HttpStatus.NOT_FOUND.value());
+               response.put("success", false);
+               response.put("message", "NOT FOUND");
+               return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+           }
+
+        }
+    }
     @PostMapping("/memberjoin/{roomId}")
     public ResponseEntity<String> memberJoin(@PathVariable Long roomId,
                                              @RequestBody StRoomMemberJoinRequestDto requestDto) {
@@ -186,16 +200,16 @@ public class StRoomController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/recruitInfo/{roomId}")
+    @GetMapping("/Info/{roomId}")
     public ResponseEntity<Map<String, Object>> recruitInfo(@PathVariable Long roomId) {
         String recruitInfo = stRoomService.isRecruiting(roomId);
-        StRoomResponseDto stroom = stRoomService.findById(roomId);
+       StRoomDetailResponseDto stroom = stRoomService.findByRoomId(roomId);
         List<StRoomToDoResponseDto> todoList = toDoService.findStRoomTodoByRoomId(roomId);
         List<StRoomMemberResponseDto> studyRoomMemberList = stRoomService.getStudyRoomMemberList(roomId);
 
         Map<String, Object> response = new HashMap<>();
         response.put("모집", recruitInfo);
-        response.put("stroom", stroom);
+        response.put("StudyRoom", stroom);
         response.put("todoList", todoList);
         response.put("studyRoomMemberList", studyRoomMemberList);
         return ResponseEntity.status(HttpStatus.OK).body(response);

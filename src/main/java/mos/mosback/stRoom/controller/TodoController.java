@@ -71,17 +71,18 @@ public class TodoController {
         }
     }
 
-    @PutMapping("/member/todo/{todoId}")
-    public ResponseEntity<String> updateMemberTodo(@PathVariable Long todoId,
-                                                   @RequestBody stRoomToDoRequestDto requestDto) throws Exception {
+    @PutMapping("/member/todo/{idx}")
+    public ResponseEntity<String> updateMemberTodo(@PathVariable Long idx,
+                                                   @RequestBody StudyMemberToDoRequestDto requestDto) throws Exception {
         // 현재 로그인한 사용자의 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentEmail = authentication.getName(); // 현재 사용자의 이메일
+        requestDto.setCurrentEmail(currentEmail);
         try {
-            StudyMemberTodoEntity updatedToDo = toDoService.updateMemberTodo(todoId, requestDto.getTodoContent(),
+            StudyMemberTodoEntity updatedToDo = toDoService.updateMemberTodo(idx, requestDto.getTodoContent(),
                     requestDto.getStatus(), currentEmail);
             return ResponseEntity.ok
-                    ("Study Member ToDo 업데이트 완료. \nIndex: " + todoId +
+                    ("Study Member ToDo 업데이트 완료. \nIndex: " + idx +
                             "\nstatus:200" +
                             "\nsuccess:true");
         } catch (IllegalArgumentException e) {

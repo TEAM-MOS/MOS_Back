@@ -88,6 +88,13 @@ public class StRoomService {
         return new StRoomResponseDto(stRoomEntity);
     }
 
+    @Transactional(readOnly = true)
+    public StRoomDetailResponseDto findByRoomId(Long roomId) {
+        StRoomEntity stRoomEntity = stRoomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id=" + roomId));
+
+        return new StRoomDetailResponseDto(stRoomEntity);
+    }
     public List<Home_RoomResponseDto> findAllRoomsDesc() {
         return stRoomRepository.findAllDesc();
     }
@@ -164,8 +171,25 @@ public class StRoomService {
         responseDTO.setQuestion(stRoomEntity.getQuest());
 
         return responseDTO;
-
     }
+
+    public QuestionAndAnswerResponseDto getQuestionAndAnswerById(Long memberId, Long roomId) {
+
+        StudyMemberEntity memberEntity = studyMemberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("Member not found"));
+
+        StRoomEntity stRoomEntity = stRoomRepository.findById(roomId)
+                .orElseThrow(() -> new EntityNotFoundException("Room not found"));
+
+        QuestionAndAnswerResponseDto responseDto = new QuestionAndAnswerResponseDto();
+        responseDto.setMemberId(memberEntity.getMemberId());
+        responseDto.setAnswer(memberEntity.getAnswer());
+        responseDto.setQuestion(stRoomEntity.getQuest());
+
+
+        return responseDto;
+    }
+
 
     public String getMyInfo(String email) throws Exception {
         // 3. 사용자 이메일 조회해서 save 전에 주입

@@ -40,6 +40,7 @@ public class StRoomEntity extends BaseTimeEntity {
     private LocalDate startDate; //스터디 시작 날짜
     private LocalDate endDate; //스터디 끝나는 날짜
     private boolean recruiting; //모집여부
+    private LocalDate deadline; // 모집 마감날짜
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<StudyDaysEntity> studyDayEntities = new ArrayList<>();
@@ -48,7 +49,7 @@ public class StRoomEntity extends BaseTimeEntity {
     @Builder
     public StRoomEntity(String title, String goal, String rules, String quest,
                         String category, String intro, int memberNum, int maxMember
-            ,String mod, boolean onOff, String location,int online,
+                         ,String mod, boolean onOff, String location,int online,
                         LocalDate startDate, LocalDate endDate, List<StudyDaysEntity> studyDayEntities
     ) {
         this.title = title;
@@ -88,7 +89,5 @@ public class StRoomEntity extends BaseTimeEntity {
         this.endDate = endDate;
         this.studyDayEntities = studyDayEntities;
     }
-
-
 
 }
