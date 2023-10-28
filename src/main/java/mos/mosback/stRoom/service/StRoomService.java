@@ -1,5 +1,6 @@
 package mos.mosback.stRoom.service;
 import lombok.RequiredArgsConstructor;
+import mos.mosback.login.domain.user.dto.UserProfileDto;
 import mos.mosback.stRoom.domain.stRoom.MemberStatus;
 import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
 import mos.mosback.stRoom.domain.stRoom.StudyMemberEntity;
@@ -31,7 +32,7 @@ public class StRoomService {
 
     public Long save(StRoomSaveRequestDto requestDto, HttpServletRequest req) {
         try {
-           // 1. Study Room 저장
+            // 1. Study Room 저장
             StRoomEntity stRoom = stRoomRepository.save(requestDto.toEntity());
 
             // 2. 스터디 멤버 정보 저장할 변수 선언
@@ -68,6 +69,7 @@ public class StRoomService {
         }
 
     }
+
 
     @Transactional
     public void update(Long roomId, StRoomUpdateRequestDto requestDto) {
