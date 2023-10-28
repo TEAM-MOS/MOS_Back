@@ -31,7 +31,7 @@ public class StRoomService {
 
     public Long save(StRoomSaveRequestDto requestDto, HttpServletRequest req) {
         try {
-            // 1. Study Room 저장
+           // 1. Study Room 저장
             StRoomEntity stRoom = stRoomRepository.save(requestDto.toEntity());
 
             // 2. 스터디 멤버 정보 저장할 변수 선언
@@ -44,15 +44,22 @@ public class StRoomService {
             String loginUserEmail = Optional.ofNullable(jwtService.extractEmail(accessToken)).get().orElse("");
             User user = userService.getUserByEmail(loginUserEmail);
 
-            // 4. 정보 대입
-//            user.getStRooms().add(stRoom);
-//            stRoom.setMemberNum(1);
-
-            // 5. Study Member 저장
+            // 5. 정보 대입
             studyMember.setMemberId(user.getId());
+            user.getStRooms().add(stRoom);
+
+            // 6. Study Member 저장
             studyMember.setStRoom(stRoom);
             studyMember.setStatus(MemberStatus.Leader);
             studyMemberRepository.save(studyMember);
+
+            // 7. 프로필 정보 업데이트
+            UserProfileDto userProfileDto = new UserProfileDto(
+                    user.getNickname(), user.getName(), user.getStr_duration(),
+                    user.getEnd_duration(), user.getMessage(), user.getCompany(),user.getTend1(), user.getTend2(), stRoom.getRoomId()
+            );
+            userProfileDto.setRoomId(stRoom.getRoomId());
+            userService.updateUserProfile(loginUserEmail, userProfileDto); // 프로필 업데이트 메서드 호출
 
             return stRoom.getRoomId();
         } catch (Exception e) {
