@@ -1,6 +1,7 @@
 package mos.mosback.stRoom.service;
 import lombok.RequiredArgsConstructor;
 import mos.mosback.login.domain.user.dto.UserProfileDto;
+import mos.mosback.login.domain.user.repository.UserRepository;
 import mos.mosback.stRoom.domain.stRoom.MemberStatus;
 import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
 import mos.mosback.stRoom.domain.stRoom.StudyMemberEntity;
@@ -29,6 +30,7 @@ public class StRoomService {
     private final StudyMemberRepository studyMemberRepository;
     private final UserService userService;
     private final JwtService jwtService;
+    private final UserRepository userRepository;
 
     public Long save(StRoomSaveRequestDto requestDto, HttpServletRequest req) {
         try {
@@ -45,22 +47,15 @@ public class StRoomService {
             String loginUserEmail = Optional.ofNullable(jwtService.extractEmail(accessToken)).get().orElse("");
             User user = userService.getUserByEmail(loginUserEmail);
 
-            // 5. 정보 대입
-            studyMember.setMemberId(user.getId());
-            user.getStRooms().add(stRoom);
+            // 4. 정보 대입
+//            user.getStRooms().add(stRoom);
+//            stRoom.setMemberNum(1);
 
-            // 6. Study Member 저장
+            // 5. Study Member 저장
+            studyMember.setMemberId(user.getId());
             studyMember.setStRoom(stRoom);
             studyMember.setStatus(MemberStatus.Leader);
             studyMemberRepository.save(studyMember);
-
-            // 7. 프로필 정보 업데이트
-            UserProfileDto userProfileDto = new UserProfileDto(
-                    user.getNickname(), user.getName(), user.getStr_duration(),
-                    user.getEnd_duration(), user.getMessage(), user.getCompany(),user.getTend1(), user.getTend2(), stRoom.getRoomId()
-            );
-            userProfileDto.setRoomId(stRoom.getRoomId());
-            userService.updateUserProfile(loginUserEmail, userProfileDto); // 프로필 업데이트 메서드 호출
 
             return stRoom.getRoomId();
         } catch (Exception e) {
@@ -69,7 +64,6 @@ public class StRoomService {
         }
 
     }
-
 
     @Transactional
     public void update(Long roomId, StRoomUpdateRequestDto requestDto) {
@@ -198,7 +192,27 @@ public class StRoomService {
 
         return responseDto;
     }
+    public UserProfileDto getMemberProfileById(Long memberId) throws Exception {
 
+        Optional<User> optionalUser = userRepository.findById(memberId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            // 엔터티 정보를 DTO로 매핑하여 반환
+            return new UserProfileDto(
+                    user.getNickname(),
+                    user.getName(),
+                    user.getStr_duration(),
+                    user.getEnd_duration(),
+                    user.getMessage(),
+                    user.getCompany(),
+                    user.getTend1(),
+                    user.getTend2(),
+                    user.getRoomId()
+            );
+        } else {
+            throw new Exception("해당 이메일의 사용자를 찾을 수 없습니다: " + memberId);
+        }
+    }
 
     public String getMyInfo(String email) throws Exception {
         // 3. 사용자 이메일 조회해서 save 전에 주입
