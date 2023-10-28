@@ -2,14 +2,12 @@ package mos.mosback.login.domain.user;
 
 
 import lombok.*;
+import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
+import java.util.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,15 +20,20 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
+
     private Long id;
 
-    @Column(name="room_id")
+    @OneToMany
+    private List<StRoomEntity> stRooms= new ArrayList<>();
+
+    @Column(name ="room_id")
     private Long roomId;
 
     private String email; // 이메일
     private String password; // 비밀번호
 
     private String name;
+
     private String nickname; // 닉네임
 
 
@@ -40,7 +43,28 @@ public class User {
 
     private Date end_duration;
     private String message;
+
     private String company;
+
+    private String tend1;
+
+    public String getTend1() {
+        return tend1;
+    }
+
+    public void setTend1(String tend1) {
+        this.tend1 = tend1;
+    }
+
+    public String getTend2() {
+        return tend2;
+    }
+
+    public void setTend2(String tend2) {
+        this.tend2 = tend2;
+    }
+
+    private String tend2;
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -70,6 +94,7 @@ public class User {
     public void setRoomId(Long roomId) {
         this.roomId = roomId;
     }
+
 
 
     public void setId(Long id) {
