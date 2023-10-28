@@ -7,11 +7,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.Column;
+
 
 @NoArgsConstructor
 @Getter
 @Component
 public class UserProfileDto {
+
     @Column(nullable = false)
     private String nickname;
     private String name;
