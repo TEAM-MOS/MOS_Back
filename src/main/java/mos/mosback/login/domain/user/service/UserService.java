@@ -91,7 +91,7 @@ public class UserService {
             user.setMessage(userProfileDto.getMessage());
             user.setCompany(userProfileDto.getCompany());
             user.setTend1(userProfileDto.getTend1());
-            user.setTend1(userProfileDto.getTend2());
+            user.setTend2(userProfileDto.getTend2());
             user.setRole(Role.USER);
             userRepository.save(user);
         } catch (Exception e) {
