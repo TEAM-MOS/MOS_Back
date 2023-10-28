@@ -6,14 +6,17 @@ import mos.mosback.login.domain.user.dto.*;
 import mos.mosback.login.domain.user.repository.UserRepository;
 import mos.mosback.login.domain.user.service.UserService;
 import mos.mosback.login.global.jwt.service.JwtService;
+import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -109,5 +112,24 @@ public class UserController {
             return ResponseEntity.status(400).body(response);
         }
     }
+
+
+
+    @GetMapping("/user/list")
+    public ResponseEntity<List<StRoomEntity>> getUserStudyGroups(HttpServletRequest request) {
+        try {
+            // 현재 로그인한 사용자의 이메일 가져오기
+            String currentUserEmail = request.getUserPrincipal().getName();
+
+            // 이메일을 사용하여 가입한 스터디 목록 가져오기
+            List<StRoomEntity> studyGroups = userService.getStudyGroupsForUserByEmail(currentUserEmail);
+
+            return ResponseEntity.ok(studyGroups);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 
 }
