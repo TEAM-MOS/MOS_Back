@@ -1,5 +1,7 @@
 package mos.mosback.stRoom.service;
 import lombok.RequiredArgsConstructor;
+import mos.mosback.login.domain.user.dto.UserProfileDto;
+import mos.mosback.login.domain.user.repository.UserRepository;
 import mos.mosback.stRoom.domain.stRoom.MemberStatus;
 import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
 import mos.mosback.stRoom.domain.stRoom.StudyMemberEntity;
@@ -28,6 +30,7 @@ public class StRoomService {
     private final StudyMemberRepository studyMemberRepository;
     private final UserService userService;
     private final JwtService jwtService;
+    private final UserRepository userRepository;
 
     public Long save(StRoomSaveRequestDto requestDto, HttpServletRequest req) {
         try {
@@ -189,7 +192,27 @@ public class StRoomService {
 
         return responseDto;
     }
+    public UserProfileDto getMemberProfileById(Long memberId) throws Exception {
 
+        Optional<User> optionalUser = userRepository.findById(memberId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            // 엔터티 정보를 DTO로 매핑하여 반환
+            return new UserProfileDto(
+                    user.getNickname(),
+                    user.getName(),
+                    user.getStr_duration(),
+                    user.getEnd_duration(),
+                    user.getMessage(),
+                    user.getCompany(),
+                    user.getTend1(),
+                    user.getTend2(),
+                    user.getRoomId()
+            );
+        } else {
+            throw new Exception("해당 이메일의 사용자를 찾을 수 없습니다: " + memberId);
+        }
+    }
 
     public String getMyInfo(String email) throws Exception {
         // 3. 사용자 이메일 조회해서 save 전에 주입

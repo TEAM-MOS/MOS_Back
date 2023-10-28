@@ -183,4 +183,24 @@ public class UserService {
     }
 
 
+    public UserProfileDto getUserProfileByEmail(String email) throws Exception {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            // 엔터티 정보를 DTO로 매핑하여 반환
+            return new UserProfileDto(
+                    user.getNickname(),
+                    user.getName(),
+                    user.getStr_duration(),
+                    user.getEnd_duration(),
+                    user.getMessage(),
+                    user.getCompany(),
+                    user.getTend1(),
+                    user.getTend2(),
+                    user.getRoomId()
+            );
+        } else {
+            throw new Exception("해당 이메일의 사용자를 찾을 수 없습니다: " + email);
+        }
+    }
 }

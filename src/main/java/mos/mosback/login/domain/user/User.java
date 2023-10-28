@@ -1,17 +1,14 @@
 package mos.mosback.login.domain.user;
 
-import java.util.ArrayList;
-import java.util.List;
+
 import lombok.*;
 import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
-import mos.mosback.stRoom.domain.stRoom.StudyMemberEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.*;
 
-@Setter
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -23,26 +20,51 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
+
     private Long id;
 
     @OneToMany
     private List<StRoomEntity> stRooms= new ArrayList<>();
 
-    @OneToMany
-    private List<StudyMemberEntity> members = new ArrayList<>();
-
+    @Column(name ="room_id")
+    private Long roomId;
 
     private String email; // 이메일
     private String password; // 비밀번호
 
     private String name;
+
     private String nickname; // 닉네임
+
+
+    @Column(name = "image_url")
     private String imageUrl; // 프로필 이미지
     private Date str_duration;
 
     private Date end_duration;
     private String message;
+
     private String company;
+
+    private String tend1;
+    private String tend2;
+
+    public String getTend1() {
+        return tend1;
+    }
+
+    public void setTend1(String tend1) {
+        this.tend1 = tend1;
+    }
+
+    public String getTend2() {
+        return tend2;
+    }
+
+    public void setTend2(String tend2) {
+        this.tend2 = tend2;
+    }
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -65,11 +87,15 @@ public class User {
     }
 
     //==setter==//
-
-
-    public Long getId() {
-        return id;
+    public Long getRoomId() {
+        return roomId;
     }
+
+    public void setRoomId(Long roomId) {
+        this.roomId = roomId;
+    }
+
+
 
     public void setId(Long id) {
         this.id = id;
@@ -145,6 +171,14 @@ public class User {
         this.company = company;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     //== 유저 필드 업데이트 ==//
     public void updateNickname(String updateNickname) {
         this.nickname = updateNickname;
@@ -166,13 +200,6 @@ public class User {
         this.company = updateCompany;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
 
     public void updatePassword(String updatePassword, PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(updatePassword);
