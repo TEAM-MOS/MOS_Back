@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Component
 public class UserProfileDto {
+    @Column(nullable = false)
     private String nickname;
     private String name;
     private Date str_duration;
