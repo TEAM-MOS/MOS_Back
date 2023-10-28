@@ -1,5 +1,8 @@
 package mos.mosback.stRoom.controller;
 import lombok.RequiredArgsConstructor;
+import mos.mosback.login.domain.user.dto.UserProfileDto;
+import mos.mosback.login.domain.user.repository.UserRepository;
+import mos.mosback.login.domain.user.service.UserService;
 import mos.mosback.stRoom.dto.*;
 import mos.mosback.stRoom.service.StRoomService;
 import mos.mosback.stRoom.service.ToDoService;
@@ -21,7 +24,8 @@ public class StRoomController {
 
     private final StRoomService stRoomService; // stRoomService를 주입.
     private final ToDoService toDoService;
-
+    private final UserService userService;
+    private final UserRepository userRepository;
     @PostMapping("/create")
     public ResponseEntity<String> saveRoom(@RequestBody StRoomSaveRequestDto requestDto, HttpServletRequest req) {
         // 현재 로그인한 사용자의 정보 가져오기
@@ -137,6 +141,26 @@ public class StRoomController {
         }
     }
 
+    @GetMapping("/myPage/{memberId}")
+    public ResponseEntity<Map<String, Object>> getUserProfile(@PathVariable Long memberId) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            UserProfileDto userProfileDto = stRoomService.getMemberProfileById(memberId);
+            response.put("status", 200);
+            response.put("success", true);
+            response.put("data", userProfileDto);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+
+            response.put("status", 500);
+            response.put("success", false);
+            response.put("message", "오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+
     @GetMapping("/QnA/{memberId}/{roomId}")
     public ResponseEntity<?> getQuestionandAnswerById(@PathVariable("memberId") Long memberId, @PathVariable("roomId") Long roomId) {
         {
@@ -165,6 +189,7 @@ public class StRoomController {
         return ResponseEntity.status(HttpStatus.CREATED).body
                 ("message : joined successfully.\nstatus : 201\n success: true");
     }
+    
     @PostMapping("/accept/{roomId}")
     public ResponseEntity<String> acceptMember(@PathVariable Long roomId,
                                              @RequestBody AcceptMemberRequestDto requestDto) {
@@ -174,7 +199,8 @@ public class StRoomController {
             return ResponseEntity.status(HttpStatus.CREATED).body
                     ("message : Accepted successfully.\nstatus : 201\n success: true");
         }catch (IllegalArgumentException ex){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("message : ServerError.ServerError.\nstatus : 500\n success: false");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("message : ServerError.ServerError.\nstatus : 500\n success: false");
         }
     }
     @PostMapping("/reject/{roomId}")
