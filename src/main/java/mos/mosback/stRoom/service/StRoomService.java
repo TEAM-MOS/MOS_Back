@@ -211,6 +211,34 @@ public class StRoomService {
         return stRoom.isRecruiting() ? "true" : "false";
     }
 
+    public void acceptMember(AcceptMemberRequestDto requestDto){
+        // 1. save할 변수 선언
+        StudyMemberEntity studyMember = new StudyMemberEntity();
+
+        // 2. 가입 시에는 룸ID를 요청 파라미터에서 받아서 StRoom 조회
+        StRoomEntity stRoomEntity = stRoomRepository.findById(requestDto.getRoomId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id =" + requestDto.getRoomId()));
+
+        studyMember.setMemberId(requestDto.getMemberId());
+        studyMember.setStRoom(stRoomEntity);
+        studyMember.setStatus(MemberStatus.Member);
+        studyMemberRepository.save(studyMember);
+
+    }
+    public void rejecttMember(AcceptMemberRequestDto requestDto){
+        // 1. save할 변수 선언
+        StudyMemberEntity studyMember = new StudyMemberEntity();
+
+        // 2. 가입 시에는 룸ID를 요청 파라미터에서 받아서 StRoom 조회
+        StRoomEntity stRoomEntity = stRoomRepository.findById(requestDto.getRoomId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id =" + requestDto.getRoomId()));
+
+        studyMember.setMemberId(requestDto.getMemberId());
+        studyMember.setStRoom(stRoomEntity);
+        studyMember.setStatus(MemberStatus.Rejected);
+        studyMemberRepository.save(studyMember);
+
+    }
 
     public List<StRoomMemberResponseDto> getStudyRoomMemberList(Long roomId) {
         StRoomEntity stRoom = stRoomRepository.findById(roomId)
@@ -225,4 +253,5 @@ public class StRoomService {
         }
         return memberList;
     }
+
 }

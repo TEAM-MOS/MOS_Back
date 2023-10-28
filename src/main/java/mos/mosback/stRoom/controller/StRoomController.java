@@ -165,6 +165,31 @@ public class StRoomController {
         return ResponseEntity.status(HttpStatus.CREATED).body
                 ("message : joined successfully.\nstatus : 201\n success: true");
     }
+    @PostMapping("/accept/{roomId}")
+    public ResponseEntity<String> acceptMember(@PathVariable Long roomId,
+                                             @RequestBody AcceptMemberRequestDto requestDto) {
+        try {
+            requestDto.setRoomId(roomId);
+            stRoomService.acceptMember(requestDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body
+                    ("message : Accepted successfully.\nstatus : 201\n success: true");
+        }catch (IllegalArgumentException ex){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("message : ServerError.ServerError.\nstatus : 500\n success: false");
+        }
+    }
+    @PostMapping("/reject/{roomId}")
+    public ResponseEntity<String> rejectMember(@PathVariable Long roomId,
+                                             @RequestBody AcceptMemberRequestDto requestDto) {
+        try {
+            requestDto.setRoomId(roomId);
+            stRoomService.rejecttMember(requestDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body
+                    ("message : Rejected successfully.\nstatus : 201\n success: true");
+        }catch (IllegalArgumentException ex){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("message : ServerError.ServerError.\nstatus : 500\n success: false");
+        }
+    }
+
 
 
     @GetMapping("/recruiting")
@@ -215,6 +240,8 @@ public class StRoomController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
 
     }
+
+
 }
 
 
