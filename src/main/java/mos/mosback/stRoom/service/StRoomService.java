@@ -48,6 +48,7 @@ public class StRoomService {
 
             // 5. 정보 대입
             studyMember.setMemberId(user.getId());
+            user.getStRooms().add(stRoom);
 
             // 6. Study Member 저장
             studyMember.setStRoom(stRoom);
@@ -57,8 +58,9 @@ public class StRoomService {
             // 7. 프로필 정보 업데이트
             UserProfileDto userProfileDto = new UserProfileDto(
                     user.getNickname(), user.getName(), user.getStr_duration(),
-                    user.getEnd_duration(), user.getMessage(), user.getCompany(), stRoom.getRoomId()
+                    user.getEnd_duration(), user.getMessage(), user.getCompany(),user.getTend1(), user.getTend2(), stRoom.getRoomId()
             );
+            userProfileDto.setRoomId(stRoom.getRoomId());
             userService.updateUserProfile(loginUserEmail, userProfileDto); // 프로필 업데이트 메서드 호출
 
             return stRoom.getRoomId();
@@ -143,6 +145,7 @@ public class StRoomService {
             // 3. 사용자 이메일 조회해서 save 전에 주입
             User user = userService.getUserByEmail(requestDto.getEmail());
             studyMember.setMemberId(user.getId());
+
 
             // 4. 조회된 정보 토대로 StudyMember save 처리
             studyMember.setStRoom(stRoomEntity);
