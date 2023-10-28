@@ -9,6 +9,7 @@ import mos.mosback.login.domain.user.dto.UserProfileDto;
 import mos.mosback.login.domain.user.dto.UserSignUpDto;
 import mos.mosback.login.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
@@ -20,8 +21,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -33,16 +37,7 @@ public class UserService {
 
     private final JavaMailSender mailSender;
 
-//    public void joinStudyRoom(Long id, Long studyRoomId) throws Exception {
-//        User user = userRepository.findById(id).orElseThrow(() -> new Exception("사용자를 찾을 수 없습니다."));
-//        user.getStudyIds().add(studyRoomId);
-//        userRepository.save(user);
-//    }
-//
-//    public Set<Long> getJoinedStudyRoomIds(Long id) throws Exception {
-//        User user = userRepository.findById(id).orElseThrow(() -> new Exception("사용자를 찾을 수 없습니다."));
-//        return user.getStudyIds();
-//    }
+
     public User getUserById(Long id) throws Exception {
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
@@ -90,11 +85,13 @@ public class UserService {
 
             // 회원 정보 생성
             user.setNickname(userProfileDto.getNickname());
+            user.setName(userProfileDto.getName());
             user.setStr_duration(userProfileDto.getStr_duration());
             user.setEnd_duration(userProfileDto.getEnd_duration());
             user.setMessage(userProfileDto.getMessage());
             user.setCompany(userProfileDto.getCompany());
-            user.setRoomId(userProfileDto.getRoomId());
+            user.setTend1(userProfileDto.getTend1());
+            user.setTend1(userProfileDto.getTend2());
             user.setRole(Role.USER);
             userRepository.save(user);
         } catch (Exception e) {
@@ -109,10 +106,13 @@ public class UserService {
 
             // 회원 정보 업데이트
             user.setNickname(userProfileDto.getNickname());
+            user.setName(userProfileDto.getName());
             user.setStr_duration(userProfileDto.getStr_duration());
             user.setEnd_duration(userProfileDto.getEnd_duration());
             user.setMessage(userProfileDto.getMessage());
             user.setCompany(userProfileDto.getCompany());
+            user.setTend1(userProfileDto.getTend1());
+            user.setTend2(userProfileDto.getTend2());
             user.setRoomId(userProfileDto.getRoomId());
             userRepository.save(user);
         } catch (Exception e) {
@@ -228,6 +228,36 @@ public class UserService {
         // 실제로는 파일 시스템에 이미지를 저장하고 해당 이미지의 경로를 반환해야 합니다.
         // 이 예제에서는 경로 대신 "image_url_placeholder"를 반환합니다.
         return "image_url_placeholder";
+    }
+
+
+    public UserProfileDto getUserProfileByEmail(String email) throws Exception {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            // 엔터티 정보를 DTO로 매핑하여 반환
+            return new UserProfileDto(
+                    user.getNickname(),
+                    user.getName(),
+                    user.getStr_duration(),
+                    user.getEnd_duration(),
+                    user.getMessage(),
+                    user.getCompany(),
+                    user.getTend1(),
+                    user.getTend2(),
+                    user.getRoomId()
+            );
+        } else {
+            throw new Exception("해당 이메일의 사용자를 찾을 수 없습니다: " + email);
+        }
+    }
+    public List<StRoomEntity> getStudyGroupsForUserByEmail(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return user.getStRooms();
+        }
+        return Collections.emptyList(); // 사용자가 존재하지 않을 경우 빈 목록 반환
     }
 
 
