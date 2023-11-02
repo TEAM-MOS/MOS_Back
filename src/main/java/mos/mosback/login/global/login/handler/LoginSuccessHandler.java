@@ -52,7 +52,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("status", 200);
         responseData.put("success", true);
-        responseData.put("current email : {}", currentEmail);
+        responseData.put("current_email :", currentEmail);
         responseData.put("AccessToken : ", accessToken);
 
         response.setContentType("application/json");
