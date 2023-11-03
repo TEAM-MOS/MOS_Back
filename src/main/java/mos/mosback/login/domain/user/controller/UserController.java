@@ -114,20 +114,27 @@ public class UserController {
     }
 
 
-
     @GetMapping("/user/list")
-    public ResponseEntity<List<StRoomEntity>> getUserStudyGroups(HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> getLeaderStudies() {
+        Map<String, Object> response = new HashMap<>();
         try {
-            // 현재 로그인한 사용자의 이메일 가져오기
-            String currentUserEmail = request.getUserPrincipal().getName();
+            // 현재 로그인한 사용자의 정보 가져오기
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String userEmail = authentication.getName(); // 현재 사용자의 이메일
 
-            // 이메일을 사용하여 가입한 스터디 목록 가져오기
-            List<StRoomEntity> studyGroups = userService.getStudyGroupsForUserByEmail(currentUserEmail);
+            List<StRoomResponseDto> leaderStudies = stRoomService.getLeaderStudies(userEmail);
 
-            return ResponseEntity.ok(studyGroups);
+            response.put("status", HttpStatus.OK.value());
+            response.put("success", true);
+            response.put("data", leaderStudies);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("success", false);
+            response.put("error", "Internal Server Error: " + e.getMessage());
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
