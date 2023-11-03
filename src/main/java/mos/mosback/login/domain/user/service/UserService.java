@@ -260,7 +260,23 @@ public class UserService {
         return Collections.emptyList(); // 사용자가 존재하지 않을 경우 빈 목록 반환
     }
 
+ public List<StudyMembershipStatusResponseDto> getStudyMembershipStatus(String userEmail) throws NotFoundException {
+    User user = userRepository.findByEmail(userEmail)
+            .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
+    Long memberId = user.getId();
+   List<StudyMemberEntity> userStudyMemberships = studyMemberRepository.findAllByMemberId(memberId);
+
+    List<StudyMembershipStatusResponseDto> membershipStatusList = userStudyMemberships.stream()
+            .map(member -> {
+                StRoomEntity stRoom = member.getStRoom();
+                String status = member.getStatus().name();
+                return new StudyMembershipStatusResponseDto(stRoom.getTitle(), status);
+            })
+            .collect(Collectors.toList());
+
+    return membershipStatusList;
+    }
 
 }
 
