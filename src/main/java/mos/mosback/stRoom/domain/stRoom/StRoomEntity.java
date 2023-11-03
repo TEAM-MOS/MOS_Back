@@ -44,7 +44,27 @@ public class StRoomEntity extends BaseTimeEntity {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<StudyDaysEntity> studyDayEntities = new ArrayList<>();
+    
+   //----추가-----
+    public Long getRoomId() {
+        return roomId;
+    }
 
+    public String getTitle() {
+        return title;
+    }
+
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "stRoom")
+    private List<StudyMemberEntity> members = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "created_by_user_email")
+    private User createdByUser;
+
+
+    //----------------
 
     @Builder
     public StRoomEntity(String title, String goal, String rules, String quest,
