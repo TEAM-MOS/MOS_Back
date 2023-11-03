@@ -21,6 +21,14 @@ public class StudyMemberEntity implements Serializable {
     @JoinColumn(name = "roomId")
     private StRoomEntity stRoom;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    public Long getUserId() {
+        return this.user.getId();
+    }
+
+
     // 다른 필드와 매핑
 
     @Enumerated(EnumType.STRING)
@@ -29,6 +37,7 @@ public class StudyMemberEntity implements Serializable {
     @Column
     private String answer; // 스터디 답변
 
-
+    @Column
+    private LocalDateTime joinedAt;
 
 }
