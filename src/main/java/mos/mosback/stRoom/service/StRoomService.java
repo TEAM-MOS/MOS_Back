@@ -47,9 +47,6 @@ public class StRoomService {
             String loginUserEmail = Optional.ofNullable(jwtService.extractEmail(accessToken)).get().orElse("");
             User user = userService.getUserByEmail(loginUserEmail);
 
-            // 4. 정보 대입
-//            user.getStRooms().add(stRoom);
-//            stRoom.setMemberNum(1);
 
             // 5. Study Member 저장
             studyMember.setMemberId(user.getId());
