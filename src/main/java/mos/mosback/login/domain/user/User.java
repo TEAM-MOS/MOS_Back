@@ -25,6 +25,17 @@ public class User {
 
     @OneToMany
     private List<StRoomEntity> stRooms= new ArrayList<>();
+    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<StudyMemberEntity> studyMemberships = new ArrayList<>();
+
+    public List<StudyMemberEntity> getStudyMemberships() {
+        return studyMemberships;
+    }
+    public void addStudyMembership(StudyMemberEntity studyMember) {
+        this.studyMemberships.add(studyMember);
+        studyMember.setUser(this);
+    }
 
     @Column(name ="room_id")
     private Long roomId;
