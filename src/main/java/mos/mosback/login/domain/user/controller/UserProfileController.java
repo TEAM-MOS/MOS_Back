@@ -105,6 +105,35 @@ public class UserProfileController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+     @GetMapping("/status")
+    public ResponseEntity<Map<String, Object>> getStudyMembershipStatus() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName(); // 현재 사용자의 이메일
+
+        Map<String, Object> response = new HashMap<>();
+        HttpStatus httpStatus;
+        boolean success = true;
+        List<StudyMembershipStatusResponseDto> membershipStatusList;
+
+        try {
+            // userService에서 스터디 멤버십 상태 정보를 가져옵니다.
+            membershipStatusList = userService.getStudyMembershipStatus(userEmail);
+            httpStatus = HttpStatus.OK;
+        } catch (Exception e) {
+            membershipStatusList = Collections.emptyList();
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            success = false;
+            logger.error("스터디 멤버십 상태 조회 중 오류 발생: {}", e.toString());
+            response.put("error", e.getMessage());
+        }
+
+        response.put("status", httpStatus.value());
+        response.put("success", success);
+        response.put("data", membershipStatusList);
+
+        return ResponseEntity.status(httpStatus).body(response);
+    }
+
 
 }
 
