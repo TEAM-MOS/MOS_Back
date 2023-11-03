@@ -53,6 +53,10 @@ public class StRoomService {
             studyMember.setStRoom(stRoom);
             studyMember.setStatus(MemberStatus.Leader);
             studyMemberRepository.save(studyMember);
+            
+              // 6. 사용자의 스터디 멤버십에 해당 스터디그룹 정보 저장
+            user.getStudyMemberships().add(studyMember); // 이 부분을 조정해야할 수 있습니다.
+            
 
             return stRoom.getRoomId();
         } catch (Exception e) {
@@ -149,6 +153,9 @@ public class StRoomService {
             studyMember.setStatus(MemberStatus.Waiting);
             studyMember.setAnswer(requestDto.getAnswer());
             studyMemberRepository.save(studyMember);
+
+            user.addStudyMembership(studyMember); //추가
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -273,5 +280,18 @@ public class StRoomService {
         }
         return memberList;
     }
+
+    //은솔 추가한 부분
+     public List<StRoomResponseDto> getLeaderStudies(String userEmail) {
+        // 사용자의 이메일을 기반으로 Leader로 등록된 스터디룸을 조회하여 StRoomEntity 목록을 얻어옴
+        List<StRoomEntity> leaderStudies = stRoomRepository.findByCreatedByUserEmail(userEmail);
+
+        // StRoomEntity 목록을 StRoomResponseDto 목록으로 변환하여 반환
+        return leaderStudies.stream()
+                .map(StRoomResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+
 
 }
