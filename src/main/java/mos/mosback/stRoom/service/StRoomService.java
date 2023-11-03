@@ -46,7 +46,7 @@ public class StRoomService {
             // 4. Access Token으로 스터디 멤버 정보 가져오기 (User Entity를)
             String loginUserEmail = Optional.ofNullable(jwtService.extractEmail(accessToken)).get().orElse("");
             User user = userService.getUserByEmail(loginUserEmail);
-
+            stRoom.setCreatedByUser(user);
 
             // 5. Study Member 저장
             studyMember.setMemberId(user.getId());
