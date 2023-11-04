@@ -1,6 +1,7 @@
 package mos.mosback.stRoom.service;
 import lombok.RequiredArgsConstructor;
 import mos.mosback.login.domain.user.User;
+import mos.mosback.login.domain.user.repository.UserRepository;
 import mos.mosback.login.domain.user.service.UserService;
 import mos.mosback.stRoom.domain.stRoom.*;
 import mos.mosback.stRoom.dto.*;
@@ -24,6 +25,9 @@ public class ToDoService {
     private final StRoomRepository stRoomRepository;
     private final MemberTodoRepository studyMemberToDoRepository;
     private final UserService userService;
+    private final StRoomService stRoomService;
+    private final UserRepository userRepository;
+
 
     @Transactional
     public ToDoEntity addTodo(stRoomToDoRequestDto requestDto, Long roomId) {
@@ -49,11 +53,9 @@ public class ToDoService {
 
 
     @Transactional
-    public StudyMemberTodoEntity updateMemberTodo(Long todoId, String todoContent, TodoStatus status, String currentEmail) throws Exception {
-        ToDoEntity toDoEntity = toDoRepository.findById(todoId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ToDo를 찾을 수 없습니다."));
+    public StudyMemberTodoEntity updateMemberTodo(Long todoIdx, String todoContent, TodoStatus status, String currentEmail) throws Exception {
         User user = userService.getUserByEmail(currentEmail);
-        StudyMemberTodoEntity studyMemberTodoEntity = studyMemberToDoRepository.findByMemberIdAndTodoContent(user.getId(), toDoEntity.getTodoContent())
+        StudyMemberTodoEntity studyMemberTodoEntity = studyMemberToDoRepository.findById(todoIdx)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ToDo를 찾을 수 없습니다."));
 
         studyMemberTodoEntity.update(todoContent, status);
@@ -69,12 +71,10 @@ public class ToDoService {
     }
 
     @Transactional
-    public void deleteMemberTodo(Long todoId, String currentEmail) throws Exception {
-        ToDoEntity toDoEntity = toDoRepository.findById(todoId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ToDo를 찾을 수 없습니다."));
+    public void deleteMemberTodo(Long todoIdx, String currentEmail) throws Exception {
         User user = userService.getUserByEmail(currentEmail);
-        StudyMemberTodoEntity studyMemberTodoEntity = studyMemberToDoRepository.findByMemberIdAndTodoContent(user.getId(), toDoEntity.getTodoContent())
-                .orElseThrow(() -> new IllegalArgumentException("해당 Study Member ToDo를 찾을 수 없습니다."));
+        StudyMemberTodoEntity studyMemberTodoEntity = studyMemberToDoRepository.findById(todoIdx)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ToDo를 찾을 수 없습니다."));
 
         studyMemberToDoRepository.delete(studyMemberTodoEntity);
     }
@@ -125,17 +125,16 @@ public class ToDoService {
                     / (double) studyRoomTodoAverage.getTotalCount()) * 100;
         }
         List<StudyRoomDayDto> roomDayList = new ArrayList<>();
-        Date now = new Date();
-
+        Date now;
         Calendar cal1 = Calendar.getInstance();
-
-        now = new Date(cal1.getTimeInMillis());
 
         for (int i=0; i<7; i++) {
             StudyRoomDayDto dayDto = new StudyRoomDayDto();
+            now = new Date(cal1.getTimeInMillis());
             dayDto.setDate(now); // 날짜 객체 셋팅
             dayDto.setDayVal(cal1.get(Calendar.DATE)); // 날짜 셋팅
             dayDto.setDayOfWeek(getDayOfKoreanWeek(cal1.get(Calendar.DAY_OF_WEEK))); // "월"~"일" 셋팅
+            roomDayList.add(dayDto);
 
             cal1.add(Calendar.DATE, 1); // 일 계산 하루씩 추가
         }
@@ -166,4 +165,24 @@ public class ToDoService {
             return "";
         }
     }
+
+    public List<MemberTodoRankResponseDto> getMemberTodoProgress(Long roomId,String currentEmail) throws Exception {
+        List<MemberTodoRankResponseDto> progressList = new ArrayList<>();
+        List<MemberTodoRankProjection> progressProjections = studyMemberToDoRepository.getRankByStRoom(roomId);
+        List<StRoomMemberResponseDto> memberList = stRoomService.getStudyRoomMemberList(roomId);
+
+
+        for (MemberTodoRankProjection progressProjection : progressProjections) {
+            User user = stRoomService.getUserInfo(progressProjection.getMemberId());
+
+            MemberTodoRankResponseDto progress = new MemberTodoRankResponseDto();
+            progress.setProgress(progressProjection.getProgress());
+            progress.setNickname(user.getNickname());
+            progressList.add(progress);
+        }
+
+
+        return progressList;
+    }
+
 }

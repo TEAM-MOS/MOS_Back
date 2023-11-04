@@ -9,7 +9,9 @@ spring:
   config:
     activate:
       on-profile: "local"
-
+  mvc:
+     pathmatch:
+      matching-strategy: ant_path_matcher
   h2:
     console:
       enabled: true
@@ -29,6 +31,7 @@ spring:
 
   jpa:
     show-sql: true
+    defer-datasource-initialization: true
     database-platform: org.hibernate.dialect.H2Dialect
     properties:
       hibernate:
@@ -37,6 +40,7 @@ spring:
 
     hibernate:
       ddl-auto: create
+
 
   mail:
     host: smtp.naver.com # 이메일 서버 호스트 (Gmail 사용 예)

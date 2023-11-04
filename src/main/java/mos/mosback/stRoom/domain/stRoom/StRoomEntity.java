@@ -32,12 +32,15 @@ public class StRoomEntity extends BaseTimeEntity {
     private String intro; //스터디 소개
     private int memberNum; //현재 멤버수
     private int maxMember; //모집 멤버수
+    @Column(nullable = false)
     private String mod; //스터디 분위기
     private int click;// 클릭횟수 (인기순 조회)
     private boolean onOff; //진행방식 (온오프)
     private String location;
     private int online; //온라인
+    @Column(nullable = false)
     private LocalDate startDate; //스터디 시작 날짜
+    @Column(nullable = false)
     private LocalDate endDate; //스터디 끝나는 날짜
     private boolean recruiting; //모집여부
     private LocalDate deadline; // 모집 마감날짜

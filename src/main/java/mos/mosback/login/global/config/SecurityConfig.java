@@ -65,7 +65,10 @@ public class SecurityConfig {
                 .antMatchers("/sign-up","/studyRoom/create","/studyRoom/update/{roomId}","/studyRoom/{roomId}",
                         "/todo/add","/todo/update{todoId}","/todo/delete/{todoId}","/todo/{todoId}","/member/todo/add"
                         , "/studyRoom/all","/studyRoom/search","/studyRoom/byCategory/{category}","/studyRoom/recruiting",
-                        "/recruitInfo/{roomId}").permitAll() // 회원가입 접근 가능
+                        "/recruitInfo/{roomId}",
+                        "/swagger-ui.html", "/webjars/**", "/v2/**",
+                        "/webjars/springfox-swagger-ui/**", "/swagger-resources/**",
+                        "/swagger-ui/", "/swagger-ui/**", "/csrf").permitAll() // 회원가입 접근 가능
                 .anyRequest().authenticated() // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
                 .and()
                 //== 소셜 로그인 설정 ==//

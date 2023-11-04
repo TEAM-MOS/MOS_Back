@@ -7,4 +7,5 @@ import mos.mosback.stRoom.domain.stRoom.MemberStatus;
 public class StRoomMemberResponseDto {
     private Long memberId;
     private MemberStatus status;
+
 }

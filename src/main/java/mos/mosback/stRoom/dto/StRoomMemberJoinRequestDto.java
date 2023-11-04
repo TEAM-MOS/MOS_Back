@@ -10,5 +10,4 @@ public class StRoomMemberJoinRequestDto {
     private Long roomId;
     private String answer;
     private String email;
-
 }

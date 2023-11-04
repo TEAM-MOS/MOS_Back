@@ -1,11 +1,13 @@
 package mos.mosback.stRoom.dto;
 import lombok.Getter;
+import lombok.Setter;
 import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
 import mos.mosback.stRoom.domain.stRoom.StudyDaysEntity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 @Getter
+@Setter
 public class StRoomDetailResponseDto {
     private Long roomId;
     private String title;
@@ -23,6 +25,7 @@ public class StRoomDetailResponseDto {
     private String intro;
     private LocalDateTime createdDate;
     private LocalDate deadline;
+    private String nickname;
 
     public StRoomDetailResponseDto(StRoomEntity entity) {
 

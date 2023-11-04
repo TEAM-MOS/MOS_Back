@@ -1,5 +1,6 @@
 package mos.mosback.stRoom.dto;
 import lombok.Getter;
+import lombok.Setter;
 import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
 import mos.mosback.stRoom.domain.stRoom.StudyDaysEntity;
 
@@ -7,6 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 
+@Setter
 @Getter
 public class StRoomResponseDto {
     Long roomId;
@@ -20,6 +22,7 @@ public class StRoomResponseDto {
     private LocalDate startDate; //스터디 시작 날짜
     private LocalDate endDate; //스터디 끝나는 날짜
     private List<StudyDaysEntity> studyDayEntities;
+    private String nickname;
     /*유저프로필 + 사진*/
 
 
@@ -39,6 +42,8 @@ public class StRoomResponseDto {
 
 
     } //스터디 + 투두 리스트의 스터디룸 상세화면
+
+
 }
 //Entity의 필드 이루만 사용하므로 생성자로 Entity를 받아 필드에 값을 넣어줌
 //상세정보에 노출 될 필드

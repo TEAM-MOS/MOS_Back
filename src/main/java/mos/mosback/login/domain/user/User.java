@@ -36,7 +36,6 @@ public class User {
 
     private String nickname; // 닉네임
 
-
     @Column(name = "image_url")
     private String imageUrl; // 프로필 이미지
     private Date str_duration;

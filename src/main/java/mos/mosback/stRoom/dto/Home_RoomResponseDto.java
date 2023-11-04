@@ -1,10 +1,11 @@
 package mos.mosback.stRoom.dto;
 import lombok.Getter;
+import lombok.Setter;
 import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
 
 import java.time.LocalDate;
 
-
+@Setter
 @Getter
 public class Home_RoomResponseDto {
 
@@ -28,6 +29,6 @@ public class Home_RoomResponseDto {
         this.category = entity.getCategory();
         this.memberNum = entity.getMemberNum();
         this.maxMember = entity.getMaxMember();
-
     }
+
 }

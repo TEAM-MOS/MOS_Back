@@ -62,7 +62,7 @@ public class UserService {
     }
 
     //마이페이지정보입력
-    public void createUser(String currentEmail, UserProfileDto userProfileDto) throws Exception {
+    public void roomId(String currentEmail, UserProfileDto userProfileDto) throws Exception {
         if (userRepository.findByNickname(userProfileDto.getNickname()).isPresent()) {
             throw new Exception("이미 존재하는 닉네임입니다.");
         }
@@ -81,24 +81,6 @@ public class UserService {
             userRepository.save(user);
         } catch (Exception e) {
             throw new Exception("회원 정보를 생성하는 동안 오류가 발생했습니다.", e);
-        }
-    }
-
-    //마이페이지 업데이트
-    public void updateUserProfile(String currentEmail, UserProfileDto userProfileDto) throws Exception {
-        try {
-            User user = getUserByEmail(currentEmail);
-
-            // 회원 정보 업데이트
-            user.setNickname(userProfileDto.getNickname());
-            user.setStr_duration(userProfileDto.getStr_duration());
-            user.setEnd_duration(userProfileDto.getEnd_duration());
-            user.setMessage(userProfileDto.getMessage());
-            user.setCompany(userProfileDto.getCompany());
-
-            userRepository.save(user);
-        } catch (Exception e) {
-            throw new Exception("회원 정보를 업데이트하는 동안 오류가 발생했습니다.", e);
         }
     }
 
@@ -203,4 +185,49 @@ public class UserService {
             throw new Exception("해당 이메일의 사용자를 찾을 수 없습니다: " + email);
         }
     }
+    public void createUser(String currentEmail, UserProfileDto userProfileDto) throws Exception {
+        if (userRepository.findByNickname(userProfileDto.getNickname()).isPresent()) {
+            throw new Exception("이미 존재하는 닉네임입니다.");
+        }
+
+        try {
+            User user = getUserByEmail(currentEmail);
+
+            // 회원 정보 생성
+            user.setNickname(userProfileDto.getNickname());
+            user.setName(userProfileDto.getName());
+            user.setStr_duration(userProfileDto.getStr_duration());
+            user.setEnd_duration(userProfileDto.getEnd_duration());
+            user.setMessage(userProfileDto.getMessage());
+            user.setCompany(userProfileDto.getCompany());
+            user.setTend1(userProfileDto.getTend1());
+            user.setTend2(userProfileDto.getTend2());
+            user.setRole(Role.USER);
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new Exception("회원 정보를 생성하는 동안 오류가 발생했습니다.", e);
+        }
+    }
+
+    //마이페이지 업데이트
+    public void updateUserProfile(String currentEmail, UserProfileDto userProfileDto) throws Exception {
+        try {
+            User user = getUserByEmail(currentEmail);
+
+            // 회원 정보 업데이트
+            user.setNickname(userProfileDto.getNickname());
+            user.setName(userProfileDto.getName());
+            user.setStr_duration(userProfileDto.getStr_duration());
+            user.setEnd_duration(userProfileDto.getEnd_duration());
+            user.setMessage(userProfileDto.getMessage());
+            user.setCompany(userProfileDto.getCompany());
+            user.setTend1(userProfileDto.getTend1());
+            user.setTend2(userProfileDto.getTend2());
+            user.setRoomId(userProfileDto.getRoomId());
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new Exception("회원 정보를 업데이트하는 동안 오류가 발생했습니다.", e);
+        }
+    }
+
 }

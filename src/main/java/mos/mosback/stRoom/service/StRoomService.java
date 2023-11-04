@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -47,9 +48,6 @@ public class StRoomService {
             String loginUserEmail = Optional.ofNullable(jwtService.extractEmail(accessToken)).get().orElse("");
             User user = userService.getUserByEmail(loginUserEmail);
 
-            // 4. 정보 대입
-//            user.getStRooms().add(stRoom);
-//            stRoom.setMemberNum(1);
 
             // 5. Study Member 저장
             studyMember.setMemberId(user.getId());
@@ -152,6 +150,7 @@ public class StRoomService {
             studyMember.setStatus(MemberStatus.Waiting);
             studyMember.setAnswer(requestDto.getAnswer());
             studyMemberRepository.save(studyMember);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -223,6 +222,7 @@ public class StRoomService {
         // study member 가입이력이 있다면 "Y" , 없으면 "N"
         return !memberJoinList.isEmpty() ? "Y" : "N";
     }
+
     public String isRecruiting(Long roomId) {
         Optional<StRoomEntity> optionalRoom = stRoomRepository.findById(roomId);
         StRoomEntity stRoom = optionalRoom.get();
@@ -248,7 +248,7 @@ public class StRoomService {
         studyMemberRepository.save(studyMember);
 
     }
-    public void rejecttMember(AcceptMemberRequestDto requestDto){
+    public void rejectMember(AcceptMemberRequestDto requestDto){
         // 1. save할 변수 선언
         StudyMemberEntity studyMember = new StudyMemberEntity();
 
@@ -277,4 +277,24 @@ public class StRoomService {
         return memberList;
     }
 
+    public User getUserInfo(Long memberId) {
+        return userRepository.findById(memberId).orElseThrow(() -> new EntityNotFoundException("user info not found"));
+    }
+
+    public List<StudyMemberHistoryDto> getMyStudyMemberHistory(String email) throws Exception {
+        // 3. 사용자 이메일 조회해서 save 전에 주입
+        User user = userService.getUserByEmail(email);
+        List<StudyMemberEntity> memberJoinList = studyMemberRepository.findAllByMemberId(user.getId());
+        memberJoinList = memberJoinList.stream()
+                .filter(data -> !data.getStatus().equals(MemberStatus.Leader))
+                .collect(Collectors.toList());
+        List<StudyMemberHistoryDto> result = new ArrayList<>();
+        for (StudyMemberEntity item : memberJoinList) {
+            StudyMemberHistoryDto data = new StudyMemberHistoryDto();
+            data.setTitle(item.getStRoom().getTitle());
+            data.setStatus(item.getStatus());
+            result.add(data);
+        }
+        return result;
+    }
 }

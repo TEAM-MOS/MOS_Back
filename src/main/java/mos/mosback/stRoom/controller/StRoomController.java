@@ -1,8 +1,9 @@
 package mos.mosback.stRoom.controller;
+import io.swagger.annotations.ApiImplicitParam;
 import lombok.RequiredArgsConstructor;
+import mos.mosback.login.domain.user.User;
 import mos.mosback.login.domain.user.dto.UserProfileDto;
-import mos.mosback.login.domain.user.repository.UserRepository;
-import mos.mosback.login.domain.user.service.UserService;
+import mos.mosback.stRoom.domain.stRoom.MemberStatus;
 import mos.mosback.stRoom.dto.*;
 import mos.mosback.stRoom.service.StRoomService;
 import mos.mosback.stRoom.service.ToDoService;
@@ -16,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -24,8 +27,7 @@ public class StRoomController {
 
     private final StRoomService stRoomService; // stRoomService를 주입.
     private final ToDoService toDoService;
-    private final UserService userService;
-    private final UserRepository userRepository;
+
     @PostMapping("/create")
     public ResponseEntity<String> saveRoom(@RequestBody StRoomSaveRequestDto requestDto, HttpServletRequest req) {
         // 현재 로그인한 사용자의 정보 가져오기
@@ -36,16 +38,26 @@ public class StRoomController {
         if (stroomId != null) {
             return ResponseEntity.status(HttpStatus.CREATED).body
                     ("message: created successfully. ID:" + stroomId +"\nsuccess:true \nstatus:201");
+
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body
                     ("message: Bad Request \nsuccess:false \nstatus:400");
         }
     }
     @GetMapping("/my{roomId}")
-    public ResponseEntity<StRoomResponseDto> FindByID (@PathVariable Long roomId) {
+    public ResponseEntity<?> FindByID (@PathVariable Long roomId) {
 
-            StRoomResponseDto stroom = stRoomService.findById(roomId);
-            return new ResponseEntity<>(stroom, HttpStatus.OK);
+        StRoomResponseDto stroom = stRoomService.findById(roomId);
+        List<StRoomMemberResponseDto> studyRoomMemberList = stRoomService.getStudyRoomMemberList(roomId);
+        StRoomMemberResponseDto leaderInfo = studyRoomMemberList.stream()
+                .filter(data -> MemberStatus.Leader.name().equals(data.getStatus().name()))
+                .findFirst().orElseThrow(() -> new EntityNotFoundException("leader info not found"));
+        User leaderUser = stRoomService .getUserInfo(leaderInfo.getMemberId());
+        stroom.setNickname(leaderUser.getNickname());
+        stroom.setMemberNum(studyRoomMemberList.size());
+
+        return new ResponseEntity<>(stroom,HttpStatus.OK);
+
     }
 
     @GetMapping("/search")
@@ -105,6 +117,7 @@ public class StRoomController {
     @GetMapping("/home/studyRoom")
     public ResponseEntity<List<Home_RoomResponseDto>> findRoomsInHome(){
         List<Home_RoomResponseDto> roomsInhome = stRoomService.findRoomsInHome();
+
         return new ResponseEntity<>(roomsInhome,HttpStatus.OK);
     }
 
@@ -189,6 +202,7 @@ public class StRoomController {
         return ResponseEntity.status(HttpStatus.CREATED).body
                 ("message : joined successfully.\nstatus : 201\n success: true");
     }
+
     @PostMapping("/accept/{roomId}")
     public ResponseEntity<String> acceptMember(@PathVariable Long roomId,
                                              @RequestBody AcceptMemberRequestDto requestDto) {
@@ -207,7 +221,7 @@ public class StRoomController {
                                              @RequestBody AcceptMemberRequestDto requestDto) {
         try {
             requestDto.setRoomId(roomId);
-            stRoomService.rejecttMember(requestDto);
+            stRoomService.rejectMember(requestDto);
             return ResponseEntity.status(HttpStatus.CREATED).body
                     ("message : Rejected successfully.\nstatus : 201\n success: true");
         }catch (IllegalArgumentException ex){
@@ -250,12 +264,36 @@ public class StRoomController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    /**
+     * 스터디 가입여부를 조회하는 API
+     * @return
+     */
+    @GetMapping("/my-study-member-history")
+    public ResponseEntity<Map<String, Object>> getMyStudyMemberHistory() throws Exception {
+        // 현재 로그인한 사용자의 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName(); // 현재 사용자의 이메일
+        List<StudyMemberHistoryDto> memberHistoryList = stRoomService.getMyStudyMemberHistory(email);
+        Map<String, Object> response = new HashMap<>();
+        response.put("memberHistoryList", memberHistoryList);
+        response.put("success", true);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
     @GetMapping("/Info/{roomId}")
+    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
     public ResponseEntity<Map<String, Object>> recruitInfo(@PathVariable Long roomId) {
         String recruitInfo = stRoomService.isRecruiting(roomId);
        StRoomDetailResponseDto stroom = stRoomService.findByRoomId(roomId);
         List<StRoomToDoResponseDto> todoList = toDoService.findStRoomTodoByRoomId(roomId);
         List<StRoomMemberResponseDto> studyRoomMemberList = stRoomService.getStudyRoomMemberList(roomId);
+        StRoomMemberResponseDto leaderInfo = studyRoomMemberList.stream()
+                .filter(data -> MemberStatus.Leader.name().equals(data.getStatus().name()))
+                .findFirst().orElseThrow(() -> new EntityNotFoundException("leader info not found"));
+        User leaderUser = stRoomService.getUserInfo(leaderInfo.getMemberId());
+        stroom.setNickname(leaderUser.getNickname());
+        stroom.setMemberNum(studyRoomMemberList.size());
 
         Map<String, Object> response = new HashMap<>();
         response.put("모집", recruitInfo);
