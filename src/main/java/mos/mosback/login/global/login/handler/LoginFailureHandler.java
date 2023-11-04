@@ -27,7 +27,7 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
         log.info("로그인에 실패했습니다. 메시지 : {}", exception.getMessage());
 
         Map<String, Object> responseData = new HashMap<>();
-        responseData.put("status", 200);
+        responseData.put("status", 500);
         responseData.put("success", false);
         responseData.put("메시지" , "로그인실패! 이메일이나 비밀번호를 확인해주세요");
         response.setContentType("application/json");
