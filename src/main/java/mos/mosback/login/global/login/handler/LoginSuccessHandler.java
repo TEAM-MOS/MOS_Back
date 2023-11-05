@@ -47,7 +47,6 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         log.info("발급된 Jwt 만료 기간 : {}", accessTokenExpiration);
 
         Map<String, Object> result = new HashMap<>();
-        result.put("currentEmail", currentEmail); // 사용자 고유 식별자 (예: DB에서 조회한 값)
         result.put("jwt", jwt);
 
         Map<String, Object> responseData = new HashMap<>();
