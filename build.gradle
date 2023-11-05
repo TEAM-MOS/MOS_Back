@@ -52,10 +52,11 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
-    implementation("org.mariadb.jdbc:mariadb-java-client")
+    implementation 'org.mariadb.jdbc:mariadb-java-client'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'mysql:mysql-connector-java:8.0.34'
     implementation 'org.springframework.boot:spring-boot-starter-mail' //메일 의존성
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -68,9 +69,12 @@ dependencies {
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.23'
 
     implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.2'
-    implementation 'mysql:mysql-connector-java:8.0.26'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'com.auth0:java-jwt:4.2.1'
+
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+    implementation 'software.amazon.awssdk:s3'
+
 
     // lombok
     implementation('org.projectlombok:lombok:1.18.20')
