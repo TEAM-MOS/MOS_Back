@@ -36,6 +36,7 @@ public class User {
 
     private String nickname; // 닉네임
 
+
     @Column(name = "image_url")
     private String imageUrl; // 프로필 이미지
     private Date str_duration;
@@ -46,7 +47,6 @@ public class User {
     private String company;
 
     private String tend1;
-    private String tend2;
 
     public String getTend1() {
         return tend1;
@@ -64,6 +64,7 @@ public class User {
         this.tend2 = tend2;
     }
 
+    private String tend2;
     @Enumerated(EnumType.STRING)
     private Role role;
 

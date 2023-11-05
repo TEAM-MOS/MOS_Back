@@ -11,12 +11,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.HashMap;
 import java.util.Map;
-
 @RestController
 @RequestMapping("/profile")
+
 public class UserProfileController {
 
     // 현재 로그인한 사용자의 정보 가져오기
