@@ -54,6 +54,28 @@ spring:
   logging:
     level:
       root: DEBUG
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY}
+      secretKey: ${AWS_SECRET_KEY}
+
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+  autoconfigure:
+    exclude:
+      - org.springframework.cloud.aws.autoconfigure.context.ContextInstanceDataAutoConfiguration
+        - org.springframework.cloud.aws.autoconfigure.context.ContextRegionProviderAutoConfiguration
+        - org.springframework.cloud.aws.autoconfigure.context.ContextStackAutoConfiguration
+        - org.springframework.cloud.aws.autoconfigure.context.ContextCredentialsAutoConfiguration
+
+application:
+  bucket:
+    name: mos-s3-bucket
+
 ---
 server:
   port: 8090
