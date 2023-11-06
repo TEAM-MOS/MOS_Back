@@ -1,0 +1,81 @@
+spring:
+  profiles:
+    group:
+      local : "local, jwt, oauth"
+    active : local
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "local"
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+
+
+  main:
+    allow-circular-references: true
+
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+    hibernate:
+      ddl-auto: create
+
+
+  mail:
+    host: smtp.naver.com # 이메일 서버 호스트 (Gmail 사용 예)
+    port: 465 # SMTP 포트 (Gmail의 경우 465 또는 587)
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true # TLS를 사용하려면 true, SSL을 사용하려면 false
+        debug: true # 디버그 모드 활성화
+  logging:
+    level:
+      root: DEBUG
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY}
+      secretKey: ${AWS_SECRET_KEY}
+
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+  autoconfigure:
+    exclude:
+      - org.springframework.cloud.aws.autoconfigure.context.ContextInstanceDataAutoConfiguration
+        - org.springframework.cloud.aws.autoconfigure.context.ContextRegionProviderAutoConfiguration
+        - org.springframework.cloud.aws.autoconfigure.context.ContextStackAutoConfiguration
+        - org.springframework.cloud.aws.autoconfigure.context.ContextCredentialsAutoConfiguration
+
+application:
+  bucket:
+    name: mos-s3-bucket
+
+---
+server:
+  port: 8090
