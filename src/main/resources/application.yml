@@ -10,7 +10,7 @@ spring:
     activate:
       on-profile: "local"
   mvc:
-     pathmatch:
+    pathmatch:
       matching-strategy: ant_path_matcher
   h2:
     console:
@@ -43,18 +43,18 @@ spring:
 
 
   mail:
-    host: smtp.naver.com # 이메일 서버 호스트 (Gmail 사용 예)
-    port: 587 # SMTP 포트 (Gmail의 경우 465 또는 587)
-    username: # 이메일 계정
-    password: 비밀번호
+    host: smtp.naver.com # ??? ?? ??? (Gmail ?? ?)
+    port: 587 # SMTP ?? (Gmail? ?? 465 ?? 587)
+    username: # ??? ??
+    password: ????
 
     properties:
       mail:
         smtp:
           auth: true
           starttls:
-            enable: true # TLS를 사용하려면 true, SSL을 사용하려면 false
-        debug: true # 디버그 모드 활성화
+            enable: true # TLS? ????? true, SSL? ????? false
+        debug: true # ??? ?? ???
   logging:
     level:
       root: DEBUG

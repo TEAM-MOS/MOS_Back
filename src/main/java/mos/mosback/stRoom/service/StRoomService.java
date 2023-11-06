@@ -24,6 +24,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
+
+
 @RequiredArgsConstructor
 @Service
 public class StRoomService {
@@ -45,7 +47,7 @@ public class StRoomService {
             String accessToken = Optional.ofNullable(jwtService.extractAccessToken(req)).get().orElse("");
 
             // 4. Access Token으로 스터디 멤버 정보 가져오기 (User Entity를)
-            String loginUserEmail = Optional.ofNullable(jwtService.extractEmail(accessToken)).get().orElse("");
+            String loginUserEmail = Optional.ofNullable(jwtService.extractEmailFromJwt(accessToken)).get().orElse("");
             User user = userService.getUserByEmail(loginUserEmail);
 
 
@@ -54,6 +56,10 @@ public class StRoomService {
             studyMember.setStRoom(stRoom);
             studyMember.setStatus(MemberStatus.Leader);
             studyMemberRepository.save(studyMember);
+
+            //추가
+            // 6. 사용자의 스터디 멤버십에 해당 스터디그룹 정보 저장
+           /* user.getStudyMemberships().add(studyMember);*/
 
             return stRoom.getRoomId();
         } catch (Exception e) {
@@ -149,6 +155,7 @@ public class StRoomService {
             studyMember.setStRoom(stRoomEntity);
             studyMember.setStatus(MemberStatus.Waiting);
             studyMember.setAnswer(requestDto.getAnswer());
+            studyMember.setImg(user.getImageUrl());
             studyMemberRepository.save(studyMember);
 
         } catch (Exception e) {
@@ -198,6 +205,7 @@ public class StRoomService {
             User user = optionalUser.get();
             // 엔터티 정보를 DTO로 매핑하여 반환
             return new UserProfileDto(
+                    user.getId(),
                     user.getNickname(),
                     user.getName(),
                     user.getStr_duration(),
@@ -206,13 +214,13 @@ public class StRoomService {
                     user.getCompany(),
                     user.getTend1(),
                     user.getTend2(),
-                    user.getRoomId()
+                    user.getRoomId(),
+                    user.getImageUrl()
             );
         } else {
             throw new Exception("해당 이메일의 사용자를 찾을 수 없습니다: " + memberId);
         }
     }
-
     public String getMyInfo(String email) throws Exception {
         // 3. 사용자 이메일 조회해서 save 전에 주입
         User user = userService.getUserByEmail(email);
@@ -263,7 +271,7 @@ public class StRoomService {
 
     }
 
-    public List<StRoomMemberResponseDto> getStudyRoomMemberList(Long roomId) {
+    public List<StRoomMemberResponseDto> getStudyRoomMembers(Long roomId) {
         StRoomEntity stRoom = stRoomRepository.findById(roomId)
                 .orElseThrow(() -> new EntityNotFoundException("Room not found"));
         List<StudyMemberEntity> memberEntityList = studyMemberRepository.findAllByStRoom(stRoom);
@@ -272,6 +280,7 @@ public class StRoomService {
             StRoomMemberResponseDto dto = new StRoomMemberResponseDto();
             dto.setMemberId(item.getMemberId());
             dto.setStatus(item.getStatus());
+            dto.setImage(item.getImg());
             memberList.add(dto);
         }
         return memberList;
@@ -297,4 +306,29 @@ public class StRoomService {
         }
         return result;
     }
+
+
+/*    //-------------은솔 새로 추가된 부분 -----------------
+    public List<StRoomMemberResponseDto> getStudyRoomMemberList(Long roomId) {
+        StRoomEntity stRoom = stRoomRepository.findById(roomId)
+                .orElseThrow(() -> new EntityNotFoundException("Room not found"));
+
+        List<StRoomMemberResponseDto> memberList = studyMemberRepository
+                .findByStRoom(stRoom)
+                .stream()
+                .map(member -> new StRoomMemberResponseDto(member.getMemberId(),member.getStatus());
+                .collect(Collectors.toList());
+
+        return memberList;
+
+    }
+    public List<StRoomResponseDto> getLeaderStudies(String userEmail) {
+        // 사용자의 이메일을 기반으로 Leader로 등록된 스터디룸을 조회하여 StRoomEntity 목록을 얻어옴
+        List<StRoomEntity> leaderStudies = stRoomRepository.findByCreatedByUserEmail(userEmail);
+
+        // StRoomEntity 목록을 StRoomResponseDto 목록으로 변환하여 반환
+        return leaderStudies.stream()
+                .map(StRoomResponseDto::new)
+                .collect(Collectors.toList());
+    }*/
 }

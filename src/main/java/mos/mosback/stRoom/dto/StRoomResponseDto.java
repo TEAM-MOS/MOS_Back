@@ -23,7 +23,7 @@ public class StRoomResponseDto {
     private LocalDate endDate; //스터디 끝나는 날짜
     private List<StudyDaysEntity> studyDayEntities;
     private String nickname;
-    /*유저프로필 + 사진*/
+    private String userImg;
 
 
     public StRoomResponseDto(StRoomEntity entity) {

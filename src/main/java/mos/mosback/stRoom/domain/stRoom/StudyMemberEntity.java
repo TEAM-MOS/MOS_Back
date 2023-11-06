@@ -2,9 +2,11 @@ package mos.mosback.stRoom.domain.stRoom;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import mos.mosback.login.domain.user.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Getter // 롬복 어노테이션
 @Setter
@@ -30,6 +32,16 @@ public class StudyMemberEntity implements Serializable {
     private String answer; // 스터디 답변
 
 
+    @Column
+    private String img;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    public Long getUserId() {
+        return this.user.getId();
+    }
+    @Column
+    private LocalDateTime joinedAt;
 
 }

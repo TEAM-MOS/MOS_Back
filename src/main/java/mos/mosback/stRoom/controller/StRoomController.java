@@ -1,8 +1,9 @@
 package mos.mosback.stRoom.controller;
-import io.swagger.annotations.ApiImplicitParam;
+/*import io.swagger.annotations.ApiImplicitParam;*/
 import lombok.RequiredArgsConstructor;
 import mos.mosback.login.domain.user.User;
 import mos.mosback.login.domain.user.dto.UserProfileDto;
+import mos.mosback.login.domain.user.service.UserService;
 import mos.mosback.stRoom.domain.stRoom.MemberStatus;
 import mos.mosback.stRoom.dto.*;
 import mos.mosback.stRoom.service.StRoomService;
@@ -27,43 +28,60 @@ public class StRoomController {
 
     private final StRoomService stRoomService; // stRoomService를 주입.
     private final ToDoService toDoService;
+    private final UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<String> saveRoom(@RequestBody StRoomSaveRequestDto requestDto, HttpServletRequest req) {
+    public ResponseEntity<Map<String, Object>> saveRoom(@RequestBody StRoomSaveRequestDto requestDto, HttpServletRequest req) {
         // 현재 로그인한 사용자의 정보 가져오기
+        Map<String, Object> response = new HashMap<>();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentEmail = authentication.getName(); // 현재 사용자의 이메일
         requestDto.setEmail(currentEmail);
         Long stroomId = stRoomService.save(requestDto, req);
-        if (stroomId != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body
-                    ("message: created successfully. ID:" + stroomId +"\nsuccess:true \nstatus:201");
 
+        try{
+            if (stroomId != null) {
+                response.put("status", 201);
+                response.put("success", true);
+                response.put("message", "스터디룸 생성완료."+ "룸아이디:"+stroomId);
+                return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body
-                    ("message: Bad Request \nsuccess:false \nstatus:400");
+            response.put("status", 501);
+            response.put("success", false);
+            response.put("message", "서버내부오류");
+            return ResponseEntity.ok(response);
+        }
+    } catch (Exception e) {
+            response.put("status", 501);
+            response.put("success", false);
+            response.put("message", "서버내부오류");
+            return ResponseEntity.ok(response);
         }
     }
+
     @GetMapping("/my{roomId}")
     public ResponseEntity<?> FindByID (@PathVariable Long roomId) {
 
         StRoomResponseDto stroom = stRoomService.findById(roomId);
-        List<StRoomMemberResponseDto> studyRoomMemberList = stRoomService.getStudyRoomMemberList(roomId);
+        List<StRoomMemberResponseDto> studyRoomMemberList = stRoomService.getStudyRoomMembers(roomId);
         StRoomMemberResponseDto leaderInfo = studyRoomMemberList.stream()
                 .filter(data -> MemberStatus.Leader.name().equals(data.getStatus().name()))
                 .findFirst().orElseThrow(() -> new EntityNotFoundException("leader info not found"));
         User leaderUser = stRoomService .getUserInfo(leaderInfo.getMemberId());
         stroom.setNickname(leaderUser.getNickname());
+        stroom.setUserImg(leaderUser.getImageUrl());
         stroom.setMemberNum(studyRoomMemberList.size());
 
         return new ResponseEntity<>(stroom,HttpStatus.OK);
 
     }
 
+
     @GetMapping("/search")
     public ResponseEntity<?> searchRoom(@RequestParam String keyword) {
         try {
             List<Home_RoomResponseDto> strooms = stRoomService.findByTitleContaining(keyword);
+
             return new ResponseEntity<>(strooms, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             Map<String, String> response = new HashMap<>();
@@ -74,14 +92,20 @@ public class StRoomController {
         }
     }
     @PutMapping("/update/{roomId}")
-    public ResponseEntity<String> UpdateRoom(@PathVariable Long roomId, @RequestBody StRoomUpdateRequestDto requestDto) {
+    public ResponseEntity<Map<String, Object>> UpdateRoom(@PathVariable Long roomId, @RequestBody StRoomUpdateRequestDto requestDto) {
+        Map<String, Object> response = new HashMap<>();
         try {
             stRoomService.update(roomId, requestDto);
-            return ResponseEntity.ok
-                    ("message: updated successfully. roomId:"+roomId+"\nsuccess:true\nstatus:200");
+            response.put("status", 200);
+            response.put("success", true);
+            response.put("message", "deleted"+"'"+roomId+"'");
+            return ResponseEntity.ok(response);
+
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("message: NOT FOUND "+"'"+roomId+"'"+"\nsuccess:false\nstatus:404");
+            response.put("status", 404);
+            response.put("success", false);
+            response.put("message", "해당 스터디룸 없음 :"+"'"+roomId+"'");
+            return ResponseEntity.ok(response);
         }
     }
 
@@ -97,7 +121,7 @@ public class StRoomController {
         } catch (EntityNotFoundException ex) {
             response.put("status", 404);
             response.put("success", false);
-            response.put("message", "NOTFOUND"+"'"+roomId+"'");
+            response.put("message", "해당스터디룸 없음 : "+"'"+roomId+"'");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
@@ -191,7 +215,7 @@ public class StRoomController {
         }
     }
     @PostMapping("/memberjoin/{roomId}")
-    public ResponseEntity<String> memberJoin(@PathVariable Long roomId,
+    public ResponseEntity<Map<String, Object>> memberJoin(@PathVariable Long roomId,
                                              @RequestBody StRoomMemberJoinRequestDto requestDto) {
         // 현재 로그인한 사용자의 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -199,8 +223,12 @@ public class StRoomController {
         requestDto.setEmail(currentEmail);
         requestDto.setRoomId(roomId);
         stRoomService.memberJoin(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body
-                ("message : joined successfully.\nstatus : 201\n success: true");
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("status:", HttpStatus.CREATED.value());
+        response.put("success", true);
+        response.put("message", " joined successfully.");
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/accept/{roomId}")
@@ -282,19 +310,19 @@ public class StRoomController {
     }
 
     @GetMapping("/Info/{roomId}")
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
+   /* @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", example = "Bearer access_token")*/
     public ResponseEntity<Map<String, Object>> recruitInfo(@PathVariable Long roomId) {
         String recruitInfo = stRoomService.isRecruiting(roomId);
        StRoomDetailResponseDto stroom = stRoomService.findByRoomId(roomId);
         List<StRoomToDoResponseDto> todoList = toDoService.findStRoomTodoByRoomId(roomId);
-        List<StRoomMemberResponseDto> studyRoomMemberList = stRoomService.getStudyRoomMemberList(roomId);
+        List<StRoomMemberResponseDto> studyRoomMemberList = stRoomService.getStudyRoomMembers(roomId);
         StRoomMemberResponseDto leaderInfo = studyRoomMemberList.stream()
                 .filter(data -> MemberStatus.Leader.name().equals(data.getStatus().name()))
                 .findFirst().orElseThrow(() -> new EntityNotFoundException("leader info not found"));
         User leaderUser = stRoomService.getUserInfo(leaderInfo.getMemberId());
         stroom.setNickname(leaderUser.getNickname());
         stroom.setMemberNum(studyRoomMemberList.size());
-
+        stroom.setUserImg(leaderUser.getImageUrl());
         Map<String, Object> response = new HashMap<>();
         response.put("모집", recruitInfo);
         response.put("StudyRoom", stroom);

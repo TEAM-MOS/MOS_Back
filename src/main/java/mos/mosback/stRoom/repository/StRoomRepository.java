@@ -2,6 +2,7 @@ package mos.mosback.stRoom.repository;
 
 //Entity 클래스와 Entity레파지토리 위치 같아야함
 import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
+import mos.mosback.stRoom.domain.stRoom.StudyMemberEntity;
 import mos.mosback.stRoom.dto.Home_RoomResponseDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -29,5 +30,10 @@ public interface StRoomRepository extends JpaRepository<StRoomEntity, Long> {
 
     @Query("SELECT new mos.mosback.stRoom.dto.Home_RoomResponseDto(s) FROM StRoomEntity s WHERE s.startDate > current_timestamp")
     List<Home_RoomResponseDto> findRecruitingStudies();
+
+    List<StRoomEntity> findByMembersIn(List<StudyMemberEntity> studyMemberships);
+
+    List<StRoomEntity> findByCreatedByUserEmail(String userEmail);
+
 
 }

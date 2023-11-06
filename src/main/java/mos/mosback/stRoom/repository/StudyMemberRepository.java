@@ -11,4 +11,5 @@ public interface StudyMemberRepository extends JpaRepository<StudyMemberEntity, 
     List<StudyMemberEntity> findAllByMemberId(Long memberId);
 
     List<StudyMemberEntity> findAllByStRoom(StRoomEntity stRoom);
+    List<StudyMemberEntity> findByStRoom(StRoomEntity stRoom);
 }

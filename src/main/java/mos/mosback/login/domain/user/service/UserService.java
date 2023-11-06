@@ -1,5 +1,6 @@
 package mos.mosback.login.domain.user.service;
 
+import javassist.NotFoundException;
 import mos.mosback.login.domain.user.Role;
 import mos.mosback.login.domain.user.User;
 import mos.mosback.login.domain.user.dto.FindPWDto;
@@ -8,31 +9,58 @@ import mos.mosback.login.domain.user.dto.MailDto;
 import mos.mosback.login.domain.user.dto.UserProfileDto;
 import mos.mosback.login.domain.user.dto.UserSignUpDto;
 import mos.mosback.login.domain.user.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
 import mos.mosback.stRoom.domain.stRoom.StudyMemberEntity;
-import mos.mosback.stRoom.dto.StRoomSaveRequestDto;
+import mos.mosback.stRoom.dto.StudyMembershipStatusResponseDto;
+import mos.mosback.stRoom.repository.StRoomRepository;
+import mos.mosback.stRoom.repository.StudyMemberRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.util.Optional;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
-    private final JavaMailSender mailSender;
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JavaMailSender mailSender;
+
+    @Autowired
+    private StudyMemberRepository studyMemberRepository;
+
+    private StRoomRepository stRoomRepository;
+
+    @Autowired
+    private final FileService fileService;
+
+    public User getUserById(Long id) throws Exception {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            return optionalUser.get();
+        } else {
+            throw new Exception("현재 로그인한 사용자를 찾을 수 없습니다.");
+        }
+    }
 
     public void signUp(UserSignUpDto userSignUpDto) throws Exception {
 
@@ -57,12 +85,13 @@ public class UserService {
         if (optionalUser.isPresent()) {
             return optionalUser.get();
         } else {
-            throw new Exception("현재 로그인한 사용자를 찾을 수 없습니다.");
+            throw new Exception("해당 이메일의 사용자를 찾을 수 없습니다: " + email);
         }
     }
 
+
     //마이페이지정보입력
-    public void roomId(String currentEmail, UserProfileDto userProfileDto) throws Exception {
+    public void createUser(String currentEmail, UserProfileDto userProfileDto) throws Exception {
         if (userRepository.findByNickname(userProfileDto.getNickname()).isPresent()) {
             throw new Exception("이미 존재하는 닉네임입니다.");
         }
@@ -72,15 +101,55 @@ public class UserService {
 
             // 회원 정보 생성
             user.setNickname(userProfileDto.getNickname());
+            user.setName(userProfileDto.getName());
             user.setStr_duration(userProfileDto.getStr_duration());
             user.setEnd_duration(userProfileDto.getEnd_duration());
             user.setMessage(userProfileDto.getMessage());
             user.setCompany(userProfileDto.getCompany());
-
+            user.setTend1(userProfileDto.getTend1());
+            user.setTend2(userProfileDto.getTend2());
             user.setRole(Role.USER);
+
             userRepository.save(user);
         } catch (Exception e) {
             throw new Exception("회원 정보를 생성하는 동안 오류가 발생했습니다.", e);
+        }
+    }
+
+    public void updateUserProfileImageUrl(Long userId, String imageUrl) throws Exception {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setImageUrl(imageUrl);
+            userRepository.save(user);
+        } else {
+            throw new Exception("해당 ID의 사용자를 찾을 수 없습니다: " + userId);
+        }
+    }
+
+
+    //마이페이지 업데이트
+    public void updateUserProfile(String currentEmail, UserProfileDto userProfileDto ) throws Exception {
+        try {
+            User user = getUserByEmail(currentEmail);
+
+            // 회원 정보 업데이트
+            user.setNickname(userProfileDto.getNickname());
+            user.setName(userProfileDto.getName());
+            user.setStr_duration(userProfileDto.getStr_duration());
+            user.setEnd_duration(userProfileDto.getEnd_duration());
+            user.setMessage(userProfileDto.getMessage());
+            user.setCompany(userProfileDto.getCompany());
+            user.setTend1(userProfileDto.getTend1());
+            user.setTend2(userProfileDto.getTend2());
+/*            user.setRoomId(userProfileDto.getRoomId());*/
+
+
+
+
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new Exception("회원 정보를 업데이트하는 동안 오류가 발생했습니다.", e);
         }
     }
 
@@ -101,8 +170,7 @@ public class UserService {
     }
 
 
-    // 메일 내용을 생성하고 임시 비밀번호로 회원 비밀번호를 변경
-
+// 메일 내용을 생성하고 임시 비밀번호로 회원 비밀번호를 변경
     public MailDto createMailAndChangePassword(String userEmail) {
         String tempPassword = getTempPassword();
         MailDto mailDTO = new MailDto();
@@ -164,13 +232,35 @@ public class UserService {
         return userRepository.findByEmail(userEmail);
     }
 
+    // 사용자의 이미지 URL 업데이트 메서드
+    public void uploadAndSaveImage(Long id, MultipartFile file) throws IOException {
+        // id를 사용하여 사용자 정보를 데이터베이스에서 조회합니다.
+        User user = userRepository.findById(id).get();
 
-    public UserProfileDto getUserProfileByEmail(String email) throws Exception {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (user != null) {
+            // 이미지를 S3에 업로드하고 URL을 받아옵니다.
+            String imageUrl = fileService.uploadFile(file, user.getId());
+
+            // 사용자 정보가 존재하면 이미지 URL을 업데이트합니다.
+            user.setImageUrl(imageUrl);
+            userRepository.save(user); // 변경된 정보를 저장합니다.
+        } else {
+            throw new IllegalArgumentException("해당 ID의 사용자를 찾을 수 없습니다: " + id);
+        }
+    }
+
+    public User findById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public UserProfileDto getMemberProfileById(Long memberId) throws Exception {
+
+        Optional<User> optionalUser = userRepository.findById(memberId);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             // 엔터티 정보를 DTO로 매핑하여 반환
             return new UserProfileDto(
+                    user.getId(),
                     user.getNickname(),
                     user.getName(),
                     user.getStr_duration(),
@@ -179,55 +269,125 @@ public class UserService {
                     user.getCompany(),
                     user.getTend1(),
                     user.getTend2(),
-                    user.getRoomId()
+                    user.getRoomId(),
+                    user.getImageUrl()
+            );
+        } else {
+            throw new Exception("해당 이메일의 사용자를 찾을 수 없습니다: " + memberId);
+        }
+    }
+
+    public List<StRoomEntity> getStudyGroupsForUserByEmail(String email) throws NotFoundException {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return user.getStRooms();
+        } else {
+            throw new NotFoundException("사용자를 찾을 수 없습니다.");
+        }
+    }
+
+
+
+    public List<StRoomEntity> getStudyGroupsForUserByMemberId(Long memberId) {
+        // 사용자의 memberId를 이용해 사용자가 참여한 스터디 그룹 목록을 조회합니다.
+        List<StudyMemberEntity> userStudyMemberships = studyMemberRepository.findAllByMemberId(memberId);
+
+        // 사용자가 참여한 스터디 그룹 목록을 담을 리스트를 생성합니다.
+        List<StRoomEntity> userStudyGroups = stRoomRepository.findByMembersIn(userStudyMemberships);
+
+        return userStudyGroups;
+    }
+
+//    public List<StudyMembershipStatusResponseDto> getStudyMembershipStatus(String userEmail) throws NotFoundException {
+//        User user = userRepository.findByEmail(userEmail)
+//                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+//
+//        Long memberId = user.getId();
+//        List<StudyMemberEntity> userStudyMemberships = studyMemberRepository.findAllByMemberId(memberId);
+//
+//        Map<StRoomEntity, StudyMemberEntity> latestStudyMembershipsMap = userStudyMemberships.stream()
+//                .collect(Collectors.toMap(
+//                        StudyMemberEntity::getStRoom,
+//                        Function.identity(),
+//                        (m1, m2) -> m1.getJoinedAt().isAfter(m2.getJoinedAt()) ? m1 : m2
+//                ));
+//
+//        List<StudyMembershipStatusResponseDto> membershipStatusList = latestStudyMembershipsMap.entrySet().stream()
+//                .map(entry -> {
+//                    StRoomEntity stRoom = entry.getKey();
+//                    StudyMemberEntity studyMembership = entry.getValue();
+//                    String status = studyMembership.getStatus().name();
+//                    return new StudyMembershipStatusResponseDto(stRoom.getTitle(), status);
+//                })
+//                .collect(Collectors.toList());
+//
+//        return membershipStatusList;
+//    }
+
+//        내가 가입한 스터디의 상태를 보여줌(하나만 보여주는 문제)
+    public List<StudyMembershipStatusResponseDto> getStudyMembershipStatus(String userEmail) throws NotFoundException {
+    User user = userRepository.findByEmail(userEmail)
+            .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+    Long memberId = user.getId();
+   List<StudyMemberEntity> userStudyMemberships = studyMemberRepository.findAllByMemberId(memberId);
+
+    List<StudyMembershipStatusResponseDto> membershipStatusList = userStudyMemberships.stream()
+            .map(member -> {
+                StRoomEntity stRoom = member.getStRoom();
+                String status = member.getStatus().name();
+                return new StudyMembershipStatusResponseDto(stRoom.getTitle(), status);
+            })
+            .collect(Collectors.toList());
+
+    return membershipStatusList;
+    }
+
+
+//    public List<StudyMembershipStatusResponseDto> getStudyMembershipStatus(String userEmail) throws NotFoundException {
+//        User user = userRepository.findByEmail(userEmail)
+//                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+//
+//        Long memberId = user.getId();
+//         List<StudyMemberEntity> userStudyMemberships = studyMemberRepository.findAllByMemberId(memberId);
+//
+//        List<StudyMembershipStatusResponseDto> membershipStatusList = userStudyMemberships.stream()
+//                .map(member -> {
+//                    StRoomEntity stRoom = member.getStRoom();
+//                    String status = member.getStatus().name();
+//                    return new StudyMembershipStatusResponseDto(stRoom.getTitle(), status);
+//                })
+//                .collect(Collectors.toList());
+//
+//        return membershipStatusList;
+//    }
+
+
+    public UserProfileDto getUserProfileByEmail(String email) throws Exception {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            // 엔터티 정보를 DTO로 매핑하여 반환
+            return new UserProfileDto(
+                    user.getId(),
+                    user.getNickname(),
+                    user.getName(),
+                    user.getStr_duration(),
+                    user.getEnd_duration(),
+                    user.getMessage(),
+                    user.getCompany(),
+                    user.getTend1(),
+                    user.getTend2(),
+                    user.getRoomId(),
+                    user.getImageUrl()
             );
         } else {
             throw new Exception("해당 이메일의 사용자를 찾을 수 없습니다: " + email);
         }
     }
-    public void createUser(String currentEmail, UserProfileDto userProfileDto) throws Exception {
-        if (userRepository.findByNickname(userProfileDto.getNickname()).isPresent()) {
-            throw new Exception("이미 존재하는 닉네임입니다.");
-        }
 
-        try {
-            User user = getUserByEmail(currentEmail);
-
-            // 회원 정보 생성
-            user.setNickname(userProfileDto.getNickname());
-            user.setName(userProfileDto.getName());
-            user.setStr_duration(userProfileDto.getStr_duration());
-            user.setEnd_duration(userProfileDto.getEnd_duration());
-            user.setMessage(userProfileDto.getMessage());
-            user.setCompany(userProfileDto.getCompany());
-            user.setTend1(userProfileDto.getTend1());
-            user.setTend2(userProfileDto.getTend2());
-            user.setRole(Role.USER);
-            userRepository.save(user);
-        } catch (Exception e) {
-            throw new Exception("회원 정보를 생성하는 동안 오류가 발생했습니다.", e);
-        }
-    }
-
-    //마이페이지 업데이트
-    public void updateUserProfile(String currentEmail, UserProfileDto userProfileDto) throws Exception {
-        try {
-            User user = getUserByEmail(currentEmail);
-
-            // 회원 정보 업데이트
-            user.setNickname(userProfileDto.getNickname());
-            user.setName(userProfileDto.getName());
-            user.setStr_duration(userProfileDto.getStr_duration());
-            user.setEnd_duration(userProfileDto.getEnd_duration());
-            user.setMessage(userProfileDto.getMessage());
-            user.setCompany(userProfileDto.getCompany());
-            user.setTend1(userProfileDto.getTend1());
-            user.setTend2(userProfileDto.getTend2());
-            user.setRoomId(userProfileDto.getRoomId());
-            userRepository.save(user);
-        } catch (Exception e) {
-            throw new Exception("회원 정보를 업데이트하는 동안 오류가 발생했습니다.", e);
-        }
-    }
 
 }
+
+

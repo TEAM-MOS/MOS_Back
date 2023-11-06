@@ -8,6 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import mos.mosback.login.domain.user.User;
 import mos.mosback.login.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +24,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Getter
 @Slf4j
+
 public class JwtService {
 
     @Value("${jwt.secretKey}")
@@ -42,7 +46,7 @@ public class JwtService {
      * JWT의 Subject와 Claim으로 email 사용 -> 클레임의 name을 "email"으로 설정
      * JWT의 헤더에 들어오는 값 : 'Authorization(Key) = Bearer {토큰} (Value)' 형식
      */
-    private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
+    private static final String ACCESS_TOKEN_SUBJECT = "accessToken";
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
     private static final String EMAIL_CLAIM = "email";
     private static final String BEARER = "Bearer ";
@@ -52,18 +56,16 @@ public class JwtService {
     /**
      * AccessToken 생성 메소드
      */
-    public String createAccessToken(String email) {
+    public String createJwt(String email) {
         Date now = new Date();
-        return JWT.create() // JWT 토큰을 생성하는 빌더 반환
-                .withSubject(ACCESS_TOKEN_SUBJECT) // JWT의 Subject 지정 -> AccessToken이므로 AccessToken
-                .withExpiresAt(new Date(now.getTime() + accessTokenExpirationPeriod)) // 토큰 만료 시간 설정
-
-                //클레임으로는 저희는 email 하나만 사용합니다.
-                //추가적으로 식별자나, 이름 등의 정보를 더 추가하셔도 됩니다.
-                //추가하실 경우 .withClaim(클래임 이름, 클래임 값) 으로 설정해주시면 됩니다
+        return JWT.create()
+                .withSubject(ACCESS_TOKEN_SUBJECT)
+                .withExpiresAt(new Date(now.getTime() + accessTokenExpirationPeriod))
                 .withClaim(EMAIL_CLAIM, email)
-                .sign(Algorithm.HMAC512(secretKey)); // HMAC512 알고리즘 사용, application-jwt.yml에서 지정한 secret 키로 암호화
+                .sign(Algorithm.HMAC512(secretKey));
     }
+
+
 
     /**
      * RefreshToken 생성
@@ -116,8 +118,8 @@ public class JwtService {
      */
     public Optional<String> extractAccessToken(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader(accessHeader))
-                .filter(refreshToken -> refreshToken.startsWith(BEARER))
-                .map(refreshToken -> refreshToken.replace(BEARER, ""));
+                .filter(token -> token.startsWith(BEARER))
+                .map(token -> token.replace(BEARER, ""));
     }
 
     /**
@@ -127,19 +129,19 @@ public class JwtService {
      * 유효하다면 getClaim()으로 이메일 추출
      * 유효하지 않다면 빈 Optional 객체 반환
      */
-    public Optional<String> extractEmail(String accessToken) {
+    public Optional<String> extractEmailFromJwt(String jwt) {
         try {
-            // 토큰 유효성 검사하는 데에 사용할 알고리즘이 있는 JWT verifier builder 반환
             return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
-                    .build() // 반환된 빌더로 JWT verifier 생성
-                    .verify(accessToken) // accessToken을 검증하고 유효하지 않다면 예외 발생
-                    .getClaim(EMAIL_CLAIM) // claim(Emial) 가져오기
+                    .build()
+                    .verify(jwt)
+                    .getClaim(EMAIL_CLAIM)
                     .asString());
         } catch (Exception e) {
-            log.error("액세스 토큰이 유효하지 않습니다.");
+            log.error("유효하지 않은 JWT입니다. {}", e.getMessage());
             return Optional.empty();
         }
     }
+
 
     /**
      * AccessToken 헤더 설정

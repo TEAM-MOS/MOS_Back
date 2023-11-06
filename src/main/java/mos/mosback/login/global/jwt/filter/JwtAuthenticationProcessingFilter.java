@@ -46,11 +46,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getRequestURI().startsWith("/swagger-ui")) {
-            // Swagger는 필터 적용 X
-            filterChain.doFilter(request, response); // "/login" 요청이 들어오면, 다음 필터 호출
-            return;
-        }
         if (request.getRequestURI().equals(NO_CHECK_URL)) {
             filterChain.doFilter(request, response); // "/login" 요청이 들어오면, 다음 필터 호출
             return; // return으로 이후 현재 필터 진행 막기 (안해주면 아래로 내려가서 계속 필터 진행시킴)
@@ -91,10 +86,11 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         userRepository.findByRefreshToken(refreshToken)
                 .ifPresent(user -> {
                     String reIssuedRefreshToken = reIssueRefreshToken(user);
-                    jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(user.getEmail()),
+                    jwtService.sendAccessAndRefreshToken(response, jwtService.createJwt(user.getEmail()),
                             reIssuedRefreshToken);
                 });
     }
+
 
     /**
      * [리프레시 토큰 재발급 & DB에 리프레시 토큰 업데이트 메소드]
@@ -119,14 +115,9 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     public void checkAccessTokenAndAuthentication(HttpServletRequest request, HttpServletResponse response,
                                                   FilterChain filterChain) throws ServletException, IOException {
         log.info("checkAccessTokenAndAuthentication() 호출");
-        if (request.getRequestURI().startsWith("/swagger-ui")) {
-            // Swagger는 필터 적용 X
-            filterChain.doFilter(request, response); // "/login" 요청이 들어오면, 다음 필터 호출
-            return;
-        }
         jwtService.extractAccessToken(request)
                 .filter(jwtService::isTokenValid)
-                .ifPresent(accessToken -> jwtService.extractEmail(accessToken)
+                .ifPresent(jwt -> jwtService.extractEmailFromJwt(jwt)
                         .ifPresent(email -> userRepository.findByEmail(email)
                                 .ifPresent(this::saveAuthentication)));
 

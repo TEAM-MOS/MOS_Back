@@ -1,5 +1,6 @@
 package mos.mosback.login.global.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -9,14 +10,21 @@ import java.util.Properties;
 
 @Configuration
 public class MailConfig {
+
+    @Value("${MAIL_USERNAME}")
+    private String mailUsername;
+
+    @Value("${MAIL_PASSWORD}")
+    private String mailPassword;
     @Bean
     public JavaMailSender javaMailService() {
+
+
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
 
         javaMailSender.setHost("smtp.naver.com");
-        javaMailSender.setUsername("이메일");
-        javaMailSender.setPassword("비밀번호");
-
+        javaMailSender.setUsername(mailUsername);
+        javaMailSender.setPassword(mailPassword);
         javaMailSender.setPort(465);
 
         javaMailSender.setJavaMailProperties(getMailProperties());
