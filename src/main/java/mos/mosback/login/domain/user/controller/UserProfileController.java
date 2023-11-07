@@ -50,33 +50,36 @@ public class UserProfileController {
     }
 
     @PostMapping
-    public Map<String, Object> createUserProfile(@RequestPart(value = "file") MultipartFile file,
-                                                 @RequestPart(value = "userProfileDto") UserProfileDto userProfileDto) {
-        Map<String, Object> response = new HashMap<>();
-        try {
-            // 현재 로그인한 사용자의 정보 가져오기
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String currentEmail = authentication.getName(); // 현재 사용자의 이메일
+    public Map<String, Object> createUserProfile(
+        @RequestParam(value = "file", required = false) MultipartFile file,
+        @RequestBody UserProfileDto userProfileDto) {
+    Map<String, Object> response = new HashMap<>();
+    try {
+        // 현재 로그인한 사용자의 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentEmail = authentication.getName(); // 현재 사용자의 이메일
 
-            // 회원 정보 생성
-            userService.createUser(currentEmail, userProfileDto);
-            // 이미지 업로드 및 URL 저장
+        // 회원 정보 생성
+        userService.createUser(currentEmail, userProfileDto);
+
+        // 파일이 업로드되었을 때만 이미지 업로드 및 URL 저장
+        if (file != null && !file.isEmpty()) {
             String imageUrl = fileService.uploadFile(file, userProfileDto.getId());
             userProfileDto.setImageUrl(imageUrl);
-
             // 사용자 정보에 이미지 URL 업데이트
             userService.updateUserProfileImageUrl(userProfileDto.getId(), imageUrl);
-
-            response.put("status", 200);
-            response.put("success", true);
-            response.put("message", "회원 정보가 생성되었습니다.");
-        } catch (Exception e) {
-            e.printStackTrace(); // 이 코드는 예외의 스택 트레이스를 콘솔에 출력합니다.
-            response.put("status", 500);
-            response.put("success", false);
-            response.put("message", "오류가 발생했습니다.");
         }
-        return response;
+
+        response.put("status", 200);
+        response.put("success", true);
+        response.put("message", "회원 정보가 생성되었습니다.");
+    } catch (Exception e) {
+        e.printStackTrace(); // 이 코드는 예외의 스택 트레이스를 콘솔에 출력합니다.
+        response.put("status", 500);
+        response.put("success", false);
+        response.put("message", "오류가 발생했습니다.");
+    }
+    return response;
     }
 
 
