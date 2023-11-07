@@ -171,7 +171,6 @@ public class ToDoService {
         List<MemberTodoRankProjection> progressProjections = studyMemberToDoRepository.getRankByStRoom(roomId);
         List<StRoomMemberResponseDto> memberList = stRoomService.getStudyRoomMemberList(roomId);
 
-
         for (MemberTodoRankProjection progressProjection : progressProjections) {
             User user = stRoomService.getUserInfo(progressProjection.getMemberId());
 
@@ -181,8 +180,31 @@ public class ToDoService {
             progressList.add(progress);
         }
 
-
         return progressList;
     }
 
+    public MemberTodoProgressResponseDto getProgressInfo(Long roomId, String currentEmail) throws Exception {
+        MemberTodoProgressResponseDto todoProgress = new MemberTodoProgressResponseDto();
+        User user = userService.getUserByEmail(currentEmail);
+        todoProgress.setUserNick(user.getNickname());
+
+        StudyRoomTodoInfoDto studyRoomTodoAverage = null;
+        try {
+            studyRoomTodoAverage = studyMemberToDoRepository.getStudyRoomTodoAverage(roomId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (studyRoomTodoAverage != null) {
+            // DB에 데이터가 존재할 때에만 해당 로직 수행
+            double totalCount = studyRoomTodoAverage.getTotalCount();
+            double completedCount = studyRoomTodoAverage.getCompletedCount();
+            double average = (totalCount - completedCount) / totalCount * 100;
+            todoProgress.setAvg(average);
+        } else {
+            todoProgress.setAvg(0.0);
+        }
+
+        return todoProgress;
+    }
 }

@@ -38,15 +38,16 @@ public class StRoomController {
         Map<String, Object> response = new HashMap<>();
         if (stroomId != null) {
 
-            response.put("status", "201");
-            response.put("message", "스터디생성완료, roomId: " + stroomId);
-            response.put("success", "true");
+            response.put("status", 201);
+            response.put("message", "스터디생성완료");
+            response.put("roomId",stroomId);
+            response.put("success", true);
             return ResponseEntity.status(HttpStatus.OK).body(response);
 
         } else {
-            response.put("status", "500");
+            response.put("status", 500);
             response.put("message", "서버내부오류");
-            response.put("success", "false");
+            response.put("success", false);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
@@ -54,16 +55,23 @@ public class StRoomController {
     public ResponseEntity<?> FindByID (@PathVariable Long roomId) {
 
         StRoomResponseDto stroom = stRoomService.findById(roomId);
-        List<StRoomMemberResponseDto> studyRoomMemberList = stRoomService.getStudyRoomMemberList(roomId);
-        StRoomMemberResponseDto leaderInfo = studyRoomMemberList.stream()
-                .filter(data -> MemberStatus.Leader.name().equals(data.getStatus().name()))
-                .findFirst().orElseThrow(() -> new EntityNotFoundException("leader info not found"));
-        User leaderUser = stRoomService .getUserInfo(leaderInfo.getMemberId());
-        stroom.setNickname(leaderUser.getNickname());
-        stroom.setMemberNum(studyRoomMemberList.size());
+        try {
+            List<StRoomMemberResponseDto> studyRoomMemberList = stRoomService.getStudyRoomMemberList(roomId);
+            StRoomMemberResponseDto leaderInfo = studyRoomMemberList.stream()
+                    .filter(data -> MemberStatus.Leader.name().equals(data.getStatus().name()))
+                    .findFirst().orElseThrow(() -> new EntityNotFoundException("leader info not found"));
+            User leaderUser = stRoomService.getUserInfo(leaderInfo.getMemberId());
+            stroom.setNickname(leaderUser.getNickname());
+            stroom.setMemberNum(studyRoomMemberList.size());
 
-        return new ResponseEntity<>(stroom,HttpStatus.OK);
-
+            return new ResponseEntity<>(stroom, HttpStatus.OK);
+        }catch (Exception e){
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", 404);
+            response.put("message", "해당 스터디룸 없음" );
+            response.put("success", false);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
     }
 
     @GetMapping("/search")
@@ -72,10 +80,10 @@ public class StRoomController {
             List<Home_RoomResponseDto> strooms = stRoomService.findByTitleContaining(keyword);
             return new ResponseEntity<>(strooms, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            Map<String, String> response = new HashMap<>();
-            response.put("status", "404");
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", 404);
             response.put("message", "존재하지 않는 키워드: " + keyword);
-            response.put("success", "false");
+            response.put("success", false);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
@@ -84,15 +92,15 @@ public class StRoomController {
         try {
             Map<String, Object> response = new HashMap<>();
             stRoomService.update(roomId, requestDto);
-            response.put("status", "201");
+            response.put("status", 201);
             response.put("message", "수정완료");
-            response.put("success", "true");
+            response.put("success", true);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e) {
             Map<String, Object> response = new HashMap<>();
-            response.put("status", "404");
+            response.put("status", 404);
             response.put("message", "해당 스터디룸 없음");
-            response.put("success", "false");
+            response.put("success", false);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
@@ -109,7 +117,7 @@ public class StRoomController {
         } catch (EntityNotFoundException ex) {
             response.put("status", 404);
             response.put("success", false);
-            response.put("message", "해당스터디룸 찾을 수 없음"+"'"+roomId+"'");
+            response.put("message", "해당 스터디룸 없음");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
@@ -242,7 +250,7 @@ public class StRoomController {
             stRoomService.acceptMember(requestDto);
             Map<String, Object> response = new HashMap<>();
             response.put("status:", HttpStatus.OK.value());
-            response.put("success", false);
+            response.put("success", true);
             response.put("message", "승인완료");
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }catch (IllegalArgumentException ex){
@@ -261,7 +269,7 @@ public class StRoomController {
             stRoomService.rejectMember(requestDto);
             Map<String, Object> response = new HashMap<>();
             response.put("status:", HttpStatus.OK.value());
-            response.put("success", false);
+            response.put("success", true);
             response.put("message", "승인거절완료");
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }catch (IllegalArgumentException ex){
@@ -285,7 +293,7 @@ public class StRoomController {
             Map<String, Object> response = new HashMap<>();
             response.put("status", HttpStatus.NOT_FOUND.value());
             response.put("success", false);
-            response.put("message", "스터디룸을 찾을 수 없음");
+            response.put("message", "모집중인 스터디룸을 찾을 수 없음");
 
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }

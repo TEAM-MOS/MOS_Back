@@ -1,4 +1,6 @@
 package mos.mosback.stRoom.controller;
+import mos.mosback.login.domain.user.dto.NicknameDto;
+import mos.mosback.stRoom.domain.stRoom.MemberStatus;
 import mos.mosback.stRoom.domain.stRoom.StudyMemberTodoEntity;
 import mos.mosback.stRoom.domain.stRoom.ToDoEntity;
 import mos.mosback.stRoom.dto.*;
@@ -9,7 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
+
+import javax.persistence.EntityNotFoundException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -23,35 +30,44 @@ public class TodoController {
     }
 
     @PostMapping("todo/add/{roomId}")
-    public ResponseEntity<String> addTodo(@RequestBody stRoomToDoRequestDto requestDto, @PathVariable Long roomId) {
+    public ResponseEntity<Map<String, Object>> addTodo(@RequestBody stRoomToDoRequestDto requestDto, @PathVariable Long roomId) {
         try{
+
             ToDoEntity todo = toDoService.addTodo(requestDto, roomId);
-            return ResponseEntity.status(HttpStatus.CREATED).body
-                    ("TodoList 추가 완료." +
-                            "\ntodoIndex : " + todo.getTodoId() +
-                            "\nstatus:201" +
-                            "\nsuccess:true");
+            Map<String, Object> response = new HashMap<>();
+            response.put("status:", HttpStatus.OK.value());
+            response.put("success",true);
+            response.put("index",todo.getTodoId());
+            response.put("message", "todo추가완료");
+            return ResponseEntity.ok(response);
         }catch(IllegalArgumentException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body
-                    ("TodoList 추가 실패" +
-                    "\nstatus:404" +
-                    "\nsuccess:false");
+            Map<String, Object> response = new HashMap<>();
+            response.put("status:", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("success",false);
+            response.put("message","서버내부오류");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
 
     }
     @PostMapping("/member/todo/add")
-    public ResponseEntity<String> addMemberTodo(@RequestBody StudyMemberToDoRequestDto requestDto) throws Exception{
+    public ResponseEntity<Map<String, Object>> addMemberTodo(@RequestBody StudyMemberToDoRequestDto requestDto) throws Exception{
         try { // 현재 로그인한 사용자의 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentEmail = authentication.getName(); // 현재 사용자의 이메일
         requestDto.setCurrentEmail(currentEmail);
         StudyMemberTodoEntity todo = toDoService.addMemberTodo(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("TodoList 추가 완료. index : " +todo.getIdx());
+            Map<String, Object> response = new HashMap<>();
+            response.put("status:", HttpStatus.OK.value());
+            response.put("success",true);
+            response.put("index",todo.getIdx());
+            response.put("message", "todo추가완료");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
     }catch (IllegalArgumentException ex){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("ServerError"+
-                            "\nstatus:500" +
-                            "\nsuccess:false");
+            Map<String, Object> response = new HashMap<>();
+            response.put("status:", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("success",false);
+            response.put("message","서버내부오류");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
  //todo개수만큼 프론트에서 호출해줘야함
@@ -59,23 +75,32 @@ public class TodoController {
 
 
     @PutMapping("todo/{todoId}")
-    public ResponseEntity<String> updateTodo(@PathVariable Long todoId, @RequestBody stRoomToDoRequestDto requestDto) {
+    public ResponseEntity<Map<String, Object>> updateTodo(@PathVariable Long todoId, @RequestBody stRoomToDoRequestDto requestDto) {
         try {
             ToDoEntity updatedToDo = toDoService.updateTodo(todoId, requestDto.getTodoContent(),requestDto.getStatus());
-            return ResponseEntity.ok
-                    ("ToDo 업데이트 완료. \nIndex: " + todoId+
-                    "\nstatus:200" +
-                    "\nsuccess:true");
+            Map<String, Object> response = new HashMap<>();
+            if(updatedToDo != null) {
+                response.put("status:", HttpStatus.OK.value());
+                response.put("success", true);
+                response.put("message", "Todo수정완료");
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            }else {
+                response.put("status:", HttpStatus.NOT_FOUND.value());
+                response.put("success", false);
+                response.put("message", "해당Todo없음");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("NOT FOUND TODO"+
-                            "\nstatus:401" +
-                            "\nsuccess:false");
+            Map<String, Object> response = new HashMap<>();
+            response.put("status:", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("success",false);
+            response.put("message","서버내부오류");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
     @PutMapping("/member/todo/{todoIdx}")
-    public ResponseEntity<String> updateMemberTodo(@PathVariable Long todoIdx,
+    public ResponseEntity<Map<String, Object>> updateMemberTodo(@PathVariable Long todoIdx,
                                                    @RequestBody StudyMemberToDoRequestDto requestDto) throws Exception {
         // 현재 로그인한 사용자의 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -84,58 +109,85 @@ public class TodoController {
         try {
             StudyMemberTodoEntity updatedToDo = toDoService.updateMemberTodo(todoIdx, requestDto.getTodoContent(),
                     requestDto.getStatus(), currentEmail);
-            return ResponseEntity.ok
-                    ("Study Member ToDo 업데이트 완료. \nIndex: " + todoIdx +
-                            "\nstatus:200" +
-                            "\nsuccess:true");
+            Map<String, Object> response = new HashMap<>();
+            if(updatedToDo != null) {
+                response.put("status:", HttpStatus.OK.value());
+                response.put("success", true);
+                response.put("message", "Todo수정완료");
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            }else {
+                response.put("status:", HttpStatus.NOT_FOUND.value());
+                response.put("success", false);
+                response.put("message", "해당Todo없음");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("NOT FOUND TODO"+
-                            "\nstatus:401" +
-                            "\nsuccess:false");
+            Map<String, Object> response = new HashMap<>();
+            response.put("status:", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("success",false);
+            response.put("message","서버내부오류");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
     @DeleteMapping("todo/{todoId}")
-    public ResponseEntity<String> deleteTodo(@PathVariable Long todoId) {
+    public ResponseEntity<Map<String, Object>> deleteTodo(@PathVariable Long todoId) {
         try {
             toDoService.deleteTodo(todoId);
-            return ResponseEntity.ok
-                    ("ToDo 삭제 완료. Index: " + todoId+
-                    "\nstatus:200" +
-                    "\nsuccess:true");
+            Map<String, Object> response = new HashMap<>();
+            response.put("status:", HttpStatus.OK.value());
+            response.put("success", true);
+            response.put("message", "Todo삭제완료");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("NOT FOUND TODO"+
-                            "\nstatus:401" +
-                            "\nsuccess:false");
+            Map<String, Object> response = new HashMap<>();
+            response.put("status:", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("success",false);
+            response.put("message","서버내부오류");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
     @DeleteMapping("/member/todo/{todoIdx}")
-    public ResponseEntity<String> deleteMemberTodo(@PathVariable Long todoIdx) throws Exception{
+    public ResponseEntity<Map<String, Object>> deleteMemberTodo(@PathVariable Long todoIdx) throws Exception{
         // 현재 로그인한 사용자의 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentEmail = authentication.getName(); // 현재 사용자의 이메일
         try {
             toDoService.deleteMemberTodo(todoIdx, currentEmail);
-            return ResponseEntity.ok
-                    ("Study Member ToDo 삭제 완료. Index: " + todoIdx+
-                            "\nstatus:200" +
-                            "\nsuccess:true");
+            Map<String, Object> response = new HashMap<>();
+            response.put("status:", HttpStatus.OK.value());
+            response.put("success", true);
+            response.put("message", "Todo삭제완료");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("NOT FOUND TODO"+
-                            "\nstatus:401" +
-                            "\nsuccess:false");
+            Map<String, Object> response = new HashMap<>();
+            response.put("status:", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("success",false);
+            response.put("message","서버내부오류");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
+
     }
 
     @GetMapping("todo/{roomId}")
-    public ResponseEntity<List<StRoomToDoResponseDto>> findStRoomTodoByRoomId(@PathVariable Long roomId) {
+    public ResponseEntity<Map<String, Object>> findStRoomTodoByRoomId(@PathVariable Long roomId) {
         List<StRoomToDoResponseDto> todo = toDoService.findStRoomTodoByRoomId(roomId);
-        return new ResponseEntity<>(todo, HttpStatus.OK);
+        Map<String, Object> response = new HashMap<>();
+
+        if (!todo.isEmpty()) {
+            response.put("status", HttpStatus.OK.value());
+            response.put("success", true);
+            response.put("todo", todo);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } else {
+            response.put("status", HttpStatus.NOT_FOUND.value());
+            response.put("success", false);
+            response.put("message", "Todo를 찾을 수 없음");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
     }
+
 
 
     @GetMapping("/member/room/{roomId}")
@@ -148,11 +200,17 @@ public class TodoController {
     }
 
     @GetMapping("/todoRank/{roomId}")
-    public ResponseEntity<List<MemberTodoRankResponseDto>> getMemberTodoRank(@PathVariable Long roomId) throws Exception {
+    public ResponseEntity<Map<String, Object>> getMemberTodoRank(@PathVariable Long roomId) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentEmail = authentication.getName(); // 현재 사용자의 이메일
         List<MemberTodoRankResponseDto> todoList = toDoService.getMemberTodoProgress(roomId, currentEmail);
-        return new ResponseEntity<>(todoList, HttpStatus.OK);
+        MemberTodoProgressResponseDto todoProgress = toDoService.getProgressInfo(roomId,currentEmail);
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", todoProgress);
+        response.put("TodoRank", todoList);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+
+
     }
 
 

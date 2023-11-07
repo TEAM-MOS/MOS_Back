@@ -82,11 +82,16 @@ public class StRoomService {
 
 
     @Transactional(readOnly = true)
-    public StRoomResponseDto findById(Long roomId) {
-        StRoomEntity stRoomEntity = stRoomRepository.findById(roomId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id=" + roomId));
+    public StRoomResponseDto findById(Long roomId)  {
+      try {
+          StRoomEntity stRoomEntity = stRoomRepository.findById(roomId)
+                  .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id=" + roomId));
 
-        return new StRoomResponseDto(stRoomEntity);
+          return new StRoomResponseDto(stRoomEntity);
+      }catch (Exception e){
+          e.printStackTrace();
+          return null;
+      }
     }
 
     @Transactional(readOnly = true)
