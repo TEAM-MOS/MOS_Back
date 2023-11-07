@@ -4,6 +4,7 @@ public class UserInfo {
 
     private String email;
     private String password;
+    private String nickname;
 
     // 생성자, 게터/세터 등 생략
 
@@ -13,5 +14,9 @@ public class UserInfo {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getNickname(){
+        return nickname;
     }
 }

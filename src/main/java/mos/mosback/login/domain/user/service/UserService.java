@@ -25,10 +25,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static com.amazonaws.services.ec2.model.Scope.Region;
 
 @Service
 @Transactional
@@ -142,7 +148,7 @@ public class UserService {
             user.setCompany(userProfileDto.getCompany());
             user.setTend1(userProfileDto.getTend1());
             user.setTend2(userProfileDto.getTend2());
-/*            user.setRoomId(userProfileDto.getRoomId());*/
+            user.setRoomId(userProfileDto.getRoomId());
 
 
 
@@ -253,9 +259,8 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-    public UserProfileDto getMemberProfileById(Long memberId) throws Exception {
-
-        Optional<User> optionalUser = userRepository.findById(memberId);
+    public UserProfileDto getUserProfileByEmail(String email) throws Exception {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             // 엔터티 정보를 DTO로 매핑하여 반환
@@ -273,9 +278,10 @@ public class UserService {
                     user.getImageUrl()
             );
         } else {
-            throw new Exception("해당 이메일의 사용자를 찾을 수 없습니다: " + memberId);
+            throw new Exception("해당 이메일의 사용자를 찾을 수 없습니다: " + email);
         }
     }
+
 
     public List<StRoomEntity> getStudyGroupsForUserByEmail(String email) throws NotFoundException {
         Optional<User> userOptional = userRepository.findByEmail(email);
@@ -364,28 +370,7 @@ public class UserService {
 //    }
 
 
-    public UserProfileDto getUserProfileByEmail(String email) throws Exception {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            // 엔터티 정보를 DTO로 매핑하여 반환
-            return new UserProfileDto(
-                    user.getId(),
-                    user.getNickname(),
-                    user.getName(),
-                    user.getStr_duration(),
-                    user.getEnd_duration(),
-                    user.getMessage(),
-                    user.getCompany(),
-                    user.getTend1(),
-                    user.getTend2(),
-                    user.getRoomId(),
-                    user.getImageUrl()
-            );
-        } else {
-            throw new Exception("해당 이메일의 사용자를 찾을 수 없습니다: " + email);
-        }
-    }
+
 
 
 }

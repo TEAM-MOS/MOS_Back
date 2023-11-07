@@ -1,4 +1,5 @@
 package mos.mosback.stRoom.domain.stRoom;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,6 +21,15 @@ public class StudyMemberEntity implements Serializable {
     private Long memberId;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    public Long getUserId() {
+        return this.user.getId();
+    }
+
+
+    @JsonBackReference
+    @ManyToOne
     @JoinColumn(name = "roomId")
     private StRoomEntity stRoom;
 
@@ -31,17 +41,6 @@ public class StudyMemberEntity implements Serializable {
     @Column
     private String answer; // 스터디 답변
 
-
-    @Column
-    private String img;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-    public Long getUserId() {
-        return this.user.getId();
-    }
     @Column
     private LocalDateTime joinedAt;
-
 }

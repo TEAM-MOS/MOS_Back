@@ -4,6 +4,4 @@ public interface MemberTodoRankProjection {
     Long getMemberId();
     double getProgress();
     String getNickname();
-
-    String getImage();
 }

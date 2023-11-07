@@ -8,8 +8,10 @@ import java.util.List;
 
 public interface StudyMemberRepository extends JpaRepository<StudyMemberEntity, Long> {
 
-    List<StudyMemberEntity> findAllByMemberId(Long memberId);
 
     List<StudyMemberEntity> findAllByStRoom(StRoomEntity stRoom);
+    List<StudyMemberEntity> findAllByMemberId(Long memberId);
     List<StudyMemberEntity> findByStRoom(StRoomEntity stRoom);
+
+
 }

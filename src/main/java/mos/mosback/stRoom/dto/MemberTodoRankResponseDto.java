@@ -8,5 +8,5 @@ import lombok.Setter;
 public class MemberTodoRankResponseDto {
     private String nickname;
     private double progress;
-    private String Image;
+
 }

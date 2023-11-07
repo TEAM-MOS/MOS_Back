@@ -1,21 +1,18 @@
 spring:
   profiles:
-    group:
-      "local" : "local, jwt, oauth"
-    active : local
-
+    active: local
 ---
 spring:
   config:
     activate:
       on-profile: "local"
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
+
   h2:
     console:
       enabled: true
       path: /h2-console
+      settings:
+        web-allow-others: true
 
   datasource:
     driver-class-name: org.h2.Driver
@@ -23,38 +20,64 @@ spring:
     username: sa
     password:
 
-  server:
-    port: 8080
-
   main:
     allow-circular-references: true
 
   jpa:
     show-sql: true
-    defer-datasource-initialization: true
     database-platform: org.hibernate.dialect.H2Dialect
     properties:
       hibernate:
         format_sql: true
         show_sql: true
-
-    hibernate:
-      ddl-auto: create
-
+        ddl-auto: create
 
   mail:
-    host: smtp.naver.com # ??? ?? ??? (Gmail ?? ?)
-    port: 587 # SMTP ?? (Gmail? ?? 465 ?? 587)
-    username: # ??? ??
-    password: ????
-
+    host: smtp.naver.com
+    port: 465
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
           auth: true
           starttls:
-            enable: true # TLS? ????? true, SSL? ????? false
-        debug: true # ??? ?? ???
-  logging:
-    level:
-      root: DEBUG
+            enable: true
+        debug: true
+
+jwt:
+  secretKey: 'dfadfekndchnsdifqld125654x8sdfnjldsncuelsdfs45x321df'
+
+  access:
+    expiration: 360000000 # 1??(60?) (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h))
+    header: Authorization
+
+  refresh:
+    expiration: 1209600000 #  (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h) * 24L(h -> ??) * 14(2?))
+    header: Authorization-refresh
+
+logging:
+  level:
+    root: DEBUG
+
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIAZ2K7DUYBW6RY24QH
+      secretKey: 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
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+  autoconfigure:
+    exclude:
+      - org.springframework.cloud.aws.autoconfigure.context.ContextInstanceDataAutoConfiguration
+      - org.springframework.cloud.aws.autoconfigure.context.ContextRegionProviderAutoConfiguration
+      - org.springframework.cloud.aws.autoconfigure.context.ContextStackAutoConfiguration
+      - org.springframework.cloud.aws.autoconfigure.context.ContextCredentialsAutoConfiguration
+
+application:
+  bucket:
+    name: mos-s3-bucket
+
+

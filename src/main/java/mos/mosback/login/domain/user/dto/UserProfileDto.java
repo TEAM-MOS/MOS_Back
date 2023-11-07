@@ -50,9 +50,9 @@ public class UserProfileDto {
         this.end_duration = end_duration;
         this.message = message;
         this.company = company;
+        this.roomId = roomId;
         this.tend1 = tend1;
         this.tend2= tend2;
-        this.roomId = roomId;
         this.imageUrl=imageUrl;
 
 
@@ -73,4 +73,5 @@ public class UserProfileDto {
     }
 
 }
+
 

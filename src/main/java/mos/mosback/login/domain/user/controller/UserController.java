@@ -122,7 +122,7 @@ public class UserController {
     }
 
 
-   /* @GetMapping("/user/list")
+    @GetMapping("/user/list")
     public ResponseEntity<Map<String, Object>> getLeaderStudies() {
         Map<String, Object> response = new HashMap<>();
         try {
@@ -144,6 +144,6 @@ public class UserController {
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }*/
+    }
 
 }

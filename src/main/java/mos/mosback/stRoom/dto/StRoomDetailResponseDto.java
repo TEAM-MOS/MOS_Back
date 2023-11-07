@@ -26,7 +26,6 @@ public class StRoomDetailResponseDto {
     private LocalDateTime createdDate;
     private LocalDate deadline;
     private String nickname;
-    private String UserImg;
 
     public StRoomDetailResponseDto(StRoomEntity entity) {
 

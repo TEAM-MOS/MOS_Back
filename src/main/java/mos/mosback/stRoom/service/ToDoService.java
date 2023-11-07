@@ -169,6 +169,8 @@ public class ToDoService {
     public List<MemberTodoRankResponseDto> getMemberTodoProgress(Long roomId,String currentEmail) throws Exception {
         List<MemberTodoRankResponseDto> progressList = new ArrayList<>();
         List<MemberTodoRankProjection> progressProjections = studyMemberToDoRepository.getRankByStRoom(roomId);
+        List<StRoomMemberResponseDto> memberList = stRoomService.getStudyRoomMemberList(roomId);
+
 
         for (MemberTodoRankProjection progressProjection : progressProjections) {
             User user = stRoomService.getUserInfo(progressProjection.getMemberId());
@@ -176,15 +178,11 @@ public class ToDoService {
             MemberTodoRankResponseDto progress = new MemberTodoRankResponseDto();
             progress.setProgress(progressProjection.getProgress());
             progress.setNickname(user.getNickname());
-            progress.setImage(user.getImageUrl());
             progressList.add(progress);
         }
 
 
         return progressList;
     }
-
-
-
 
 }

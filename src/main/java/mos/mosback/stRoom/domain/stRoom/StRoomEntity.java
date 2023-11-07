@@ -1,8 +1,11 @@
 package mos.mosback.stRoom.domain.stRoom;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import mos.mosback.login.domain.user.User;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.*;
@@ -47,6 +50,15 @@ public class StRoomEntity extends BaseTimeEntity {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<StudyDaysEntity> studyDayEntities = new ArrayList<>();
+
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "stRoom")
+    private List<StudyMemberEntity> members = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "created_by_user_email")
+    private User createdByUser;
 
 
     @Builder

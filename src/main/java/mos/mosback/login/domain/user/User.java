@@ -3,11 +3,13 @@ package mos.mosback.login.domain.user;
 
 import lombok.*;
 import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
+import mos.mosback.stRoom.domain.stRoom.StudyMemberEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,11 +25,22 @@ public class User {
 
     private Long id;
 
+    @Column(name ="room_id")
+    private Long roomId;
+
     @OneToMany
     private List<StRoomEntity> stRooms= new ArrayList<>();
 
-    @Column(name ="room_id")
-    private Long roomId;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<StudyMemberEntity> studyMemberships = new ArrayList<>();
+
+    public List<StudyMemberEntity> getStudyMemberships() {
+        return studyMemberships;
+    }
+    public void addStudyMembership(StudyMemberEntity studyMember) {
+        this.studyMemberships.add(studyMember);
+        studyMember.setUser(this);
+    }
 
     private String email; // 이메일
     private String password; // 비밀번호
@@ -47,6 +60,8 @@ public class User {
     private String company;
 
     private String tend1;
+    private String tend2;
+
 
     public String getTend1() {
         return tend1;
@@ -64,7 +79,7 @@ public class User {
         this.tend2 = tend2;
     }
 
-    private String tend2;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -94,6 +109,8 @@ public class User {
     public void setRoomId(Long roomId) {
         this.roomId = roomId;
     }
+
+
 
 
 

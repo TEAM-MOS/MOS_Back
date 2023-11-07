@@ -151,8 +151,6 @@ public class TodoController {
     public ResponseEntity<List<MemberTodoRankResponseDto>> getMemberTodoRank(@PathVariable Long roomId) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentEmail = authentication.getName(); // 현재 사용자의 이메일
-
-
         List<MemberTodoRankResponseDto> todoList = toDoService.getMemberTodoProgress(roomId, currentEmail);
         return new ResponseEntity<>(todoList, HttpStatus.OK);
     }

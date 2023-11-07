@@ -8,9 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import mos.mosback.login.domain.user.User;
 import mos.mosback.login.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +21,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Getter
 @Slf4j
-
 public class JwtService {
 
     @Value("${jwt.secretKey}")
