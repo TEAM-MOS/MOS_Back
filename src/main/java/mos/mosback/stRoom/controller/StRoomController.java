@@ -26,21 +26,31 @@ public class StRoomController {
     private final ToDoService toDoService;
     private final UserService userService;
     private final UserRepository userRepository;
+    
     @PostMapping("/create")
-    public ResponseEntity<String> saveRoom(@RequestBody StRoomSaveRequestDto requestDto, HttpServletRequest req) {
+    public ResponseEntity<Map<String, Object>> saveRoom(@RequestBody StRoomSaveRequestDto requestDto, HttpServletRequest req) {
         // 현재 로그인한 사용자의 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentEmail = authentication.getName(); // 현재 사용자의 이메일
         requestDto.setEmail(currentEmail);
         Long stroomId = stRoomService.save(requestDto, req);
+        Map<String, Object> response = new HashMap<>();
         if (stroomId != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body
-                    ("message: created successfully. ID:" + stroomId +"\nsuccess:true \nstatus:201");
+
+            response.put("status", "201");
+            response.put("message", "스터디생성완료");
+            response.put("roomId", stroomId);
+            response.put("success", "true");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body
-                    ("message: Bad Request \nsuccess:false \nstatus:400");
+            response.put("status", "500");
+            response.put("message", "서버내부오류");
+            response.put("success", "false");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
     @GetMapping("/my{roomId}")
     public ResponseEntity<StRoomResponseDto> FindByID (@PathVariable Long roomId) {
 
