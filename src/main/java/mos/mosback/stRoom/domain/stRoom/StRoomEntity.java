@@ -51,9 +51,7 @@ public class StRoomEntity extends BaseTimeEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<StudyDaysEntity> studyDayEntities = new ArrayList<>();
 
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "stRoom")
+    @OneToMany
     private List<StudyMemberEntity> members = new ArrayList<>();
 
     @ManyToOne

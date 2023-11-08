@@ -11,10 +11,14 @@ import mos.mosback.stRoom.repository.ToDoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
 
 
 @RequiredArgsConstructor
@@ -26,7 +30,7 @@ public class ToDoService {
     private final MemberTodoRepository studyMemberToDoRepository;
     private final UserService userService;
     private final StRoomService stRoomService;
-    private final UserRepository userRepository;
+
 
 
     @Transactional
@@ -94,13 +98,14 @@ public class ToDoService {
         toDoEntity.setStatus(TodoStatus.Waiting);
         toDoEntity.setStRoom(stRoomEntity);
         toDoEntity.setTodoContent(requestDto.getTodoContent());
-
+        toDoEntity.setDate(requestDto.getDate());
         return studyMemberToDoRepository.save(toDoEntity);
     }
 
     public StudyMemberRoomInfoResponseDto getMemberRoomInfo(Long roomId, String currentEmail) throws Exception {
         StudyMemberRoomInfoResponseDto result = new StudyMemberRoomInfoResponseDto();
-        StRoomEntity stRoomEntity = stRoomRepository.findById(roomId)
+
+        StRoomEntity stRoom = stRoomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id =" + roomId));
 
         User user = userService.getUserByEmail(currentEmail);
@@ -110,28 +115,34 @@ public class ToDoService {
         for (StudyMemberTodoEntity item : todoEntityList) {
             todoList.add(new StRoomMemberToDoResponseDto(item));
         }
-        // 스터디 룸에 대한 현재 투두평균값
-
-        StudyRoomTodoInfoDto studyRoomTodoAverage = null;
+        List<StRoomTodoInfoProjection> studyRoomTodoAverage = null;
         double average = 0;
         try {
-            studyRoomTodoAverage = studyMemberToDoRepository.getStudyRoomTodoAverage(roomId);
+            studyRoomTodoAverage = studyMemberToDoRepository.getStudyRoomTodoAverage(roomId); // studyRoomTodoAverage를 초기화
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (studyRoomTodoAverage != null) {
+        if (studyRoomTodoAverage != null && !studyRoomTodoAverage.isEmpty()) {
+            StRoomTodoInfoProjection projection = studyRoomTodoAverage.get(0);
             // DB에 데이터가 존재할 때에만 해당 로직 수행
-            average = (studyRoomTodoAverage.getTotalCount() - studyRoomTodoAverage.getCompletedCount()
-                    / (double) studyRoomTodoAverage.getTotalCount()) * 100;
+            int totalCount = projection.getTotalCount();
+            int completedCount = projection.getCompletedCount();
+            if (totalCount > 0) {
+                average = ((double) completedCount / totalCount) * 100;
+            }
         }
         List<StudyRoomDayDto> roomDayList = new ArrayList<>();
-        Date now;
+
+        Date now = new Date();
         Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(now);
+        LocalDate date = LocalDate.now();
 
         for (int i=0; i<7; i++) {
             StudyRoomDayDto dayDto = new StudyRoomDayDto();
-            now = new Date(cal1.getTimeInMillis());
-            dayDto.setDate(now); // 날짜 객체 셋팅
+
+            dayDto.setYear(date.getYear()); // 날짜 객체 셋팅
+            dayDto.setMonth(date.getMonthValue());
             dayDto.setDayVal(cal1.get(Calendar.DATE)); // 날짜 셋팅
             dayDto.setDayOfWeek(getDayOfKoreanWeek(cal1.get(Calendar.DAY_OF_WEEK))); // "월"~"일" 셋팅
             roomDayList.add(dayDto);
@@ -139,30 +150,31 @@ public class ToDoService {
             cal1.add(Calendar.DATE, 1); // 일 계산 하루씩 추가
         }
 
+        result.setCategory(stRoom.getCategory());
         result.setTodoList(todoList);
         result.setStudyRoomTodoAverage(average); // 평균값
         result.setRoomDayList(roomDayList);
-
         return result;
     }
 
-    private String getDayOfKoreanWeek(int i) {
-        if (i == 1) {
-            return "월";
-        } else if (i == 2) {
-            return "화";
-        } else if (i == 3) {
-            return "수";
-        } else if (i == 4) {
-            return "목";
-        } else if (i == 5) {
-            return "금";
-        } else if (i == 6) {
-            return "토";
-        } else if (i == 7) {
-            return "일";
-        } else {
-            return "";
+    public String getDayOfKoreanWeek(int dayOfWeek) {
+        switch (dayOfWeek) {
+            case Calendar.SUNDAY:
+                return "일";
+            case Calendar.MONDAY:
+                return "월";
+            case Calendar.TUESDAY:
+                return "화";
+            case Calendar.WEDNESDAY:
+                return "수";
+            case Calendar.THURSDAY:
+                return "목";
+            case Calendar.FRIDAY:
+                return "금";
+            case Calendar.SATURDAY:
+                return "토";
+            default:
+                return "";
         }
     }
 
@@ -188,23 +200,52 @@ public class ToDoService {
         User user = userService.getUserByEmail(currentEmail);
         todoProgress.setUserNick(user.getNickname());
 
-        StudyRoomTodoInfoDto studyRoomTodoAverage = null;
+        List<StRoomTodoInfoProjection> studyRoomTodoAverage = null;
+        double average = 0;
         try {
             studyRoomTodoAverage = studyMemberToDoRepository.getStudyRoomTodoAverage(roomId);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        if (studyRoomTodoAverage != null) {
+        if (studyRoomTodoAverage != null && !studyRoomTodoAverage.isEmpty()) {
+            StRoomTodoInfoProjection projection = studyRoomTodoAverage.get(0);
             // DB에 데이터가 존재할 때에만 해당 로직 수행
-            double totalCount = studyRoomTodoAverage.getTotalCount();
-            double completedCount = studyRoomTodoAverage.getCompletedCount();
-            double average = (totalCount - completedCount) / totalCount * 100;
-            todoProgress.setAvg(average);
-        } else {
-            todoProgress.setAvg(0.0);
+            int totalCount = projection.getTotalCount();
+            int completedCount = projection.getCompletedCount();
+            if (totalCount > 0) {
+                average = ((double) completedCount / totalCount) * 100;
+            }
         }
 
+        todoProgress.setAvg(average);
         return todoProgress;
     }
+
+    public List<MemberTodoResponseDto> getTodoByDateAndMemberIdAndRoomId(LocalDate date, Long memberId, Long roomId){
+        List<MemberTodoResponseDto> dto = new ArrayList<>();
+        List<StRoomTodoFindProjection> projection = studyMemberToDoRepository.findTodoByDateAndMemberIdAndRoomId(date, memberId, roomId);
+
+        //projection null check
+        if(projection == null || projection.isEmpty())
+        {
+            System.out.println("**********");
+        }
+        // run 하고 api 도 plea
+        for (StRoomTodoFindProjection projections : projection) {
+            MemberTodoResponseDto responseDto = new MemberTodoResponseDto();
+            responseDto.setStatus(projections.getStatus());
+            responseDto.setTodoContent(projections.getTodoContent());
+            responseDto.setIdx(projections.getIdx());
+
+            //projection select result check
+            System.out.println("=========[TO DO LIST"+responseDto.getIdx()+"]===========");
+            System.out.println(responseDto.getStatus());
+            System.out.println(responseDto.getTodoContent());
+
+            dto.add(responseDto);
+        }
+
+        return dto;
+    }
+
 }

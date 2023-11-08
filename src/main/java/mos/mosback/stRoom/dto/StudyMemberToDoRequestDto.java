@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mos.mosback.stRoom.domain.stRoom.TodoStatus;
 
+import java.time.LocalDate;
+
 
 @Setter
 @Getter
@@ -15,5 +17,6 @@ public class StudyMemberToDoRequestDto {
     private Long roomId;
     private Long todoId;
     private String currentEmail;
+    private LocalDate date;
 
 }

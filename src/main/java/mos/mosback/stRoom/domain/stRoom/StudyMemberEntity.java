@@ -17,7 +17,6 @@ public class StudyMemberEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "memberID")
     private Long memberId;
 
     @ManyToOne

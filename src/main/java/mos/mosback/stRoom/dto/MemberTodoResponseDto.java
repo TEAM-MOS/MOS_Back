@@ -1,19 +1,13 @@
 package mos.mosback.stRoom.dto;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mos.mosback.stRoom.domain.stRoom.TodoStatus;
 
-import java.time.LocalDate;
-
-
-@Setter
 @Getter
-@NoArgsConstructor
-public class stRoomToDoRequestDto {
-
+@Setter
+public class MemberTodoResponseDto {
     private String todoContent;
+    private Long idx;
     private TodoStatus status;
-    private Long roomId;
 
 }

@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Getter // 롬복 어노테이션
 @Setter
@@ -20,7 +21,7 @@ public class StudyMemberTodoEntity implements Serializable {
     @Column(name = "memberID")
     private Long memberId;
 
-    @Column(name = "todoContent")
+    @Column(name = "todo_content")
     private String todoContent;
 
     @ManyToOne
@@ -30,6 +31,8 @@ public class StudyMemberTodoEntity implements Serializable {
     // 다른 필드와 매핑
     @Enumerated(EnumType.STRING)
     private TodoStatus status;
+
+    private LocalDate date;
 
 
     public void update(String todoContent, TodoStatus status) {

@@ -84,6 +84,7 @@ public class StRoomService {
     @Transactional(readOnly = true)
     public StRoomResponseDto findById(Long roomId)  {
       try {
+
           StRoomEntity stRoomEntity = stRoomRepository.findById(roomId)
                   .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id=" + roomId));
 
@@ -102,6 +103,8 @@ public class StRoomService {
         return new StRoomDetailResponseDto(stRoomEntity);
     }
     public List<Home_RoomResponseDto> findAllRoomsDesc() {
+
+
         return stRoomRepository.findAllDesc();
     }
 

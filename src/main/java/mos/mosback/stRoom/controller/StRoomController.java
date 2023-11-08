@@ -3,6 +3,7 @@ import lombok.RequiredArgsConstructor;
 import mos.mosback.login.domain.user.User;
 import mos.mosback.login.domain.user.dto.UserProfileDto;
 import mos.mosback.stRoom.domain.stRoom.MemberStatus;
+import mos.mosback.stRoom.domain.stRoom.StRoomEntity;
 import mos.mosback.stRoom.dto.*;
 import mos.mosback.stRoom.service.StRoomService;
 import mos.mosback.stRoom.service.ToDoService;
@@ -55,6 +56,7 @@ public class StRoomController {
     public ResponseEntity<?> FindByID (@PathVariable Long roomId) {
 
         StRoomResponseDto stroom = stRoomService.findById(roomId);
+
         try {
             List<StRoomMemberResponseDto> studyRoomMemberList = stRoomService.getStudyRoomMemberList(roomId);
             StRoomMemberResponseDto leaderInfo = studyRoomMemberList.stream()
@@ -70,6 +72,7 @@ public class StRoomController {
             response.put("status", 404);
             response.put("message", "해당 스터디룸 없음" );
             response.put("success", false);
+
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
