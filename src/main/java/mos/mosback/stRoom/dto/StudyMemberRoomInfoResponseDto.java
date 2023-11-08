@@ -9,8 +9,8 @@ import java.util.List;
 @NoArgsConstructor
 public class StudyMemberRoomInfoResponseDto {
     private String category;
-    private double studyRoomTodoAverage; // 평균값
-    private List<StRoomMemberToDoResponseDto> todoList; // 사용자 투두정보
+    private double avg; // 평균값
+/*    private List<StRoomMemberToDoResponseDto> todoList; // 사용자 투두정보*/
     private List<StudyRoomDayDto> roomDayList;
 
 }

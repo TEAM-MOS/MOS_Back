@@ -1,25 +1,16 @@
 package mos.mosback.stRoom.controller;
 import lombok.RequiredArgsConstructor;
-import mos.mosback.login.domain.user.User;
-import mos.mosback.login.domain.user.dto.NicknameDto;
-import mos.mosback.login.domain.user.service.UserService;
-import mos.mosback.stRoom.domain.stRoom.MemberStatus;
 import mos.mosback.stRoom.domain.stRoom.StudyMemberTodoEntity;
 import mos.mosback.stRoom.domain.stRoom.ToDoEntity;
 import mos.mosback.stRoom.dto.*;
 import mos.mosback.stRoom.service.ToDoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
-
-import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +21,6 @@ import java.util.Map;
 public class TodoController {
 
     private final ToDoService toDoService;
-    private final UserService userService;
 
     @PostMapping("todo/add/{roomId}")
     public ResponseEntity<Map<String, Object>> addTodo(@RequestBody stRoomToDoRequestDto requestDto, @PathVariable Long roomId) {
@@ -53,7 +43,7 @@ public class TodoController {
     }
     @PostMapping("/member/todo/add")
     public ResponseEntity<Map<String, Object>> addMemberTodo(@RequestBody StudyMemberToDoRequestDto requestDto) throws Exception {
-//        try { // 현재 로그인한 사용자의 정보 가져오기
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentEmail = authentication.getName(); // 현재 사용자의 이메일
         requestDto.setCurrentEmail(currentEmail);
@@ -65,16 +55,6 @@ public class TodoController {
         response.put("message", "todo추가완료");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-//    }catch (IllegalArgumentException ex){
-//            Map<String, Object> response = new HashMap<>();
-//            response.put("status:", HttpStatus.INTERNAL_SERVER_ERROR.value());
-//            response.put("success",false);
-//            response.put("message","서버내부오류");
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-//        }
-//    }
- //todo개수만큼 프론트에서 호출해줘야함
-//
 
 
     @PutMapping("todo/{todoId}")
@@ -215,15 +195,12 @@ public class TodoController {
 
 
     }
-    @GetMapping("/get-todo/{roomId}/{date}")
+    @GetMapping("/myTodo/{roomId}/{date}")
     public ResponseEntity<Map<String, Object>> getTodoByDateAndMemberIdAndRoomId
             (@PathVariable Long roomId, @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentEmail = authentication.getName();
-        User user = userService.getUserByEmail(currentEmail);
-        Long memberId = user.getId();
-
-        List<MemberTodoResponseDto> todoList = toDoService.getTodoByDateAndMemberIdAndRoomId(date, memberId, roomId);
+        String email = authentication.getName(); // 현재 사용자의 이메일
+        List<MemberTodoResponseDto> todoList = toDoService.getTodoByDateAndMemberIdAndRoomId(date, roomId,email);
 
         Map<String, Object> response = new HashMap<>();
         response.put("todoList", todoList);

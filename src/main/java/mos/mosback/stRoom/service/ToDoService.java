@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -151,8 +150,8 @@ public class ToDoService {
         }
 
         result.setCategory(stRoom.getCategory());
-        result.setTodoList(todoList);
-        result.setStudyRoomTodoAverage(average); // 평균값
+     /*   result.setTodoList(todoList);*/
+        result.setAvg(average); // 평균값
         result.setRoomDayList(roomDayList);
         return result;
     }
@@ -221,16 +220,15 @@ public class ToDoService {
         return todoProgress;
     }
 
-    public List<MemberTodoResponseDto> getTodoByDateAndMemberIdAndRoomId(LocalDate date, Long memberId, Long roomId){
+    public List<MemberTodoResponseDto> getTodoByDateAndMemberIdAndRoomId(LocalDate date, Long roomId,String email) throws Exception{
         List<MemberTodoResponseDto> dto = new ArrayList<>();
-        List<StRoomTodoFindProjection> projection = studyMemberToDoRepository.findTodoByDateAndMemberIdAndRoomId(date, memberId, roomId);
-
+        User user= userService.getUserByEmail(email);
+        List<StRoomTodoFindProjection> projection = studyMemberToDoRepository.findTodoByDateAndMemberIdAndRoomId(date,user.getId(),roomId);
         //projection null check
         if(projection == null || projection.isEmpty())
         {
             System.out.println("**********");
         }
-        // run 하고 api 도 plea
         for (StRoomTodoFindProjection projections : projection) {
             MemberTodoResponseDto responseDto = new MemberTodoResponseDto();
             responseDto.setStatus(projections.getStatus());
