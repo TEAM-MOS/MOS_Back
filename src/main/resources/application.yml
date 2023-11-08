@@ -35,8 +35,8 @@ spring:
   mail:
     host: smtp.naver.com
     port: 465
-    username: dmsthf1225@naver.com
-    password: dkffkqb77!!
+    username: 
+    password: 
     properties:
       mail:
         smtp:
@@ -63,8 +63,8 @@ logging:
 cloud:
   aws:
     credentials:
-      accessKey: AKIAZ2K7DUYBW6RY24QH
-      secretKey: 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
+      accessKey: 
+      secretKey: 
     region:
       static: ap-northeast-2
     stack:
