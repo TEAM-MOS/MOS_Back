@@ -215,7 +215,7 @@ public class TodoController {
 
 
     }
-    @GetMapping("/get-todo/{roomId}/{date}")
+    @GetMapping("/myTodo/{roomId}/{date}")
     public ResponseEntity<Map<String, Object>> getTodoByDateAndMemberIdAndRoomId
             (@PathVariable Long roomId, @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
