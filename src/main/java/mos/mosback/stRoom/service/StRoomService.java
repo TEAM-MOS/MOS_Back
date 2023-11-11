@@ -55,6 +55,11 @@ public class StRoomService {
             User user = userService.getUserByEmail(loginUserEmail);
             stRoom.setCreatedByUser(user);
 
+            //멤버수 증가 코드 추가함함
+            
+            int currentMemberNum = stRoom.getMemberNum();
+            stRoom.setMemberNum(currentMemberNum + 1);
+
             // 5. Study Member 저장
             studyMember.setMemberId(user.getId());
             studyMember.setStRoom(stRoom);
@@ -290,7 +295,9 @@ public class StRoomService {
             // 2. 기존의 StudyMemberEntity를 불러오거나 생성
             StudyMemberEntity studyMember = studyMemberRepository.findByMemberIdAndStRoom(requestDto.getMemberId(), stRoomEntity)
                     .orElse(new StudyMemberEntity());
-
+            //멤버수증가
+            int currentMemberNum = stRoomEntity.getMemberNum();
+            stRoomEntity.setMemberNum(currentMemberNum + 1);
             studyMember.setMemberId(requestDto.getMemberId());
             studyMember.setStRoom(stRoomEntity);
             studyMember.setStatus(MemberStatus.Member);
