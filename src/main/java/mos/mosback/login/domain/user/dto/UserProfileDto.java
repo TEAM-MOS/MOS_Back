@@ -55,6 +55,9 @@ public class UserProfileDto {
 
 
     }
+     public Long getId() {
+        return id;
+    }
 
     public String getImageUrl() {
         return imageUrl;
