@@ -250,8 +250,7 @@ public class StRoomService {
             // 엔터티 정보를 DTO로 매핑하여 반환
             return new UserProfileDto(
                     user.getId(),
-                    user.getNickname(),
-                    user.getName(),
+                    user.getNickname(),                  
                     user.getStr_duration(),
                     user.getEnd_duration(),
                     user.getMessage(),
