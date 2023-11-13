@@ -193,6 +193,31 @@ public class UserProfileController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+    @GetMapping("/id")
+    public ResponseEntity<Map<String, Object>> getUserId() {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            // 현재 로그인한 사용자의 정보 가져오기
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String userEmail = authentication.getName(); // 현재 사용자의 이메일
+
+            // 현재 사용자의 이메일을 이용하여 프로필 정보를 가져옵니다.
+            UserProfileDto userProfileDto = userService.getUserProfileByEmail(userEmail);
+
+            response.put("status", 200);
+            response.put("success", true);
+            response.put("id", userProfileDto.getId());
+
+            // id를 클라이언트에 응답으로 반환합니다.
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            // 에러 발생 시 500 Internal Server Error 반환
+            response.put("status", 500);
+            response.put("success", false);
+            response.put("message", "오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 
     @GetMapping("/status")
     public ResponseEntity<Map<String, Object>> getStudyMembershipStatus() {
