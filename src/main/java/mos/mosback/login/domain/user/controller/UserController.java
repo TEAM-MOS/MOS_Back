@@ -90,7 +90,7 @@ public class UserController {
 
         if (existingUser.isPresent()) {
             response.put("status", 500);
-            response.put("success", true);
+            response.put("success", false);
             response.put("message", "이메일이 이미 존재합니다.");
         } else {
             response.put("status", 200);
