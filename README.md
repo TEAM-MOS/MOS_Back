@@ -34,3 +34,6 @@ iOS 어플/취업 준비생을 위한 스터디 어플
 ## MAIN LOGO
 <img src = "https://github.com/TEAM-MOS/MOS_total/assets/127409712/25166edc-c376-4b27-9619-c3aa45a68468.jpg" width="300" height="300">
 
+
+## WEB
+<img src = "https://github.com/TEAM-MOS/MOS_total/issues/2#issue-2092557495">
