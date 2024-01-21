@@ -35,5 +35,7 @@ iOS 어플/취업 준비생을 위한 스터디 어플
 <img src = "https://github.com/TEAM-MOS/MOS_total/assets/127409712/25166edc-c376-4b27-9619-c3aa45a68468.jpg" width="300" height="300">
 
 
-## WEB
-<img src = "https://github.com/TEAM-MOS/MOS_total/issues/2#issue-2092557495">
+
+## 화면소개
+![PT231201134012](https://github.com/TEAM-MOS/MOS_total/assets/127409712/1749a2a8-4e2d-44a9-a822-ca5e2723ba65)
+![PT231201134017](https://github.com/TEAM-MOS/MOS_total/assets/127409712/f7fa542f-71bb-4d9d-994a-a6aea0858858)
